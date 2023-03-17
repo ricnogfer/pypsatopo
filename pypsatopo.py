@@ -31,7 +31,7 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = \"%s\", tooltip = \"Carri
                       "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: 1.00\", style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\", arrowtail = \"vee\", dir = \"both\"]"
                      }
 NETWORK_NAME = "My Network"
-FILE_FORMAT = "svg"
+FILE_FORMAT = "svg"   # possible values are: "svg", "png", "jpg", "gif" and "ps"
 FILE_NAME = "topography.%s" % FILE_FORMAT
 RANK_DIRECTION = "TB"   # possible values are: "TB" (top to bottom), "BT" (bottom to top), "LR" (left to right) and "RL" (right to left)
 RANK_SEPARATION = 1.0
@@ -762,7 +762,7 @@ if __name__ == "__main__":
     network.add("Load", "vehicle", bus = "transport")
     network.add("Store", "battery", bus = "electricity")
     network.add("Link", "ICE", bus0 = "oil", bus1 = "transport")
-    network.madd("Link", ["BEV"], bus0 = "electricity", bus1 = "transport")
+    network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
     # generate topographical representation of dummy (PyPSA) network
