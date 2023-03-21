@@ -4,10 +4,10 @@
 
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
 __project__ = "PyPSATopo"
-__description__ = "The PyPSATopo tool allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language - https://graphviz.org)"
+__description__ = "PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language - https://graphviz.org)"
 __license__ = "BSD 3-Clause"
 __contact__ = "ricardo.fernandes@mpe.au.dk"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __status__ = "Development"
 
 
@@ -19,6 +19,7 @@ import re
 import datetime
 import subprocess
 import pypsa
+import pandas
 
 
 
@@ -28,11 +29,15 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = \"%s\", tooltip = \"Carri
                       "LOAD": "   \"%s (load)\" [label = \"%s\", tooltip = \"Carrier: %s\", shape = \"invtriangle\", width = %.1f, height = %.1f, style = \"setlinewidth(%.1f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"none\"]",
                       "STORE": "   \"%s (store)\" [label = \"%s\", tooltip = \"Carrier: %s\", shape = \"box\", width = %.1f, style = \"setlinewidth(%.1f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\"]   \"%s (store)\" -> \"%s (bus)\" [style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\"]",
                       "LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\"]",
-                      "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: 1.00\", style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\", arrowtail = \"vee\", dir = \"both\"]"
+                      "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: 1.00\", style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\", arrowtail = \"vee\", dir = \"both\"]",
+                      "MULTI_LINK_POINT": "   \"%s (multi-link)\" [label = \"%s\", shape = \"point\", width = %.1f, color = \"%s\"]",
+                      "MULTI_LINK_BUS_TO_POINT": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = \"%s\", tooltip = \"Carrier: %s\", style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "MULTI_LINK_POINT_TO_BUS": "   \"%s (multi-link)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.1f)\", color = \"%s\", arrowhead = \"vee\"]"
                      }
-NETWORK_NAME = "My Network"
 FILE_FORMAT = "svg"   # possible values are: "svg", "png", "jpg", "gif" and "ps"
 FILE_NAME = "topography.%s" % FILE_FORMAT
+BACKGROUND_COLOR = "transparent"
+NETWORK_NAME = "My Network"
 RANK_DIRECTION = "TB"   # possible values are: "TB" (top to bottom), "BT" (bottom to top), "LR" (left to right) and "RL" (right to left)
 RANK_SEPARATION = 1.0
 NODE_SEPARATION = 1.0
@@ -40,14 +45,14 @@ EDGE_STYLE = "polyline"   # possible values are: "polyline", "curved", "ortho" a
 TEXT_FONT = "Courier New"
 TEXT_SIZE = 8.0
 TEXT_COLOR = "red"
-BUS_MINIMUM_WIDTH = 2.5
+BUS_MINIMUM_WIDTH = 3.0
 BUS_THICKNESS = 6.0
 BUS_COLOR = "black"
 GENERATOR_MINIMUM_WIDTH = 1.1
 GENERATOR_THICKNESS = 2.0
 GENERATOR_COLOR = "black"
 LOAD_MINIMUM_WIDTH = 1.4
-LOAD_MINIMUM_HEIGHT = 1.1
+LOAD_MINIMUM_HEIGHT = 1.2
 LOAD_THICKNESS = 2.0
 LOAD_COLOR = "black"
 STORE_MINIMUM_WIDTH = 1.3
@@ -55,6 +60,7 @@ STORE_THICKNESS = 2.0
 STORE_COLOR = "black"
 LINK_THICKNESS = 1.5
 LINK_COLOR = "black"
+MULTI_LINK_POINT_WIDTH = 0.1
 
 
 
@@ -78,7 +84,7 @@ def _get_buses(network):
         bus = network.buses.index.values[i]
         carrier = network.buses.carrier[i]
         unit = "" if network.buses.unit[i] == "None" else network.buses.unit[i]
-        result[bus] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "carrier": carrier, "unit": unit}
+        result[bus] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": carrier, "unit": unit}
 
 
     return result
@@ -155,7 +161,7 @@ def _get_stores(buses, stores):
 
 
 
-def _get_links(buses, links):
+def _get_links(buses, links, quiet):
     """
     Parameters
     ----------
@@ -163,23 +169,68 @@ def _get_links(buses, links):
         DESCRIPTION.
     links : TYPE
         DESCRIPTION.
+    quiet : TYPE
+        DESCRIPTION.
 
     Returns
     -------
     None.
     """
 
+    # get declared buses that links connect to
+    bus_regexp = re.compile("^bus[0-9]+$")
+    declared_buses = list()
+    for column in links.columns:
+        if bus_regexp.match(column):
+            declared_buses.append(column)
+
+
+    # loop through existing links
     for i in range(len(links)):
+
+
+        # get specified buses (from declared buses) that the link connects to
+        link = links.iloc[i]
+        specified_buses = dict()
+        for bus in declared_buses:
+            value = link[bus]
+            if not pandas.isna(value):
+                specified_buses[bus] = value
+
+
+        # check that buses that the link connects to exist
+        exists = True
+        for bus_name, bus_value in specified_buses.items():
+            if bus_value not in buses:
+                if not quiet:
+                    if bus_value:
+                        print("Skipping link '%s' as bus '%s' that it connects to does not exist..." % (links.index.values[i], bus_value))
+                    else:
+                        print("Skipping link '%s' as it does not have a value specified for bus '%s'..." % (links.index.values[i], bus_name))
+                exists = False
+                break
+        if not exists:
+            continue   # skip link as one of the buses it connects to does not exist
+
+
+        # process link
         link = links.index.values[i]
-        bus0 = links.bus0[i]
-        bus1 = links.bus1[i]
-        carrier = links.carrier[i]
-        efficiency = links.efficiency[i]
-        bidirectional = (links.efficiency[i] == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
-        if bus1 in buses:
+        if len(specified_buses) < 3:   # mono-link
+            bus0 = links.bus0[i]
+            bus1 = links.bus1[i]
+            carrier = links.carrier[i]
+            efficiency = links.efficiency[i]
+            bidirectional = (links.efficiency[i] == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
             buses[bus1]["LINKS"].append((link, bus0, carrier, efficiency, bidirectional))
-        if bus0 in buses:
             buses[bus0]["LINKS"].append((link, bus1, carrier, efficiency, bidirectional))
+        else:   # multi-link
+            bus0 = specified_buses["bus0"]
+            for bus_name, bus_value in specified_buses.items():
+                if bus_name == "bus0":
+                    buses[bus0]["MULTI_LINK_POINTS"].append(bus0)
+                    buses[bus0]["MULTI_LINK_BUS_TO_POINTS"].append((bus_value, bus0, link, "my_dummy_carrier"))
+                else:
+                    buses[bus0]["MULTI_LINK_POINT_TO_BUSES"].append((bus0, bus_value, link, "my_dummy_carrier", 0.8))
 
 
 
@@ -413,11 +464,6 @@ def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, quiet, visi
         print("Focusing on bus '%s'..." % focus)
 
 
-    # stop processing as neighbourhood cannot be negative
-    if neighbourhood < 0:
-        return result
-
-
     # check if bus has already been visited (processed)
     if focus in visited_buses:
         return result
@@ -465,7 +511,26 @@ def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, quiet, visi
                     result.append(bidirectional_link_representation % (bus, focus, link, carrier, LINK_THICKNESS, LINK_COLOR))
                 else:
                     result.append(link_representation % (bus, focus, link, carrier, efficiency, LINK_THICKNESS, LINK_COLOR))
-                result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, quiet, visited_buses, visited_links))
+                result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, quiet, visited_buses, visited_links))   # focus on neighbouring (adjacent) bus in a recursive fashion
+
+
+    # represent multi-link points (attached to the bus currently on focus) in DOT
+    multi_link_point_representation = DOT_REPRESENTATION["MULTI_LINK_POINT"]
+    for bus in buses[focus]["MULTI_LINK_POINTS"]:
+        result.append(multi_link_point_representation % (bus, bus, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
+
+
+    # represent multi-link from bus to points (attached to the bus currently on focus) in DOT
+    multi_link_bus_to_point_representation = DOT_REPRESENTATION["MULTI_LINK_BUS_TO_POINT"]
+    for bus, point, label, carrier in buses[focus]["MULTI_LINK_BUS_TO_POINTS"]:
+        result.append(multi_link_bus_to_point_representation % (bus, point, label, carrier, LINK_THICKNESS, LINK_COLOR))
+
+
+    # represent multi-link from point to buses (attached to the bus currently on focus) in DOT
+    multi_link_point_to_bus_representation = DOT_REPRESENTATION["MULTI_LINK_POINT_TO_BUS"]
+    for point, bus, label, carrier, efficiency in buses[focus]["MULTI_LINK_POINT_TO_BUSES"]:
+        result.append(multi_link_point_to_bus_representation % (point, bus, label, carrier, efficiency, LINK_THICKNESS, LINK_COLOR))
+        result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, quiet, visited_buses, visited_links))   # focus on neighbouring (adjacent) bus in a recursive fashion
 
 
     return result
@@ -569,15 +634,21 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
     visited = set()
 
 
-    # display info message
-    if not quiet:
-        print("Start generating topographical representation of the network...")
+    # check if neighbourhood is valid
+    if neighbourhood < 0:
+        print("The neighbourhood should be equal or greater than 0")
+        return -1   # return unsuccessfully
 
 
     # check if file format is valid
     if file_format not in ("svg", "png", "jpg", "gif", "ps"):
         print("The file format '%s' is not valid (acceptable formats are 'svg', 'png', 'jpg', 'gif' or 'ps')!" % file_format)
-        return -1
+        return -1   # return unsuccessfully
+
+
+    # display info message
+    if not quiet:
+        print("Start generating topographical representation of the network...")
 
 
     # check basic conditions
@@ -593,23 +664,23 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
         if isinstance(focus, str):
             if focus not in buses:
                 print("The bus '%s' to focus on does not exist!" % focus)
-                return -1
+                return -1   # return unsuccessfully
         else:   # list
             for bus in focus:
                 if bus not in buses:
                     print("The bus '%s' to focus on does not exist!" % bus)
-                    return -1
+                    return -1   # return unsuccessfully
 
 
         # check if focus specification matches neighbourhood specification
         if isinstance(focus, str):
             if not isinstance(neighbourhood, int):
                 print("The neighbourhood should be a scalar!")
-                return -1
+                return -1   # return unsuccessfully
         else:   # list
             if not isinstance(neighbourhood, int) and len(neighbourhood) != len(focus):
                 print("The number of neighbourhoods should be the same as the number of buses to focus on!")
-                return -1
+                return -1   # return unsuccessfully
 
 
     # compile regular expressions
@@ -639,6 +710,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
 
     # configure digraph layout
     result.append("   // configure digraph layout")
+    result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
     result.append("   labelloc = \"t\"")
     result.append("   label = \"%s\n\n           \"" % network_name)
     result.append("   rankdir = \"%s\"" % RANK_DIRECTION)
@@ -678,7 +750,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
         # get links from (PyPSA) network
         if not quiet:
             print("Retrieving links...")
-        _get_links(buses, network.links)
+        _get_links(buses, network.links, quiet)
 
 
         # focus on bus
@@ -771,4 +843,3 @@ if __name__ == "__main__":
 
     # set exit code and finish
     sys.exit(status)
-
