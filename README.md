@@ -1,6 +1,6 @@
 Description
 -----------
-The PyPSATopo tool allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). To get a quick illustration of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
+PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). To get a quick illustration of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
 
     python pypsatopo.py
 
@@ -21,7 +21,7 @@ network.add("Store", "battery", bus = "electricity")
 network.add("Link", "ICE", bus0 = "oil", bus1 = "transport")
 network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ```
-... and generate its corresponding topographical representation in the [SVG](https://en.wikipedia.org/wiki/SVG) format (besides its counterpart in the DOT language):
+... as well as generate its corresponding topographical representation in the [SVG](https://en.wikipedia.org/wiki/SVG) format (besides its counterpart in the DOT language):
 
 <img src = "resources/topography.svg" alt = "Topographical representation of network 'My Dymmy Network'" width = 475)>
 
@@ -48,18 +48,20 @@ By default, PyPSATopo generates the topographical representation of a PyPSA-base
 pypsatopo.generate(my_network, file_format = "gif")
 ```
 
-Also, by default, PyPSATopo generates the topographical representation of the entire network. This might be particularly overwhelming (visually speaking) depending on the complexity of the network - see [PyPSA-Eur-Sec network topographical representation](resources/pypsa-eur-sec_topography.svg) as an example. To mitigate this, parameters `focus` and `neighbourhood` (in function `generate`) may be utilized in combination to focus on a particular aspect/segment of the network. The former tells PyPSATopo which bus to start visiting, while the latter tells how much neighbourhood (around the bus) should be visited. For example, setting parameters `focus = "process emissions"` and `neighbourhood = 2` (which focuses on the `process emissions` bus with a maximum neighbourhood degree of `2`) yields this [result](resources/pypsa-eur-sec_process_emissions_topography.svg) upon generating PyPSA-Eur-Sec network topographical representation.
+Also, by default, PyPSATopo generates the topographical representation of the entire network. This might be particularly overwhelming (visually speaking) depending on the complexity of the network - see [PyPSA-Eur-Sec network topographical representation](resources/pypsa-eur-sec_topography.svg) as an example. To mitigate this, parameters `focus` and `neighbourhood` (in function `generate`) may be utilized in combination to focus on a particular aspect/segment of the network. The former tells PyPSATopo which bus to start visiting, while the latter tells how much neighbourhood (around the bus) should be visited (in other words, how much components attached (in)directly to the bus should be included in the representation). For example, setting parameters `focus = "process emissions"` and `neighbourhood = 2` (which focuses/starts on the `process emissions` bus and includes all the components attached to it up to a maximum neighbourhood degree of `2`) yields this [result](resources/pypsa-eur-sec_process_emissions_topography.svg) upon generating PyPSA-Eur-Sec network topographical representation.
 
 Additionally, in case of need for fine-grained selection/visiting logic, parameters `bus_filter` and `link_filter` (in function `generate`) may be utilized in combination or separately. Both parameters are expected to be (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameter `bus_filter` tells PyPSATopo which buses to include/exclude, parameter `link_filter` tells which links may be visited (or not) upon generating the topographical representation of a network.
 
 
 Dependencies
 ------------
-PyPSATopo leverages from several components to accomplish its functionality, namely: [Python](https://www.python.org/), [PyPSA](https://pypsa.org/) and [Dot](https://graphviz.org) (from Graphviz). These should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
+PyPSATopo leverages from several components to accomplish its functionality, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
 
 - Python 3.10.8
 
 - PyPSA 0.21.3
+
+- Pandas 1.5.3
 
 - Dot 2.40.1
 
