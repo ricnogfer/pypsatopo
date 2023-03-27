@@ -1,6 +1,6 @@
 Description
 -----------
-PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). To get a quick illustration of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
+PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). Besides easing understand of a network by providing its graphical representation, the tool helps debugging a network faster given that missing buses and broken links are shown in (slighly) different shapes and colors. To get a quick illustration of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
 
     python pypsatopo.py
 

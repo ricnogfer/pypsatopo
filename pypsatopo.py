@@ -23,16 +23,20 @@ import pandas
 
 
 
-# declare global variables (these can be overwritten by the caller to adjust/personalize the topographical representation of the PyPSA-based network)
-DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nUnit: %s\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f)\", color = \"%s\"]",
-                      "GENERATOR": "   \"%s (generator)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: %.2f\", shape = \"circle\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (generator)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "LOAD": "   \"%s (load)\" [label = \"%s\", tooltip = \"Carrier: %s\", shape = \"invtriangle\", width = %.2f, height = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "STORE": "   \"%s (store)\" [label = \"%s\", tooltip = \"Carrier: %s\", shape = \"box\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]   \"%s (store)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
-                      "LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
-                      "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: 1.00\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
+# declare (public) global variables (these can be overwritten by the caller to adjust/personalize the topographical representation of the PyPSA-based network)
+DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = \"%s\", tooltip = \"Bus: %s\nCarrier: %s\nUnit: %s\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f)\", color = \"%s\"]",
+                      "MISSING_BUS": "   \"%s (bus)\" [label = \"%s\", tooltip = \"Bus: %s (missing)\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f), dashed\", color = \"%s\"]",
+                      "GENERATOR": "   \"%s (generator)\" [label = \"%s\", tooltip = \"Generator: %s\nCarrier: %s\nEfficiency: %.2f\", shape = \"circle\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (generator)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "LOAD": "   \"%s (load)\" [label = \"%s\", tooltip = \"Load: %s\nCarrier: %s\", shape = \"invtriangle\", width = %.2f, height = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "STORE": "   \"%s (store)\" [label = \"%s\", tooltip = \"Store: %s\nCarrier: %s\", shape = \"box\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]   \"%s (store)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
+                      "LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
+                      "BROKEN_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
+                      "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nEfficiency: 1.00\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
+                      "BROKEN_BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nEfficiency: 1.00\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "MULTI_LINK_POINT": "   \"%s (multi-link)\" [label = \"%s\", shape = \"point\", width = %.2f, color = \"%s\"]",
-                      "MULTI_LINK_BUS_TO_POINT": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = \"%s\", tooltip = \"Carrier: %s\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "MULTI_LINK_POINT_TO_BUS": "   \"%s (multi-link)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Carrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]"
+                      "MULTI_LINK_BUS_TO_POINT": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = \"%s\", tooltip = \"Multi-link: %s\nCarrier: %s\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "MULTI_LINK_POINT_TO_BUS": "   \"%s (multi-link)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
+                      "BROKEN_MULTI_LINK_POINT_TO_BUS": "   \"%s (multi-link)\" -> \"%s (bus)\" [label = \"%s\", tooltip = \"Multi-link: %s (broken)\nFrom: %s\nTo: %s\nCarrier: %s\nEfficiency: %.2f\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]"
                      }
 FILE_FORMAT = "svg"   # possible values are: "svg", "png", "jpg", "gif" and "ps"
 FILE_NAME = "topography.%s" % FILE_FORMAT
@@ -46,8 +50,9 @@ TEXT_FONT = "Courier New"
 TEXT_SIZE = 8.0
 TEXT_COLOR = "red"
 BUS_MINIMUM_WIDTH = 3.0
-BUS_THICKNESS = 6.0
+BUS_THICKNESS = 7.0
 BUS_COLOR = "black"
+MISSING_BUS_COLOR = "grey65"
 GENERATOR_MINIMUM_WIDTH = 1.1
 GENERATOR_THICKNESS = 2.0
 GENERATOR_COLOR = "black"
@@ -62,7 +67,13 @@ LINK_THICKNESS = 1.5
 LINK_COLOR = "black"
 LINK_ARROW_SHAPE = "vee"   # possible values are: "vee", "normal", "onormal", "diamond", "odiamond", "curve" and "none"
 LINK_ARROW_SIZE = 1.2
+BROKEN_LINK_COLOR = "grey65"
 MULTI_LINK_POINT_WIDTH = 0.05
+
+
+
+# declare (private) global variables (these should not be overwritten by the caller)
+_MISSING_BUS_COUNT = 0
 
 
 
@@ -86,7 +97,7 @@ def _get_buses(network):
         bus = network.buses.index.values[i]
         carrier = network.buses.carrier[i]
         unit = "" if network.buses.unit[i] == "None" else network.buses.unit[i]
-        result[bus] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": carrier, "unit": unit}
+        result[bus] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": carrier, "unit": unit, "missing": False}
 
 
     return result
@@ -179,6 +190,9 @@ def _get_links(buses, links, quiet):
     None.
     """
 
+    global _MISSING_BUS_COUNT
+
+
     # get declared buses that links connect to
     bus_regexp = re.compile("^bus[0-9]+$")
     declared_buses = list()
@@ -187,32 +201,58 @@ def _get_links(buses, links, quiet):
             declared_buses.append(column)
 
 
+    # get declared efficiencies that links have
+    efficiency_regexp = re.compile("^efficiency[0-9]*$")
+    declared_efficiencies = set()
+    for column in links.columns:
+        if efficiency_regexp.match(column):
+            if column == "efficiency":
+                declared_efficiencies.add("0")
+            else:
+                declared_efficiencies.add(column[10:])
+
     # loop through existing links
     for i in range(len(links)):
 
 
-        # get specified buses (from declared buses) that the link connects to
+        # get specified buses (from declared buses) that the link connects to as well as efficiency values
         link = links.iloc[i]
-        specified_buses = dict()
+        specified_buses = list()
         for bus in declared_buses:
             value = link[bus]
             if not pandas.isna(value):
-                specified_buses[bus] = value
+                number = bus[3:]
+                if number == "0":
+                    efficiency = 1.0
+                elif number == "1":
+                    if "0" in declared_efficiencies:
+                        efficiency = link["efficiency"]
+                        if pandas.isna(efficiency):
+                            efficiency = 1.0
+                    else:
+                        efficiency = 1.0
+                elif number in declared_efficiencies:
+                    efficiency = link["efficiency%s" % number]
+                    if pandas.isna(efficiency):
+                        efficiency = 1.0
+                else:
+                    efficiency = 1.0
+                specified_buses.append([bus, value, efficiency])
 
 
         # check that buses that the link connects to exist
-        exists = True
-        for bus_name, bus_value in specified_buses.items():
-            if bus_value not in buses:
+        broken = 0
+        for bus in specified_buses:
+            if bus[1] in buses:
+                bus.append(True)
+            else:
+                bus.append(False)
+                broken = broken + 1
                 if not quiet:
-                    if bus_value:
-                        print("Skipping link '%s' as bus '%s' that it connects to does not exist..." % (links.index.values[i], bus_value))
+                    if bus[1]:
+                        print("Link '%s' connects to bus '%s' which does not exist..." % (links.index.values[i], bus[1]))
                     else:
-                        print("Skipping link '%s' as it does not have a value specified for bus '%s'..." % (links.index.values[i], bus_name))
-                exists = False
-                break
-        if not exists:
-            continue   # skip link as one of the buses it connects to does not exist
+                        print("Link '%s' connects to bus '%s' which does not have a value..." % (links.index.values[i], bus[0]))
 
 
         # process link
@@ -222,29 +262,33 @@ def _get_links(buses, links, quiet):
             bus1 = links.bus1[i]
             carrier = links.carrier[i]
             efficiency = links.efficiency[i]
-            bidirectional = (links.efficiency[i] == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
-            buses[bus1]["LINKS"].append((link, bus0, carrier, efficiency, bidirectional))
-            buses[bus0]["LINKS"].append((link, bus1, carrier, efficiency, bidirectional))
+            if bus0:   # specified
+                if bus1:   # specified
+                    missing = False
+                    if bus0 not in buses:
+                        buses[bus0] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": "", "unit": "", "missing": True}
+                        missing = True
+                    if bus1 not in buses:
+                        buses[bus1] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": "", "unit": "", "missing": True}
+                        missing = True
+                    bidirectional = (links.efficiency[i] == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
+                    buses[bus1]["LINKS"].append((link, bus0, carrier, efficiency, bidirectional, missing))
+                    buses[bus0]["LINKS"].append((link, bus1, carrier, efficiency, bidirectional, missing))
+                else:   # not specified
+                    if bus0 not in buses:
+                        buses[bus0] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": "", "unit": "", "missing": True}
+                    bus1 = "bus #%d" % _MISSING_BUS_COUNT
+                    _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                    buses[bus1] = {"GENERATORS": list(), "LOADS": list(), "STORES": list(), "LINKS": list(), "MULTI_LINK_POINTS": list(), "MULTI_LINK_BUS_TO_POINTS": list(), "MULTI_LINK_POINT_TO_BUSES": list(), "carrier": "", "unit": "", "missing": True}
+                    bidirectional = (links.efficiency[i] == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
+                    buses[bus1]["LINKS"].append((link, bus0, carrier, efficiency, bidirectional, True))
+                    buses[bus0]["LINKS"].append((link, bus1, carrier, efficiency, bidirectional, True))
+            else:
+                # TODO
+                pass
         else:   # multi-link
-            link = links.index.values[i]
-            """
-            bus0 = specified_buses["bus0"]
-            for bus_name, bus_value in specified_buses.items():
-                if bus_name == "bus0":
-                    buses[bus0]["MULTI_LINK_POINTS"].append(link)
-                    buses[bus0]["MULTI_LINK_BUS_TO_POINTS"].append((bus_value, link, link, "my_dummy_carrier"))
-                else:
-                    buses[bus0]["MULTI_LINK_POINT_TO_BUSES"].append((link, bus_value, link, "my_dummy_carrier", 0.8))
-            """
-            bus0 = specified_buses["bus0"]
-            buses[bus0]["MULTI_LINK_POINTS"].append(link)
-            buses[bus0]["MULTI_LINK_BUS_TO_POINTS"].append((bus0, link, link, "my_dummy_carrierXXX"))
-
-            for bus_name, bus_value in specified_buses.items():
-                if bus_name != "bus0":
-                    buses[bus_value]["MULTI_LINK_POINTS"].append(link)
-                    buses[bus_value]["MULTI_LINK_BUS_TO_POINTS"].append((bus0, link, link, "my_dummy_carrierYYY"))
-                    buses[bus_value]["MULTI_LINK_POINT_TO_BUSES"].append((link, bus_value, link, "my_dummy_carrierYYY", 0.8))
+            # TODO
+            pass
 
 
 
@@ -264,10 +308,10 @@ def _represent_buses(buses, bus_filter):
     """
 
     result = list()
-    count = 0
-
-
     result.append(None)
+
+
+    # get bus DOT representation
     bus_representation = DOT_REPRESENTATION["BUS"]
 
 
@@ -277,11 +321,10 @@ def _represent_buses(buses, bus_filter):
         carrier = buses.carrier[i]
         unit = "" if buses.unit[i] == "None" else buses.unit[i]
         if not bus_filter or bus_filter.match(bus):
-            result.append(bus_representation % (bus, bus, carrier, unit, BUS_MINIMUM_WIDTH, BUS_THICKNESS, BUS_COLOR))
-            count = count + 1
+            result.append(bus_representation % (bus, bus, bus, carrier, unit, BUS_MINIMUM_WIDTH, BUS_THICKNESS, BUS_COLOR))
 
 
-    result[0] = "   // Buses (%d)" % count
+    result[0] = "   // Buses (%d)" % (len(result) - 1)
 
 
     return result
@@ -304,10 +347,10 @@ def _represent_generators(generators, bus_filter):
     """
 
     result = list()
-    count = 0
-
-
     result.append(None)
+
+
+    # get generator DOT representation
     generator_representation = DOT_REPRESENTATION["GENERATOR"]
 
 
@@ -318,11 +361,10 @@ def _represent_generators(generators, bus_filter):
         efficiency = generators.efficiency[i]
         bus = generators.bus.values[i]
         if not bus_filter or bus_filter.match(bus):
-            result.append(generator_representation % (generator, generator, carrier, efficiency, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, GENERATOR_COLOR, generator, bus, LINK_THICKNESS, GENERATOR_COLOR))
-            count = count + 1
+            result.append(generator_representation % (generator, generator, generator, carrier, efficiency, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, GENERATOR_COLOR, generator, bus, LINK_THICKNESS, GENERATOR_COLOR))
 
 
-    result[0] = "   // Generators (%d)" % count
+    result[0] = "   // Generators (%d)" % (len(result) - 1)
 
 
     return result
@@ -345,10 +387,10 @@ def _represent_loads(loads, bus_filter):
     """
 
     result = list()
-    count = 0
-
-
     result.append(None)
+
+
+    # get load DOT representation
     load_representation = DOT_REPRESENTATION["LOAD"]
 
 
@@ -358,11 +400,10 @@ def _represent_loads(loads, bus_filter):
         carrier = loads.carrier[i]
         bus = loads.bus.values[i]
         if not bus_filter or bus_filter.match(bus):
-            result.append(load_representation % (load, load, carrier, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, LOAD_COLOR, bus, load, LINK_THICKNESS, LOAD_COLOR))
-            count = count + 1
+            result.append(load_representation % (load, load, load, carrier, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, LOAD_COLOR, bus, load, LINK_THICKNESS, LOAD_COLOR))
 
 
-    result[0] = "   // Loads (%d)" % count
+    result[0] = "   // Loads (%d)" % (len(result) - 1)
 
 
     return result
@@ -385,10 +426,10 @@ def _represent_stores(stores, bus_filter):
     """
 
     result = list()
-    count = 0
-
-
     result.append(None)
+
+
+    # get store DOT representation
     store_representation = DOT_REPRESENTATION["STORE"]
 
 
@@ -398,18 +439,17 @@ def _represent_stores(stores, bus_filter):
         carrier = stores.carrier[i]
         bus = stores.bus.values[i]
         if not bus_filter or bus_filter.match(bus):
-            result.append(store_representation % (store, store, carrier, STORE_MINIMUM_WIDTH, STORE_THICKNESS, STORE_COLOR, bus, store, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE, store, bus, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
-            count = count + 1
+            result.append(store_representation % (store, store, store, carrier, STORE_MINIMUM_WIDTH, STORE_THICKNESS, STORE_COLOR, bus, store, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE, store, bus, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
 
-    result[0] = "   // Stores (%d)" % count
+    result[0] = "   // Stores (%d)" % (len(result) - 1)
 
 
     return result
 
 
 
-def _represent_links(buses, links, bus_filter, link_filter, quiet):
+def _represent_links(buses, links, bus_filter, link_filter, negative_efficiency, broken_link, quiet):
     """
     Parameters
     ----------
@@ -421,6 +461,10 @@ def _represent_links(buses, links, bus_filter, link_filter, quiet):
         DESCRIPTION.
     link_filter : TYPE
         DESCRIPTION.
+    negative_efficiency : TYPE
+        DESCRIPTION.
+    broken_link : TYPE
+        DESCRIPTION.
     quiet : TYPE
         DESCRIPTION.
 
@@ -428,19 +472,26 @@ def _represent_links(buses, links, bus_filter, link_filter, quiet):
     -------
     result : TYPE
         DESCRIPTION.
-
     """
 
+    global _MISSING_BUS_COUNT
+
+
     result = list()
+    result.append(None)
     count = 0
 
 
-    result.append(None)
+    # get (mono, multi and bidirectional) link DOT representation
+    missing_bus_representation = DOT_REPRESENTATION["MISSING_BUS"]
     link_representation = DOT_REPRESENTATION["LINK"]
+    broken_link_representation = DOT_REPRESENTATION["BROKEN_LINK"]
     bidirectional_link_representation = DOT_REPRESENTATION["BIDIRECTIONAL_LINK"]
+    broken_bidirectional_link_representation = DOT_REPRESENTATION["BROKEN_BIDIRECTIONAL_LINK"]
     multi_link_point_representation = DOT_REPRESENTATION["MULTI_LINK_POINT"]
     multi_link_bus_to_point_representation = DOT_REPRESENTATION["MULTI_LINK_BUS_TO_POINT"]
     multi_link_point_to_bus_representation = DOT_REPRESENTATION["MULTI_LINK_POINT_TO_BUS"]
+    broken_multi_link_point_to_bus_representation = DOT_REPRESENTATION["BROKEN_MULTI_LINK_POINT_TO_BUS"]
 
 
     # get declared buses that links connect to
@@ -488,22 +539,22 @@ def _represent_links(buses, links, bus_filter, link_filter, quiet):
                         efficiency = 1.0
                 else:
                     efficiency = 1.0
-                specified_buses.append((bus, value, efficiency))
+                specified_buses.append([bus, value, efficiency])
 
 
         # check that buses that the link connects to exist
-        exists = True
-        for bus_name, bus_value, _ in specified_buses:
-            if bus_value not in buses.index:
+        broken = 0
+        for bus in specified_buses:
+            if bus[1] in buses.index:
+                bus.append(True)
+            else:
+                bus.append(False)
+                broken = broken + 1
                 if not quiet:
-                    if bus_value:
-                        print("Skipping link '%s' as bus '%s' that it connects to does not exist..." % (links.index.values[i], bus_value))
+                    if bus[1]:
+                        print("Link '%s' connects to bus '%s' which does not exist..." % (links.index.values[i], bus[1]))
                     else:
-                        print("Skipping link '%s' as it does not have a value specified for bus '%s'..." % (links.index.values[i], bus_name))
-                exists = False
-                break
-        if not exists:
-            continue   # skip link as one of the buses it connects to does not exist
+                        print("Link '%s' connects to bus '%s' which does not have a value..." % (links.index.values[i], bus[0]))
 
 
         # process link
@@ -514,28 +565,122 @@ def _represent_links(buses, links, bus_filter, link_filter, quiet):
                 bus1 = links.bus1[i]
                 carrier = links.carrier[i]
                 efficiency = links.efficiency[i]
-                if not bus_filter or (bus_filter.match(bus0) and bus_filter.match(bus1)):
-                    bidirectional = (links.efficiency[i] == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
-                    if bidirectional:
-                        result.append(bidirectional_link_representation % (bus0, bus1, link, carrier, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
-                    else:
-                        result.append(link_representation % (bus0, bus1, link, carrier, efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
-                    count = count + 1
+                if bus0:   # specified
+                    if bus1:   # specified
+                        if not bus_filter or (bus_filter.match(bus0) and bus_filter.match(bus1)):
+                            missing = False
+                            if bus0 not in buses.index:
+                                if broken_link:
+                                    result.append(missing_bus_representation % (bus0, bus0, bus0, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                missing = True
+                            if bus1 not in buses.index:
+                                if broken_link:
+                                    result.append(missing_bus_representation % (bus1, bus1, bus1, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                missing = True
+                            bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
+                            if missing:
+                                if broken_link:
+                                    if bidirectional:
+                                        result.append(broken_bidirectional_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                    elif negative_efficiency or efficiency >= 0:
+                                        result.append(broken_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                    else:
+                                        result.append(broken_link_representation % (bus1, bus0, link, "%s (broken & inverted)" % link, "%s (bus1)" % bus1, "%s (bus0)" % bus0, carrier, -efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            else:
+                                if bidirectional:
+                                    result.append(bidirectional_link_representation % (bus0, bus1, link, link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                elif negative_efficiency or efficiency >= 0:
+                                    result.append(link_representation % (bus0, bus1, link, link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                else:
+                                    result.append(link_representation % (bus1, bus0, link, "%s (inverted)" % link, "%s (bus1)" % bus1, "%s (bus0)" % bus0, carrier, -efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            count = count + 1
+                    else:   # not specified
+                        if broken_link:
+                            if not bus_filter or bus_filter.match(bus0):
+                                if bus0 not in buses.index:
+                                    result.append(missing_bus_representation % (bus0, bus0, bus0, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                bus1 = "bus #%d" % _MISSING_BUS_COUNT
+                                _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                                result.append(missing_bus_representation % (bus1, bus1, bus1, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
+                                if bidirectional:
+                                    result.append(broken_bidirectional_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                elif negative_efficiency or efficiency >= 0:
+                                    result.append(broken_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                else:
+                                    result.append(broken_link_representation % (bus1, bus0, link, "%s (broken & inverted)" % link, "%s (bus1)" % bus1, "%s (bus0)" % bus0, carrier, -efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                count = count + 1
+                else:   # not specified
+                    if broken_link:
+                        bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
+                        if bus1:   # specified
+                            if not bus_filter or bus_filter.match(bus1):
+                                bus0 = "bus #%d" % _MISSING_BUS_COUNT
+                                _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                                result.append(missing_bus_representation % (bus0, bus0, bus0, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                if bus1 not in buses.index:
+                                    result.append(missing_bus_representation % (bus1, bus1, bus1, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                if bidirectional:
+                                    result.append(broken_bidirectional_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                elif negative_efficiency or efficiency >= 0:
+                                    result.append(broken_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                else:
+                                    result.append(broken_link_representation % (bus1, bus0, link, "%s (broken & inverted)" % link, "%s (bus1)" % bus1, "%s (bus0)" % bus0, carrier, -efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                count = count + 1
+                        else:   # not specified
+                            bus0 = "bus #%d" % _MISSING_BUS_COUNT
+                            _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                            result.append(missing_bus_representation % (bus0, bus0, bus0, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                            bus1 = "bus #%d" % _MISSING_BUS_COUNT
+                            _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                            result.append(missing_bus_representation % (bus1, bus1, bus1, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                            if bidirectional:
+                                result.append(broken_bidirectional_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            elif negative_efficiency or efficiency >= 0:
+                                result.append(broken_link_representation % (bus0, bus1, link, "%s (broken)" % link, "%s (bus0)" % bus0, "%s (bus1)" % bus1, carrier, efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            else:
+                                result.append(broken_link_representation % (bus1, bus0, link, "%s (broken & inverted)" % link, "%s (bus1)" % bus1, "%s (bus0)" % bus0, carrier, -efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            count = count + 1
             else:   # multi-link
                 process = True
                 if bus_filter:
-                    for _, bus_value, _ in specified_buses:
-                        if not bus_filter.match(bus_value):
+                    for bus_name, bus_value, bus_efficiency, bus_exists in specified_buses:
+                        if bus_exists and bus_filter.match(bus_value):
                             process = False
                             break
                 if process:
+                    # TODO: the "From:" tooltip should indicate the value assigned to bus0 (and not the value assigned to the link)
                     carrier = links.carrier[i]
-                    for bus_name, bus_value, bus_efficiency in specified_buses:
+                    for bus_name, bus_value, bus_efficiency, bus_exists in specified_buses:
                         if bus_name == "bus0":
-                            result.append(multi_link_point_representation % (link, link, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
-                            result.append(multi_link_bus_to_point_representation % (bus_value, link, link, carrier, LINK_THICKNESS, LINK_COLOR))
+                            if bus_exists:
+                                if broken == len(specified_buses) - 1:
+                                    result.append(multi_link_point_representation % (link, link, MULTI_LINK_POINT_WIDTH, BROKEN_LINK_COLOR))
+                                    result.append(multi_link_bus_to_point_representation % (bus_value, link, link, "%s (broken)" % link, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR))
+                                else:
+                                    result.append(multi_link_point_representation % (link, link, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
+                                    result.append(multi_link_bus_to_point_representation % (bus_value, link, link, link, carrier, LINK_THICKNESS, LINK_COLOR))
+                            else:
+                                if not bus_value:
+                                    bus_value = "bus #%d" % _MISSING_BUS_COUNT
+                                    _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                                result.append(missing_bus_representation % (bus_value, bus_value, bus_value, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                if broken == len(specified_buses):
+                                    result.append(multi_link_point_representation % (link, link, MULTI_LINK_POINT_WIDTH, BROKEN_LINK_COLOR))
+                                    result.append(multi_link_bus_to_point_representation % (bus_value, link, link, "%s (broken)" % link, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR))
+                                else:
+                                    result.append(multi_link_point_representation % (link, link, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
+                                    result.append(multi_link_bus_to_point_representation % (bus_value, link, link, bus_value, carrier, LINK_THICKNESS, LINK_COLOR))
                         else:
-                            result.append(multi_link_point_to_bus_representation % (link, bus_value, link, carrier, bus_efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            if bus_exists:
+                                result.append(multi_link_point_to_bus_representation % (link, bus_value, link, link, link, "%s (%s)" % (bus_value, bus_name), carrier, bus_efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            else:
+                                if broken_link:
+                                    if not bus_value:
+                                        bus_value = "bus #%d" % _MISSING_BUS_COUNT
+                                        _MISSING_BUS_COUNT = _MISSING_BUS_COUNT + 1
+                                    result.append(missing_bus_representation % (bus_value, bus_value, bus_value, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+                                    result.append(broken_multi_link_point_to_bus_representation % (link, bus_value, link, link, link, "%s (%s)" % (bus_value, bus_name), carrier, bus_efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                     count = count + 1
 
 
@@ -546,7 +691,7 @@ def _represent_links(buses, links, bus_filter, link_filter, quiet):
 
 
 
-def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, quiet, visited_buses, visited_links):
+def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, broken_link, quiet, visited_buses, visited_links):
     """
     Parameters
     ----------
@@ -559,6 +704,8 @@ def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, quiet, visi
     bus_filter : TYPE
         DESCRIPTION.
     link_filter : TYPE
+        DESCRIPTION.
+    broken_link : TYPE
         DESCRIPTION.
     quiet : TYPE
         DESCRIPTION.
@@ -589,9 +736,14 @@ def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, quiet, visi
 
     # represent bus (currently on focus) in DOT
     bus_representation = DOT_REPRESENTATION["BUS"]
-    carrier = buses[focus]["carrier"]
-    unit = buses[focus]["unit"]
-    result.append(bus_representation % (focus, focus, carrier, unit, BUS_MINIMUM_WIDTH, BUS_THICKNESS, BUS_COLOR))
+    missing_bus_representation = DOT_REPRESENTATION["MISSING_BUS"]
+    if buses[focus]["missing"]:
+        if broken_link:
+            result.append(missing_bus_representation % (focus, focus, focus, BUS_MINIMUM_WIDTH, BUS_THICKNESS, MISSING_BUS_COLOR))
+    else:
+        carrier = buses[focus]["carrier"]
+        unit = buses[focus]["unit"]
+        result.append(bus_representation % (focus, focus, focus, carrier, unit, BUS_MINIMUM_WIDTH, BUS_THICKNESS, BUS_COLOR))
 
 
     # stop processing as neighbourhood visiting reached its limit
@@ -602,52 +754,76 @@ def _focus_bus(buses, focus, neighbourhood, bus_filter, link_filter, quiet, visi
     # represent generators (attached to the bus currently on focus) in DOT
     generator_representation = DOT_REPRESENTATION["GENERATOR"]
     for generator, carrier, efficiency in buses[focus]["GENERATORS"]:
-        result.append(generator_representation % (generator, generator, carrier, efficiency, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, GENERATOR_COLOR, generator, focus, LINK_THICKNESS, GENERATOR_COLOR))
+        result.append(generator_representation % (generator, generator, generator, carrier, efficiency, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, GENERATOR_COLOR, generator, focus, LINK_THICKNESS, GENERATOR_COLOR))
 
 
     # represent loads (attached to the bus currently on focus) in DOT
     load_representation = DOT_REPRESENTATION["LOAD"]
     for load, carrier in buses[focus]["LOADS"]:
-        result.append(load_representation % (load, load, carrier, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, LOAD_COLOR, focus, load, LINK_THICKNESS, LOAD_COLOR))
+        result.append(load_representation % (load, load, load, carrier, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, LOAD_COLOR, focus, load, LINK_THICKNESS, LOAD_COLOR))
 
 
     # represent stores (attached to the bus currently on focus) in DOT
     store_representation = DOT_REPRESENTATION["STORE"]
     for store, carrier in buses[focus]["STORES"]:
-        result.append(store_representation % (store, store, carrier, STORE_MINIMUM_WIDTH, STORE_THICKNESS, STORE_COLOR, focus, store, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE, store, focus, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+        result.append(store_representation % (store, store, store, carrier, STORE_MINIMUM_WIDTH, STORE_THICKNESS, STORE_COLOR, focus, store, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE, store, focus, LINK_THICKNESS, STORE_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
 
     # represent links (attached to the bus currently on focus) in DOT
     link_representation = DOT_REPRESENTATION["LINK"]
+    broken_link_representation = DOT_REPRESENTATION["BROKEN_LINK"]
     bidirectional_link_representation = DOT_REPRESENTATION["BIDIRECTIONAL_LINK"]
-    for link, bus, carrier, efficiency, bidirectional in buses[focus]["LINKS"]:
+    broken_bidirectional_link_representation = DOT_REPRESENTATION["BROKEN_BIDIRECTIONAL_LINK"]
+    for link, bus, carrier, efficiency, bidirectional, missing in buses[focus]["LINKS"]:
         if (not bus_filter or bus_filter.match(bus)) and (not link_filter or link_filter.match(link)):
             if link not in visited_links:
                 visited_links.add(link)
-                if bidirectional:
-                    result.append(bidirectional_link_representation % (bus, focus, link, carrier, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                if missing:
+                    if broken_link:
+                        if bidirectional:
+                            result.append(broken_bidirectional_link_representation % (bus, focus, link, "%s (broken)" % link, carrier, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                        else:
+                            result.append(broken_link_representation % (bus, focus, link, "%s (broken)" % link, carrier, efficiency, LINK_THICKNESS, BROKEN_LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                 else:
-                    result.append(link_representation % (bus, focus, link, carrier, efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
-                result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, quiet, visited_buses, visited_links))   # focus on neighbouring (adjacent) bus in a recursive fashion
+                    if bidirectional:
+                        result.append(bidirectional_link_representation % (bus, focus, link, link, carrier, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                    else:
+                        result.append(link_representation % (bus, focus, link, link, carrier, efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, broken_link, quiet, visited_buses, visited_links))   # focus on neighbouring (adjacent) bus in a recursive fashion
 
 
+    """
     # represent multi-link points (attached to the bus currently on focus) in DOT
     multi_link_point_representation = DOT_REPRESENTATION["MULTI_LINK_POINT"]
     for bus in buses[focus]["MULTI_LINK_POINTS"]:
-        result.append(multi_link_point_representation % (bus, bus, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
+        if (not bus_filter or bus_filter.match(bus)) and (not link_filter or link_filter.match(link)):
+            #if link not in visited_links:
+            #    visited_links.add(link)
+            if True:
+                #"MULTI_LINK_POINT": "   \"%s (multi-link)\" [label = \"%s\", shape = \"point\", style = \"setlinewidth(%.2f)\", color = \"%s\"]",
+                result.append(multi_link_point_representation % (bus, bus, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
 
 
     # represent multi-link from bus to points (attached to the bus currently on focus) in DOT
     multi_link_bus_to_point_representation = DOT_REPRESENTATION["MULTI_LINK_BUS_TO_POINT"]
     for bus, point, label, carrier in buses[focus]["MULTI_LINK_BUS_TO_POINTS"]:
-        result.append(multi_link_bus_to_point_representation % (bus, point, label, carrier, LINK_THICKNESS, LINK_COLOR))
+        #if (not bus_filter or bus_filter.match(bus)) and (not link_filter or link_filter.match(link)):
+        #    if link not in visited_links:
+        #        visited_links.add(link)
+        if True:
+            result.append(multi_link_bus_to_point_representation % (bus, point, label, carrier, LINK_THICKNESS, LINK_COLOR))
 
 
     # represent multi-link from point to buses (attached to the bus currently on focus) in DOT
     multi_link_point_to_bus_representation = DOT_REPRESENTATION["MULTI_LINK_POINT_TO_BUS"]
     for point, bus, label, carrier, efficiency in buses[focus]["MULTI_LINK_POINT_TO_BUSES"]:
-        result.append(multi_link_point_to_bus_representation % (point, bus, label, carrier, efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
-        result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, quiet, visited_buses, visited_links))   # focus on neighbouring (adjacent) bus in a recursive fashion
+        #if (not bus_filter or bus_filter.match(bus)) and (not link_filter or link_filter.match(link)):
+        #    if link not in visited_links:
+        #        visited_links.add(link)
+        if True:
+            result.append(multi_link_point_to_bus_representation % (point, bus, label, carrier, efficiency, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+            result.extend(_focus_bus(buses, bus, neighbourhood - 1, bus_filter, link_filter, quiet, visited_buses, visited_links))   # focus on neighbouring (adjacent) bus in a recursive fashion
+    """
 
 
     return result
@@ -718,7 +894,7 @@ def _generate_output(dot_representation, file_name, file_format, quiet):
 
 
 
-def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_filter = None, carrier_legend = False, file_name = FILE_NAME, file_format = FILE_FORMAT, quiet = True):
+def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_filter = None, negative_efficiency = True, broken_link = True, file_name = FILE_NAME, file_format = FILE_FORMAT, quiet = True):
     """
     Parameters
     ----------
@@ -732,7 +908,9 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
         DESCRIPTION. The default is None.
     link_filter : TYPE, optional
         DESCRIPTION. The default is None.
-    carrier_legend : TYPE, optional
+    negative_efficiency : TYPE, optional
+        DESCRIPTION. The default is False.
+    broken_link : TYPE, optional
         DESCRIPTION. The default is True.
     file_name : TYPE, optional
         DESCRIPTION. The default is FILE_NAME.
@@ -839,12 +1017,6 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
     result.append("")
 
 
-    # generate carrier legend
-    if carrier_legend:
-        # to be implemented
-        pass
-
-
     if focus:
         # get generators from (PyPSA) network
         if not quiet:
@@ -872,15 +1044,15 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
 
         # focus on bus
         if isinstance(focus, str):
-            result.extend(_focus_bus(buses, focus, neighbourhood, bus_filter_regexp, link_filter_regexp, quiet, set(), set()))
+            result.extend(_focus_bus(buses, focus, neighbourhood, bus_filter_regexp, link_filter_regexp, broken_link, quiet, set(), set()))
         else:   # list
             for i in range(len(focus)):
                 bus = focus[i]
                 if bus not in visited:   # skip bus as it has already been visited (processed)
                     if isinstance(neighbourhood, int):
-                        result.extend(_focus_bus(buses, bus, neighbourhood, bus_filter_regexp, link_filter_regexp, quiet, set(), set()))
+                        result.extend(_focus_bus(buses, bus, neighbourhood, bus_filter_regexp, link_filter_regexp, broken_link, quiet, set(), set()))
                     else:   # list
-                        result.extend(_focus_bus(buses, bus, neighbourhood[i], bus_filter_regexp, link_filter_regexp, quiet, set(), set()))
+                        result.extend(_focus_bus(buses, bus, neighbourhood[i], bus_filter_regexp, link_filter_regexp, broken_link, quiet, set(), set()))
                     visited.add(bus)
 
     else:
@@ -916,7 +1088,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, link_f
         # represent links in DOT
         if not quiet:
             print("Processing links...")
-        result.extend(_represent_links(network.buses, network.links, bus_filter_regexp, link_filter_regexp, quiet))
+        result.extend(_represent_links(network.buses, network.links, bus_filter_regexp, link_filter_regexp, negative_efficiency, broken_link, quiet))
 
 
     # close digraph body
