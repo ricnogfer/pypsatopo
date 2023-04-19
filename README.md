@@ -1,6 +1,6 @@
 Description
 -----------
-PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). Besides easing understand of a network by providing its graphical representation, the tool helps debugging a network faster given that missing buses and broken links are shown in (slighly) different shapes and colors. To get a quick illustration of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
+PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). Besides easing understand of a network by providing a graphical illustration of it, the tool helps debugging a network faster given that broken links and missing buses are shown in (slightly) different shapes and colors. To get a quick overview of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
 
     python pypsatopo.py
 
@@ -21,7 +21,7 @@ network.add("Store", "battery", bus = "electricity")
 network.add("Link", "ICE", bus0 = "oil", bus1 = "transport")
 network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ```
-... as well as generate the corresponding topographical representation in the [SVG](https://en.wikipedia.org/wiki/SVG) format (besides its counterpart in the DOT language):
+... as well as generate the corresponding topographical representation of the network in the [SVG](https://en.wikipedia.org/wiki/SVG) format:
 
 <img src = "resources/topography.svg" alt = "Topographical representation of network 'My Dymmy Network'" width = 500)>
 
@@ -50,7 +50,13 @@ pypsatopo.generate(my_network, file_format = "gif")
 
 Also, by default, PyPSATopo generates the topographical representation of the entire network. This might be particularly overwhelming (visually speaking) depending on the complexity of the network - see [PyPSA-Eur-Sec network topographical representation](resources/pypsa-eur-sec_topography.svg) as an example. To mitigate this, parameters `focus` and `neighbourhood` (in function `generate`) may be utilized in combination to focus on a particular aspect/segment of the network. The former tells PyPSATopo which bus to start visiting, while the latter tells how much neighbourhood (around the bus) should be visited (in other words, how much (indirect) components attached to the bus should be included in the representation). For example, setting parameters `focus = "process emissions"` and `neighbourhood = 2` (which focuses/starts on the `process emissions` bus and includes all the components attached to it up to a maximum neighbourhood degree of `2`) yields this [result](resources/pypsa-eur-sec_process_emissions_topography.svg) upon generating PyPSA-Eur-Sec network topographical representation.
 
+Just like for links with positive efficiencies, links with negative efficiencies are represented by a line going from "bus0" to "bus1" with an arrow pointing to the latter at the end of the line. In case of need to invert the sense of the arrow (i.e. to point to "bus0" instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False` when calling function `generate`.
+
+All broken links and missing buses are included in the topographical representation of a network by default, and are shown in (slightly) different shapes and colors. To exclude these from the representation, set parameter `broken_link = False` when calling function `generate`.
+
 Additionally, in case fine-grained selection/visiting logic is needed, parameters `bus_filter` and `link_filter` (in function `generate`) may be utilized in combination or separately. Both parameters are expected to be (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameter `bus_filter` tells PyPSATopo which buses to include/exclude, parameter `link_filter` tells which links may be visited (or not) upon generating the topographical representation of a network.
+
+Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such network. Log messages not only describe the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo displaying log messages, set parameter `quiet = False` (when calling function `generate`). Otherwise, if the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed).
 
 
 Dependencies
