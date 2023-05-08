@@ -54,7 +54,7 @@ Just like for links with positive efficiencies, links with negative efficiencies
 
 All broken links and missing buses are included in the topographical representation of a network by default, and are shown in (slightly) different shapes and colors. To exclude these from the representation, set parameter `broken_link = False` when calling function `generate`.
 
-To color a component (i.e. bus, generator, load, store or link) in function of its carrier, set parameter `carrier_color` (when calling function `generate`) with a dictionary containing key-value pairs, where the key is the name of a carrier and the value is the color assigned to it. Example: setting parameter `carrier_color = {"my_carrier1": "red", "my_carrier2": "green", "my_carrier3": "blue"}` tells PyPSATopo to color a component in `red`, `green` or `blue` whenever its carrier is `my_carrier1`, `my_carrier2` or `my_carrier3`, respectively. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html).
+To color a certain component (namely: bus, generator, load or store) in function of its carrier, set parameter `carrier_color` (when calling function `generate`) with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. Example: setting parameter `carrier_color = {"my_carrier1": "red", "my_carrier2": "green", "my_carrier3": "blue"}` tells PyPSATopo to color a component in `red`, `green` or `blue` whenever its carrier is `my_carrier1`, `my_carrier2` or `my_carrier3`, respectively. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). Alternatively, in case `carrier_color` is set to `True` (instead of a dictionary), PyPSATopo automatically assigns a new color to each distinct carrier found in the network and colors all the components associated to the carrier with this color.
 
 Additionally, in case fine-grained selection/visiting logic is needed, parameters `bus_filter` and `link_filter` (in function `generate`) may be utilized in combination or separately. Both parameters are expected to be (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameter `bus_filter` tells PyPSATopo which buses to include/exclude, parameter `link_filter` tells which links may be visited (or not) upon generating the topographical representation of a network.
 
@@ -63,13 +63,15 @@ Given that it may take some time to process a complex network, PyPSATopo is capa
 
 Dependencies
 ------------
-PyPSATopo leverages from several components to accomplish its functionality, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
+PyPSATopo leverages from several components to accomplish its functionality, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org), [NumPy](https://numpy.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
 
 - Python 3.10.8
 
 - PyPSA 0.21.3
 
 - Pandas 1.5.3
+
+- NumPy 1.23.5
 
 - Dot 2.40.1
 
