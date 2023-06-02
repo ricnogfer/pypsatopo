@@ -1,6 +1,6 @@
 Description
 -----------
-PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). Besides easing understand of a network by providing its graphical illustration, the tool helps debugging a network faster given that broken links and missing buses are shown in (slightly) different shapes and colors. To get a quick overview of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
+PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language). Besides easing understand of a network by providing its graphical illustration, the tool helps debugging it given that broken links and missing buses are shown in (slightly) different shapes and colors. To get a quick overview of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
 
     python pypsatopo.py
 
@@ -18,12 +18,12 @@ network.add("Generator", "oil", bus = "oil")
 network.add("Generator", "solar", bus = "electricity")
 network.add("Load", "vehicle", bus = "transport")
 network.add("Store", "battery", bus = "electricity")
-network.add("Link", "ICE", bus0 = "oil", bus1 = "transport")
+network.add("Link", "ICEV", bus0 = "oil", bus1 = "transport")
 network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ```
 ... as well as generate the corresponding topographical representation of the network in the [SVG](https://en.wikipedia.org/wiki/SVG) format:
 
-<img src = "resources/topography.svg" alt = "Topographical representation of network 'My Dymmy Network'" width = 500)>
+<img src = "resources/topography.svg" alt = "Topographical representation of network 'My Dymmy Network'" style = "background-color: white;" width = 500>
 
 In general, the following (generic) recipe should be followed to generate the topographical representation of a PyPSA-based network:
 
@@ -52,26 +52,35 @@ Also, by default, PyPSATopo generates the topographical representation of the en
 
 Just like for links with positive efficiencies, links with negative efficiencies are represented by a line going from *bus0* to, e.g., *bus1* with an arrow pointing to the latter at the end of the line. In case of need to invert the sense of the arrow (i.e. to point to *bus0* instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False` when calling function `generate`.
 
-All broken links and missing buses are included in the topographical representation of a network by default, and are shown in (slightly) different shapes and colors. To exclude these from the representation, set parameter `broken_link = False` when calling function `generate`.
+All broken links and missing buses are included in the topographical representation of a network by default, and are shown in (slightly) different shapes and colors. To exclude these from the representation, set parameter `broken_missing = False` when calling function `generate`.
 
-To color a certain component (namely: bus, generator, load or store) in function of its carrier, set parameter `carrier_color` (when calling function `generate`) with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. Example: setting parameter `carrier_color = {"my_carrier1": "red", "my_carrier2": "green", "my_carrier3": "blue"}` tells PyPSATopo to color a component in `red`, `green` or `blue` whenever its carrier is `my_carrier1`, `my_carrier2` or `my_carrier3`, respectively. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). Alternatively, in case `carrier_color` is set to `True` (instead of a dictionary), PyPSATopo automatically assigns a new color to each distinct carrier found in the network and colors all the components associated to the carrier with this color.
+To color a certain component (namely: bus, generator, load, store or line) in function of its carrier, set parameter `carrier_color` (when calling function `generate`) with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. Example: setting parameter `carrier_color = {"my_carrier1": "red", "my_carrier2": "green", "my_carrier3": "blue"}` tells PyPSATopo to color a component in `red`, `green` or `blue` whenever its carrier is `my_carrier1`, `my_carrier2` or `my_carrier3`, respectively. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). Alternatively, in case `carrier_color` is set to `True` (instead of a dictionary), PyPSATopo automatically assigns a new color to each distinct carrier found in the network and colors all the components associated to the carrier with this color.
 
 Additionally, in case fine-grained selection/visiting logic is needed, parameters `bus_filter` and `link_filter` (in function `generate`) may be utilized in combination or separately. Both parameters are expected to be (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameter `bus_filter` tells PyPSATopo which buses to include/exclude, parameter `link_filter` tells which links may be visited (or not) upon generating the topographical representation of a network.
 
-Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such network. Log messages not only describe the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo displaying log messages, set parameter `quiet = False` (when calling function `generate`). Otherwise, if the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed).
+Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such network. Log messages not only describe the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo displaying log messages, set parameter `quiet = False` (when calling function `generate`). Otherwise, in case the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed).
+
+
+Platforms
+---------
+In principle, PyPSATopo should work in any platform (i.e. operating system) as long as the components that this tool depends on are supported in the target platform. As a reference, PyPSATopo is known to work correctly in:
+
+- Windows
+
+- Linux
+
+- macOS
 
 
 Dependencies
 ------------
-PyPSATopo leverages from several components to accomplish its functionality, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org), [NumPy](https://numpy.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
+PyPSATopo leverages from several components to accomplish its functionality, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
 
 - Python 3.10.8
 
 - PyPSA 0.21.3
 
 - Pandas 1.5.3
-
-- NumPy 1.23.5
 
 - Dot 2.40.1
 
