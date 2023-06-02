@@ -718,20 +718,12 @@ def _represent_components(buses, bus_filter, generator_filter, load_filter, stor
         multi_link_point_to_buses = values0["multi_link_point_to_buses"]
         for values1 in multi_link_point_to_buses:
             link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, selected = values1
-            if bus_to not in metrics:
-                metrics[bus_to] = {"generators": 0, "loads": 0, "stores": 0, "incoming_links": 0, "outgoing_links": 0, "lines": 0}
-            if values0["missing"] or buses[bus_to]["missing"] or broken_missing:
+            if not values0["missing"] and not buses[bus_to]["missing"] or broken_missing:
+                if bus_to not in metrics:
+                    metrics[bus_to] = {"generators": 0, "loads": 0, "stores": 0, "incoming_links": 0, "outgoing_links": 0, "lines": 0}
                 if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
                     values1[-1] = True
-            if values1[-1] or context:   # TODO: test logic
-                if broken_missing:
-                    if negative_efficiency or efficiency >= 0:
-                        metrics[bus]["outgoing_links"] += 1
-                        metrics[bus_to]["incoming_links"] += 1
-                    else:
-                        metrics[bus]["incoming_links"] += 1
-                        metrics[bus_to]["outgoing_links"] += 1
-                else:
+                if values1[-1] or context:   # TODO: test logic
                     if negative_efficiency or efficiency >= 0:
                         metrics[bus]["outgoing_links"] += 1
                         metrics[bus_to]["incoming_links"] += 1
@@ -904,8 +896,8 @@ def _represent_components(buses, bus_filter, generator_filter, load_filter, stor
         # represent multi-link points (attached to the bus) in DOT
         multi_link_points = values["multi_link_points"]
         for link, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected in multi_link_points:
-            bus_to = "1 bus (%d missing)" % missing if not_missing == 1 else "%d buses (%d missing)" % (not_missing, missing)
             not_missing = count - missing
+            bus_to = "1 bus (%d missing)" % missing if not_missing == 1 else "%d buses (%d missing)" % (not_missing, missing)
             if not_missing == 0:
                 if broken_missing:
                     if selected:
@@ -922,8 +914,8 @@ def _represent_components(buses, bus_filter, generator_filter, load_filter, stor
         # represent multi-link from bus to points (attached to the bus) in DOT
         multi_link_bus_to_points = values["multi_link_bus_to_points"]
         for link, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected in multi_link_bus_to_points:
-            bus_to = "1 bus (%d missing)" % missing if not_missing == 1 else "%d buses (%d missing)" % (not_missing, missing)
             not_missing = count - missing
+            bus_to = "1 bus (%d missing)" % missing if not_missing == 1 else "%d buses (%d missing)" % (not_missing, missing)
             if not_missing == 0:
                 if broken_missing:
                     if selected:
