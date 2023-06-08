@@ -37,8 +37,8 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                       "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "BROKEN_BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (p0): N/A MW\nPower time series (p1): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "MULTI_LINK_POINT": "   \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal energy: %s\nNominal power: %.2f MW\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", shape = \"point\", width = %.2f, color = \"%s\"]",
-                      "MULTI_LINK_BUS_TO_POINT": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "BROKEN_MULTI_LINK_BUS_TO_POINT": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\n\nOptimised nominal power: 0.00 MW\nPower time series (p0): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"none\"]",
+                      "MULTI_LINK_TRUNK": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "BROKEN_MULTI_LINK_TRUNK": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\n\nOptimised nominal power: 0.00 MW\nPower time series (p0): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"none\"]",
                       "MULTI_LINK_BRANCH": "   \"%s\" -> \"%s\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\n\nOptimised nominal power: %.2f MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BROKEN_MULTI_LINK_BRANCH": "   \"%s\" -> \"%s\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "LINE": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Line: %s\nBus0: %s\nBus1: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MVA\nCapital cost: %.2f currency/MVA\n\nOptimised nominal power: %.2f MVA\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
@@ -72,7 +72,7 @@ LINK_THICKNESS = 1.5
 LINK_COLOR = "black"
 LINK_ARROW_SHAPE = "vee"   # acceptable values are: "vee", "normal", "onormal", "diamond", "odiamond", "curve" and "none"
 LINK_ARROW_SIZE = 1.2
-MULTI_LINK_POINT_WIDTH = 0.05
+MULTI_LINK_POINT_WIDTH = 0.06
 LINE_THICKNESS = 1.5
 LINE_COLOR = "black"
 LINE_ARROW_SHAPE = "diamond"   # acceptable values are: "vee", "normal", "onormal", "diamond", "odiamond", "curve" and "none"
@@ -719,7 +719,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
                 i += 1
         else:   # dictionary
             carriers = carrier_color
-        result.append("   // add carrier color table")
+        result.append("   // carrier color table")
         result.append("   \"Carrier Color Table\" [shape = \"none\" label = <")
         result.append("      <table border = \"0\" cellborder = \"1\" cellspacing = \"0\" cellpadding = \"5\">")
         result.append("         <tr>")
@@ -745,8 +745,8 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
     bidirectional_link_representation = DOT_REPRESENTATION["BIDIRECTIONAL_LINK"]
     broken_bidirectional_link_representation = DOT_REPRESENTATION["BROKEN_BIDIRECTIONAL_LINK"]
     multi_link_point_representation = DOT_REPRESENTATION["MULTI_LINK_POINT"]
-    multi_link_bus_to_point_representation = DOT_REPRESENTATION["MULTI_LINK_BUS_TO_POINT"]
-    broken_multi_link_bus_to_point_representation = DOT_REPRESENTATION["BROKEN_MULTI_LINK_BUS_TO_POINT"]
+    multi_link_trunk_representation = DOT_REPRESENTATION["MULTI_LINK_TRUNK"]
+    broken_multi_link_trunk_representation = DOT_REPRESENTATION["BROKEN_MULTI_LINK_TRUNK"]
     multi_link_branch_representation = DOT_REPRESENTATION["MULTI_LINK_BRANCH"]
     broken_multi_link_branch_representation = DOT_REPRESENTATION["BROKEN_MULTI_LINK_BRANCH"]
     line_representation = DOT_REPRESENTATION["LINE"]
@@ -881,17 +881,17 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
                 if broken_missing:
                     if selected:
                         result_multi_link_trunks.append(multi_link_point_representation % (link, TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, BROKEN_MISSING_COLOR))
-                        result_multi_link_trunks.append(broken_multi_link_bus_to_point_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, LINK_THICKNESS, BROKEN_MISSING_COLOR))
+                        result_multi_link_trunks.append(broken_multi_link_trunk_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, LINK_THICKNESS, BROKEN_MISSING_COLOR))
                     elif context:
                         result_multi_link_trunks.append(multi_link_point_representation % (link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, FADED_COMPONENT_COLOR))
-                        result_multi_link_trunks.append(broken_multi_link_bus_to_point_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, LINK_THICKNESS, FADED_COMPONENT_COLOR))
+                        result_multi_link_trunks.append(broken_multi_link_trunk_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, LINK_THICKNESS, FADED_COMPONENT_COLOR))
             else:
                 if selected:
                     result_multi_link_trunks.append(multi_link_point_representation % (link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
-                    result_multi_link_trunks.append(multi_link_bus_to_point_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, LINK_THICKNESS, LINK_COLOR))
+                    result_multi_link_trunks.append(multi_link_trunk_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, LINK_THICKNESS, LINK_COLOR))
                 elif context:
                     result_multi_link_trunks.append(multi_link_point_representation % (link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, FADED_COMPONENT_COLOR))
-                    result_multi_link_trunks.append(multi_link_bus_to_point_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR))
+                    result_multi_link_trunks.append(multi_link_trunk_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR))
 
 
         # process multi-link branches (attached to the bus)
@@ -981,49 +981,49 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
 
 
     # add buses to result
-    result.append("   // add buses (%d)" % len(result_buses))
+    result.append("   // buses (%d)" % len(result_buses))
     result.extend(result_buses)
     result.append("")
 
 
     # add generators to result
-    result.append("   // add generators (%d)" % len(result_generators))
+    result.append("   // generators (%d)" % len(result_generators))
     result.extend(result_generators)
     result.append("")
 
 
     # add loads to result
-    result.append("   // add loads (%d)" % len(result_loads))
+    result.append("   // loads (%d)" % len(result_loads))
     result.extend(result_loads)
     result.append("")
 
 
     # add stores to result
-    result.append("   // add stores (%d)" % len(result_stores))
+    result.append("   // stores (%d)" % len(result_stores))
     result.extend(result_stores)
     result.append("")
 
 
     # add links to result
-    result.append("   // add links (%d)" % len(result_links))
+    result.append("   // links (%d)" % len(result_links))
     result.extend(result_links)
     result.append("")
 
 
     # add multi-link trunks to result
-    result.append("   // add multi-link trunks (%d)" % (len(result_multi_link_trunks) / 2))
+    result.append("   // multi-link trunks (%d)" % (len(result_multi_link_trunks) / 2))
     result.extend(result_multi_link_trunks)
     result.append("")
 
 
     # add multi-link branches to result
-    result.append("   // add multi-link branches (%d)" % len(result_multi_link_branches))
+    result.append("   // multi-link branches (%d)" % len(result_multi_link_branches))
     result.extend(result_multi_link_branches)
     result.append("")
 
 
     # add lines to result
-    result.append("   // add lines (%d)" % len(result_lines))
+    result.append("   // lines (%d)" % len(result_lines))
     result.extend(result_lines)
 
 
@@ -1031,7 +1031,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
 
 
 
-def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, negative_efficiency, broken_missing, context, quiet, carriers):
+def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, negative_efficiency, broken_missing, carrier_color, context, quiet, carriers):
     """
     Parameters
     ----------
@@ -1056,6 +1056,8 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
     negative_efficiency : TYPE
         DESCRIPTION.
     broken_missing : TYPE
+        DESCRIPTION.
+    carrier_color : TYPE
         DESCRIPTION.
     context : TYPE
         DESCRIPTION.
@@ -1100,9 +1102,10 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process bus
         values0 = components[bus]
         if (not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus)):
-            carrier = values0["carrier"]
-            if carrier and carrier not in carriers:
-                carriers[carrier] = None
+            if carrier_color:
+                carrier = values0["carrier"]
+                if carrier and carrier not in carriers:
+                    carriers[carrier] = None
             values0["selected"] = True
 
 
@@ -1116,8 +1119,9 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         for values1 in generators:
             generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
             if values0["selected"] and (not generator_filter or generator_filter.match(generator)):
-                if carrier and carrier not in carriers:
-                    carriers[carrier] = None
+                if carrier_color:
+                    if carrier and carrier not in carriers:
+                        carriers[carrier] = None
                 values1[-1] = True
                 components[bus]["generators_count"] += 1
             elif context:
@@ -1129,8 +1133,9 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         for values1 in loads:
             load, carrier, p_set, pselected = values1
             if values0["selected"] and (not load_filter or load_filter.match(load)):
-                if carrier and carrier not in carriers:
-                    carriers[carrier] = None
+                if carrier_color:
+                    if carrier and carrier not in carriers:
+                        carriers[carrier] = None
                 values1[-1] = True
                 components[bus]["loads_count"] += 1
             elif context:
@@ -1142,8 +1147,9 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         for values1 in stores:
             store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
             if values0["selected"] and (not store_filter or store_filter.match(store)):
-                if carrier and carrier not in carriers:
-                    carriers[carrier] = None
+                if carrier_color:
+                    if carrier and carrier not in carriers:
+                        carriers[carrier] = None
                 values1[-1] = True
                 components[bus]["stores_count"] += 1
             elif context:
@@ -1202,8 +1208,10 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
             if not values0["missing"] and not components[bus_to]["missing"] or broken_missing:
                 if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
                     values1[-1] = True
-                    if index < len(components[bus_to]["multi_link_trunks"]):
-                        components[bus_to]["multi_link_trunks"][index][-1] = True
+                    if not direction or neighbourhood > 1:
+                        multi_link_trunks = components[bus_to]["multi_link_trunks"]
+                        if index < len(multi_link_trunks):
+                            multi_link_trunks[index][-1] = True
                 if values1[-1] or context:   # TODO: test logic
                     if negative_efficiency or efficiency >= 0:
                         if direction:
@@ -1231,8 +1239,9 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
                 visited.add(key)
                 if not missing or broken_missing:
                     if values0["selected"] and (not bus_filter or bus_filter.match(bus1)) and (not line_filter or line_filter.match(line)):
-                        if carrier and carrier not in carriers:
-                            carriers[carrier] = None
+                        if carrier_color:
+                            if carrier and carrier not in carriers:
+                                carriers[carrier] = None
                         values1[-1] = True
                     if values1[-1] or context:
                         components[bus]["lines_count"] += 1
@@ -1358,20 +1367,6 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     visited = set()
 
 
-    # check if focus specification matches neighbourhood specification
-    if focus and not neighbourhood or not focus and neighbourhood:
-        print("The number of neighbourhoods should be the same as the number of buses to focus on!")
-        return -1   # return unsuccessfully
-    if isinstance(focus, str):
-        if not isinstance(neighbourhood, int):
-            print("The neighbourhood should be a scalar given that the focus is a scalar!")
-            return -1   # return unsuccessfully
-    else:   # list
-        if not isinstance(neighbourhood, int) and len(neighbourhood) != len(focus):
-            print("The number of neighbourhoods should be the same as the number of buses to focus on!")
-            return -1   # return unsuccessfully
-
-
     # check if neighbourhood is valid
     if isinstance(neighbourhood, int):
         if neighbourhood < 0:
@@ -1470,7 +1465,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
 
     # configure digraph layout
-    result.append("   // configure digraph layout")
+    result.append("   // digraph layout")
     result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
     result.append("   labelloc = \"t\"")
     result.append("   label = \"%s\n\n\n           \"" % network_name)
@@ -1490,17 +1485,24 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
     # process components
     if focus:
+
+        # focus on bus
         carriers = dict()
         if isinstance(focus, str):
-            _focus(components, focus, neighbourhood, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, context, quiet, carriers)
+            if isinstance(neighbourhood, int):
+                value = neighbourhood
+            else:   # list
+                value = neighbourhood[0] if len(neighbourhood) else 0
+            _focus(components, focus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, quiet, carriers)
         else:   # list
             for i in range(len(focus)):
                 bus = focus[i]
                 if bus not in visited:   # skip bus as it has already been visited (processed)
                     if isinstance(neighbourhood, int):
-                        _focus(components, bus, neighbourhood, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, context, quiet, carriers)
+                        value = neighbourhood
                     else:   # list
-                        _focus(components, bus, neighbourhood[i], bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, context, quiet, carriers)
+                        value = neighbourhood[i] if i < len(neighbourhood) else 0
+                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, quiet, carriers)
                     visited.add(bus)
 
 
