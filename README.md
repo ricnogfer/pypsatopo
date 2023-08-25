@@ -32,10 +32,16 @@ network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
 ## Installation
-To install PyPSATopo in the machine, open a terminal and execute the following:
+PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for [Python](https://en.wikipedia.org/wiki/Python_(programming_language)). To install PyPSATopo using pip, open a terminal and execute the following:
 
 ```bash
 pip install pypsatopo
+```
+
+Alternatively, PyPSATopo can be installed in the machine by cloning its [Git](https://en.wikipedia.org/wiki/Git) repository as follows:
+
+```bash
+git clone https://github.com/ricnogfer/pypsatopo.git
 ```
 
 PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
@@ -165,7 +171,7 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
     python pypsatopo.py my_network.nc --focus "CO2 Atmosphere" --neighbourhood 3
     ```
 
-- Just like for links with positive efficiencies, links with negative efficiencies are represented by a line going from *bus0* to, e.g., *bus1* with an arrow pointing to the latter at the end of the line. In case of need to invert the sense of the arrow (i.e. to point to *bus0* instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False`. As an example, the following generates the topographical representation of a network with no negative efficiencies:
+- Just like for links with positive efficiencies, PyPSATopo represents links with negative efficiencies with a line going from *bus0* to, e.g., *bus1* and an arrow at the end of the line pointing to the latter. In case of need to invert the sense of the arrow (i.e. to point to *bus0* instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False`. As an example, the following generates the topographical representation of a network with no negative efficiencies (i.e. all links with negative efficiencies will have their arrows inverted):
 
     ```python
     pypsatopo.generate(my_network, negative_efficiency = False)
@@ -195,7 +201,7 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
     python pypsatopo.py my_network.nc --carrier-color
     ```
 
-- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` may be utilized in combination or separately. These parameters are expected to be (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter` and `store_filter` tell PyPSATopo which buses, generators, loads and stores to include/exclude, respectively, parameters `link_filter` and `line_filter` tell which links and lines may be visited (or not) upon generating the topographical representation of a network. As an example, the following generates the topographical representation of a network where only the generators containing the words `wind` or `solar` in their names are selected (and all other generators are excluded):
+- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter` and `store_filter` tell PyPSATopo which buses, generators, loads and stores to include/exclude, respectively, parameters `link_filter` and `line_filter` tell which links and lines may be visited (or not) upon generating the topographical representation of a network. As an example, the following generates the topographical representation of a network where only the generators containing the words `wind` or `solar` in their names are selected (and all other generators are excluded):
 
     ```python
     pypsatopo.generate(my_network, generator_filter = "wind|solar")
@@ -205,7 +211,7 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
     python pypsatopo.py my_network.nc --generator-filter "wind|solar"
     ```
 
-- By default, excluded components are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the representation among excluded components. To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish these from the formers visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
+- By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. among excluded components). To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish these from the formers visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
 
     ```python
     pypsatopo.generate(my_network, load_filter = "agriculture", context = True)
