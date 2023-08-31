@@ -7,7 +7,7 @@ __project__ = "PyPSATopo"
 __description__ = "PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language - https://graphviz.org)"
 __license__ = "BSD 3-Clause"
 __contact__ = "ricardo.fernandes@mpe.au.dk"
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 __status__ = "Development"
 
 
@@ -44,8 +44,8 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                       "LINE": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Line: %s\nBus0: %s\nBus1: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MVA\nCapital cost: %.2f currency/MVA\n\nOptimised nominal power: %.2f MVA\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "BROKEN_LINE": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Line: %s\nBus0: %s\nBus1: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MVA\nCapital cost: %.2f currency/MVA\n\nOptimised nominal power: 0.00 MVA\nPower time series (p0): N/A MW\nPower time series (p1): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]"
                      }
+FILE_OUTPUT = "topography.svg"
 FILE_FORMAT = "svg"   # acceptable values are: "svg", "png", "jpg", "gif" and "ps"
-FILE_NAME = "topography.%s" % FILE_FORMAT
 BACKGROUND_COLOR = "transparent"
 NETWORK_NAME = "My Network"
 RANK_DIRECTION = "TB"   # acceptable values are: "TB" (top to bottom), "BT" (bottom to top), "LR" (left to right) and "RL" (right to left)
@@ -926,7 +926,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
                                 result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                             #else:
                             #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
-            else:
+            else:   # TODO: ok in terms of the logic in this "else"
                 if selected:
                     if negative_efficiency or efficiency >= 0:
                         if direction:
@@ -1252,13 +1252,13 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
 
 
-def _generate_output(dot_representation, file_name, file_format, quiet):
+def _generate_output(dot_representation, file_output, file_format, quiet):
     """
     Parameters
     ----------
     dot_representation : TYPE
         DESCRIPTION.
-    file_name : TYPE
+    file_output : TYPE
         DESCRIPTION.
     file_format : TYPE
         DESCRIPTION.
@@ -1272,24 +1272,24 @@ def _generate_output(dot_representation, file_name, file_format, quiet):
     """
 
     # write DOT representation of (PyPSA) network into a DOT file
-    file_name_dot = "%s.dot" % file_name.rsplit(".", 1)[0]
+    file_output_dot = "%s.dot" % file_output.rsplit(".", 1)[0]
     if not quiet:
-        print("[INF] Writing DOT file '%s'..." % file_name_dot)
+        print("[INF] Writing DOT file '%s'..." % file_output_dot)
     try:
-        with open(file_name_dot, "w") as handle:
+        with open(file_output_dot, "w") as handle:
             for line in dot_representation:
                 handle.write("%s%s" % (line, os.linesep))
             handle.write("%s" % os.linesep)
     except:
-        print("[ERR] The file '%s' could not be written!" % file_name_dot)
+        print("[ERR] The file '%s' could not be written!" % file_output_dot)
         return -1   # return unsuccessfully
 
 
     # launch the tool 'dot' passing DOT file to it
     if not quiet:
-        print("[INF] Generating topographical representation of the network based on DOT file '%s'..." % file_name_dot)
+        print("[INF] Generating topographical representation of the network based on DOT file '%s'..." % file_output_dot)
     try:
-        result = subprocess.run(["dot", "-T%s" % file_format, file_name_dot], capture_output = True)
+        result = subprocess.run(["dot", "-T%s" % file_format, file_output_dot], capture_output = True)
     except KeyboardInterrupt:
         if not quiet:
             print("[WAR] Terminated by user request!")
@@ -1307,12 +1307,12 @@ def _generate_output(dot_representation, file_name, file_format, quiet):
 
     # write result generated by the tool 'dot' into an output file
     if not quiet:
-        print("[INF] Writing output file '%s' in the %s format..." % (file_name, file_format.upper()))
+        print("[INF] Writing output file '%s' in the %s format..." % (file_output, file_format.upper()))
     try:
-        with open(file_name, "wb") as handle:
+        with open(file_output, "wb") as handle:
             handle.write(result.stdout)
     except:
-        print("[ERR] The file '%s' could not be written!" % file_name)
+        print("[ERR] The file '%s' could not be written!" % file_output)
         return -1   # return unsuccessfully
 
 
@@ -1320,7 +1320,7 @@ def _generate_output(dot_representation, file_name, file_format, quiet):
 
 
 
-def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = True, carrier_color = None, context = False, file_name = FILE_NAME, file_format = FILE_FORMAT, quiet = True):
+def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = True, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, quiet = True):
     """
     Parameters
     ----------
@@ -1350,8 +1350,8 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
         DESCRIPTION. The default is None.
     context : TYPE, optional
         DESCRIPTION. The default is False.
-    file_name : TYPE, optional
-        DESCRIPTION. The default is FILE_NAME.
+    file_output : TYPE, optional
+        DESCRIPTION. The default is FILE_OUTPUT.
     file_format : TYPE, optional
         DESCRIPTION. The default is FILE_FORMAT.
     quiet : TYPE, optional
@@ -1434,9 +1434,9 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("// Generated by %s version %s (on the %04d/%02d/%02d at %02d:%02d:%02d) using the following parameters: " % (__project__, __version__, now.year, now.month, now.day, now.hour, now.minute, now.second))
     result.append("//")
     if isinstance(network, str):
-        result.append("//    file_name (input)=%s" % network)
+        result.append("//    file_input=%s" % network)
     else:   # pypsa.components.Network
-        result.append("//    file_name (input)=None")
+        result.append("//    file_input=None")
     result.append("//    focus=%s" % focus)
     result.append("//    neighbourhood=%s" % neighbourhood)
     result.append("//    bus_filter=%s" % bus_filter)
@@ -1449,7 +1449,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("//    broken_missing=%s" % broken_missing)
     result.append("//    carrier_color=%s" % carrier_color)
     result.append("//    context=%s" % context)
-    result.append("//    file_name (output)=%s" % file_name)
+    result.append("//    file_output=%s" % file_output)
     result.append("//    file_format=%s" % file_format)
     result.append("//    quiet=%s" % quiet)
     result.append("//")
@@ -1469,7 +1469,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
     result.append("   labelloc = \"t\"")
     result.append("   label = \"%s\n\n\n           \"" % network_name)
-    result.append("   tooltip = \"Network: %s\nBus: %d\nGenerators: %d\nLoads: %s\nStores: %d\nLinks: %d\nLines: %d\nSnapshots: %d\"" % (network_name, len(pypsa_network.buses), len(pypsa_network.generators), len(pypsa_network.loads), len(pypsa_network.stores), len(pypsa_network.links), len(pypsa_network.lines), len(pypsa_network.snapshots)))
+    result.append("   tooltip = \"Network: %s\nBuses: %d\nGenerators: %d\nLoads: %s\nStores: %d\nLinks: %d\nLines: %d\nSnapshots: %d\"" % (network_name, len(pypsa_network.buses), len(pypsa_network.generators), len(pypsa_network.loads), len(pypsa_network.stores), len(pypsa_network.links), len(pypsa_network.lines), len(pypsa_network.snapshots)))
     result.append("   rankdir = \"%s\"" % RANK_DIRECTION)
     result.append("   ranksep = %.2f" % RANK_SEPARATION)
     result.append("   nodesep = %.2f" % NODE_SEPARATION)
@@ -1588,7 +1588,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
 
     # generate output files based on (PyPSA) network DOT representation
-    status = _generate_output(result, file_name, file_format, quiet)
+    status = _generate_output(result, file_output, file_format, quiet)
 
 
     # display info message
@@ -1604,21 +1604,37 @@ if __name__ == "__main__":
 
     # parse arguments passed to PyPSATopo
     parser = argparse.ArgumentParser()
-    parser.add_argument("-ff", "--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Lorem Ipsum")
-    parser.add_argument("-nn", "--no-negative-efficiency", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("-nb", "--no-broken-missing", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("-fo", "--focus", action = "store", help = "Lorem Ipsum")
-    parser.add_argument("-ne", "--neighbourhood", type = int, action = "store", help = "Lorem Ipsum")
-    parser.add_argument("-cc", "--carrier-color", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("-co", "--context", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("-nq", "--no-quiet", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--focus", nargs = "+", type = str, help = "Lorem Ipsum")
+    parser.add_argument("--neighbourhood", nargs = "+", type = int, help = "Lorem Ipsum")
+    parser.add_argument("--bus-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--generator-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--load-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--store-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--link-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--line-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--no-broken-missing", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--carrier-color", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--context", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--file-output", nargs = "+", type = str, help = "Lorem Ipsum")
+    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Lorem Ipsum")
+    parser.add_argument("--no-quiet", action = "store_true", help = "Lorem Ipsum")
     args, files = parser.parse_known_args()
 
 
     # process arguments
-    file_format = args.file_format if args.file_format else FILE_FORMAT
-    neighbourhood = args.neighbourhood if args.neighbourhood else 0
+    if args.neighbourhood:
+        neighbourhood = args.neighbourhood[0] if len(args.neighbourhood) == 1 else args.neighbourhood
+    else:
+        neighbourhood = 0
+    bus_filter = args.bus_filter if args.bus_filter else None
+    generator_filter = args.generator_filter if args.generator_filter else None
+    load_filter = args.load_filter if args.load_filter else None
+    store_filter = args.store_filter if args.store_filter else None
+    link_filter = args.link_filter if args.link_filter else None
+    line_filter = args.line_filter if args.line_filter else None
     carrier_color = args.carrier_color if args.carrier_color else None
+    file_format = args.file_format if args.file_format else FILE_FORMAT
 
 
     # display PyPSATopo information
@@ -1629,14 +1645,14 @@ if __name__ == "__main__":
     if files:
 
         # loop through files passed as arguments
-        for file in files:
+        for i in range(len(files)):
 
-            # generate output file name based on input file name and file format
-            file_name = "%s.%s" % (file.rsplit(".", 1)[0], file_format)
+            # generate output file name
+            file_output = args.file_output[i] if args.file_output and i < len(args.file_output) else "%s.%s" % (files[i].rsplit(".", 1)[0], file_format)
 
 
             # generate topographical representation of network
-            status = generate(file, focus = args.focus, neighbourhood = neighbourhood, negative_efficiency = not args.no_negative_efficiency, broken_missing = not args.no_broken_missing, carrier_color = carrier_color, context = args.context, file_name = file_name, file_format = file_format, quiet = not args.no_quiet)
+            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = not args.no_broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
 
 
             # check status of generation
@@ -1645,11 +1661,15 @@ if __name__ == "__main__":
 
     else:
 
+        # process arguments
+        file_output = args.file_output if args.file_output else FILE_OUTPUT
+
+
         # create dummy (PyPSA) network
         network = pypsa.Network(name = "My Dummy Network")
 
 
-        # add some dummy components to dummy (PyPSA) network
+        # add some dummy components to dummy network
         network.add("Bus", "oil")
         network.add("Bus", "electricity")
         network.add("Bus", "transport")
@@ -1661,8 +1681,8 @@ if __name__ == "__main__":
         network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
-        # generate topographical representation of dummy (PyPSA) network
-        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, negative_efficiency = not args.no_negative_efficiency, broken_missing = not args.no_broken_missing, carrier_color = carrier_color, context = args.context, file_format = file_format, quiet = not args.no_quiet)
+        # generate topographical representation of dummy network
+        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = not args.no_broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
 
 
     # set exit code and finish
