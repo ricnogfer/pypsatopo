@@ -151,7 +151,17 @@ Currently, PyPSATopo supports some of the most important PyPSA components, namel
 ## Functionalities
 As stated previously, PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network. It basically allows to reverse engineer such type of network to ease its understanding. To that end, PyPSATopo provides several functionalities to cover as many [use-cases](https://en.wikipedia.org/wiki/Use_case) as possible. These functionalities are described below and their usage exemplified using both the application programming interface and the command-line interface.
 
-- PyPSATopo is able to generate the topographical representation a network in different formats, namely: [SVG](https://en.wikipedia.org/wiki/SVG), [PNG](https://en.wikipedia.org/wiki/PNG), [JPG](https://en.wikipedia.org/wiki/JPEG), [GIF](https://en.wikipedia.org/wiki/GIF) and [PS](https://en.wikipedia.org/wiki/Postscript). The default format is SVG in case nothing is specified. To specify the format, set parameter `file_format` with the appropriate value. As an example, the following generates the topographical representation of a network in the GIF format:
+- When generating the topographical representation of a network and in case parameter `file_output` is not specified, PyPSATopo saves the output either in (1) a file named `topography` with an extension equal to the file format if the tool is used through its application programming interface or (2) a file named as the network file with an extension equal to the file format if the tool is used through a command-line interface. To specify the file name where to save the output, set parameter `file_output` with the appropriate value. As an example, the following generates the topographical representation of a network and saves the output in a file named `my_network.svg`:
+
+    ```python
+    pypsatopo.generate(my_network, file_output = "my_network.svg")
+    ```
+
+    ```bash
+    python pypsatopo.py my_network.nc --file-output my_network.svg
+    ```
+
+- PyPSATopo is able to generate the topographical representation a network in different formats, namely: [SVG](https://en.wikipedia.org/wiki/SVG), [PNG](https://en.wikipedia.org/wiki/PNG), [JPG](https://en.wikipedia.org/wiki/JPEG), [GIF](https://en.wikipedia.org/wiki/GIF) and [PS](https://en.wikipedia.org/wiki/Postscript). To specify the format, set parameter `file_format` with the appropriate value. Otherwise, in case the parameter is not set, the default format is SVG. As an example, the following generates the topographical representation of a network in the GIF format:
 
     ```python
     pypsatopo.generate(my_network, file_format = "gif")
@@ -169,6 +179,16 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
 
     ```bash
     python pypsatopo.py my_network.nc --focus "CO2 Atmosphere" --neighbourhood 3
+    ```
+
+    Alternatively, parameters `focus` and `neighbourhood` may be set with a list of buses and respective neighbourhoods to enable focusing on several aspects/segments of the network at the same time (as opposite to just one bus and respective neighbourhood). Setting these parameters with a list of buses/neighbourhoods (instead of a scalar) enables PyPSATopo to visit and combine the output of each bus into one single topographical representation, potentially generating a [disjoint union of graphs](https://en.wikipedia.org/wiki/Disjoint_union_of_graphs). As an example, the following generates the topographical representation of a network by focusing/starting on buses `my_bus0` and `my_bus1`, and including all the components attached to these buses up to a maximum neighbourhood degree of `2` and `3`, respectively:
+
+    ```python
+    pypsatopo.generate(my_network, focus = ["my_bus0", "my_bus1"], neighbourhood = [2, 3])
+    ```
+
+    ```bash
+    python pypsatopo.py my_network.nc --focus my_bus0 my_bus1 --neighbourhood 2 3
     ```
 
 - Just like for links with positive efficiencies, PyPSATopo represents links with negative efficiencies with a line going from *bus0* to, e.g., *bus1* and an arrow at the end of the line pointing to the latter. In case of need to invert the sense of the arrow (i.e. to point to *bus0* instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False`. As an example, the following generates the topographical representation of a network with no negative efficiencies (i.e. all links with negative efficiencies will have their arrows inverted):
