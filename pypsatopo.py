@@ -2,12 +2,12 @@
 
 
 
-__author__ = "Energy Systems Group at Aarhus University (Denmark)"
 __project__ = "PyPSATopo"
-__description__ = "PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network (thanks to the DOT language - https://graphviz.org)"
-__license__ = "BSD 3-Clause"
-__contact__ = "ricardo.fernandes@mpe.au.dk"
 __version__ = "0.8.0"
+__description__ = "PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network"
+__license__ = "BSD 3-Clause"
+__author__ = "Energy Systems Group at Aarhus University (Denmark)"
+__contact__ = "ricardo.fernandes@mpe.au.dk"
 __status__ = "Development"
 
 
@@ -1604,29 +1604,29 @@ if __name__ == "__main__":
 
     # parse arguments passed to PyPSATopo
     parser = argparse.ArgumentParser()
-    parser.add_argument("--focus", nargs = "+", type = str, help = "Lorem Ipsum")
+    parser.add_argument("--focus", nargs = "+", help = "Focus on one or more buses to start visiting")
     parser.add_argument("--neighbourhood", nargs = "+", type = int, help = "Lorem Ipsum")
-    parser.add_argument("--bus-filter", action = "store", help = "Lorem Ipsum")
-    parser.add_argument("--generator-filter", action = "store", help = "Lorem Ipsum")
-    parser.add_argument("--load-filter", action = "store", help = "Lorem Ipsum")
-    parser.add_argument("--store-filter", action = "store", help = "Lorem Ipsum")
-    parser.add_argument("--link-filter", action = "store", help = "Lorem Ipsum")
-    parser.add_argument("--line-filter", action = "store", help = "Lorem Ipsum")
+    parser.add_argument("--bus-filter", action = "store", help = "Filter (i.e. include/exclude) buses in the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--generator-filter", action = "store", help = "Filter (i.e. include/exclude) generators in the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--load-filter", action = "store", help = "Filter (i.e. include/exclude) loads in the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--store-filter", action = "store", help = "Filter (i.e. include/exclude) stores in the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--link-filter", action = "store", help = "Filter (i.e. include/exclude) links in the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--line-filter", action = "store", help = "Filter (i.e. include/exclude) lines in the topographical representation of the network in function of a (user-defined) regular expression")
     parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("--no-broken-missing", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("--carrier-color", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--no-broken-missing", action = "store_true", help = "Exclude broken links and missing buses from the topographical representation of the network")
+    parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
     parser.add_argument("--context", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("--file-output", nargs = "+", type = str, help = "Lorem Ipsum")
-    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Lorem Ipsum")
-    parser.add_argument("--no-quiet", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
+    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Specify the file format of the topographical representation of the network")
+    parser.add_argument("--no-quiet", action = "store_true", help = "Show log messages while generating the topographical representation of the network")
     args, files = parser.parse_known_args()
 
 
     # process arguments
-    if args.neighbourhood:
-        neighbourhood = args.neighbourhood[0] if len(args.neighbourhood) == 1 else args.neighbourhood
-    else:
+    if args.neighbourhood is None:
         neighbourhood = 0
+    else:
+        neighbourhood = args.neighbourhood[0] if len(args.neighbourhood) == 1 else args.neighbourhood
     bus_filter = args.bus_filter if args.bus_filter else None
     generator_filter = args.generator_filter if args.generator_filter else None
     load_filter = args.load_filter if args.load_filter else None
@@ -1634,6 +1634,19 @@ if __name__ == "__main__":
     link_filter = args.link_filter if args.link_filter else None
     line_filter = args.line_filter if args.line_filter else None
     carrier_color = args.carrier_color if args.carrier_color else None
+    if args.carrier_color is None:
+        carrier_color = None
+    else:
+        length = len(args.carrier_color)
+        if length == 0:
+            carrier_color = True
+        elif length % 2 != 0:
+            print("[ERR] The number of arguments specified for argument 'carrier_color' is not even (each specified carrier should have a color associated to it)!")
+            sys.exit(-1)   # set exit code to unsuccessful and exit
+        else:
+            carrier_color = dict()
+            for i in range(0, len(args.carrier_color), 2):
+                carrier_color[args.carrier_color[i]] = args.carrier_color[i + 1]
     file_format = args.file_format if args.file_format else FILE_FORMAT
 
 
@@ -1657,7 +1670,7 @@ if __name__ == "__main__":
 
             # check status of generation
             if status:
-                sys.exit(status)   # return unsuccessfully
+                sys.exit(status)   # set exit code with returned status and exit
 
     else:
 
