@@ -32,19 +32,13 @@ network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
 ## Installation
-PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for [Python](https://en.wikipedia.org/wiki/Python_(programming_language)). To install PyPSATopo using pip, open a terminal and execute the following:
+PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for [Python](https://en.wikipedia.org/wiki/Python_(programming_language)). To install the tool using pip, open a terminal and execute the following:
 
 ```bash
 pip install pypsatopo
 ```
 
-Alternatively, PyPSATopo can be installed in the machine by cloning its [Git](https://en.wikipedia.org/wiki/Git) repository as follows:
-
-```bash
-git clone https://github.com/ricnogfer/pypsatopo.git
-```
-
-PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. As a reference, PyPSATopo is known to work correctly with the following versions of the components:
+PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case these are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). As a reference, PyPSATopo is known to work correctly with the following versions of the components:
 
 - Python 3.10.8
 
@@ -54,7 +48,7 @@ PyPSATopo leverages from several components to accomplish its functionalities, n
 
 - Dot 2.40.1
 
-In addition, PyPSATopo should work in any platform (i.e. operating system) as long as the components that this tool depends on are supported in the target platform. As a reference, PyPSATopo is known to work correctly in Windows, Linux and macOS.
+In addition, PyPSATopo should work in any platform (i.e. operating system) as long as the components that this tool depends on are supported in the target platform. As a reference, the tool is known to work correctly in Windows, Linux and macOS.
 
 
 ## Usage
@@ -211,7 +205,17 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
     python pypsatopo.py my_network.nc --no-broken-missing
     ```
 
-- To color a certain component (namely: bus, generator, load, store or line) in function of its carrier, set parameter `carrier_color` with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. For instance, setting parameter `carrier_color = {"my_carrier0": "red", "my_carrier1": "green", "my_carrier2": "blue"}` tells PyPSATopo to color a component in `red`, `green` or `blue` whenever its carrier is `my_carrier0`, `my_carrier1` or `my_carrier2`, respectively. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). Alternatively, in case `carrier_color` is set to `True` (instead of a dictionary), PyPSATopo automatically assigns a new color to each distinct carrier found in the network and colors all the components associated to the carrier with this color. As an example, the following generates the topographical representation of a network with its components being colored in function of their carriers:
+- To color a certain component (namely: bus, generator, load, store or line) in function of its carrier, set parameter `carrier_color` with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). As an example, the following generates the topographical representation of a network with its components colored in `red`, `green` or `blue` whenever their carriers are `my_carrier0`, `my_carrier1` or `my_carrier2`, respectively:
+
+    ```python
+    pypsatopo.generate(my_network, carrier_color = {"my_carrier0": "red", "my_carrier1": "green", "my_carrier2": "blue"})
+    ```
+
+    ```bash
+    python pypsatopo.py my_network.nc --carrier-color my_carrier0 red my_carrier1 green my_carrier2 blue
+    ```
+
+    Alternatively, in case `carrier_color` is set to `True` (instead of a dictionary), PyPSATopo automatically assigns a new color to each distinct carrier found in the network and colors all the components associated to the carrier with this color. As an example, the following generates the topographical representation of a network with its components colored in function of their carriers:
 
     ```python
     pypsatopo.generate(my_network, carrier_color = True)
@@ -254,5 +258,4 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
 
 ## Support
 PyPSATopo is actively developed and maintained by the Energy Systems Group at [Aarhus University](https://www.au.dk) (Denmark). Please open a ticket [here](https://github.com/ricnogfer/pypsatopo/issues) in case a bug was found or a feature is missing in this tool.
-
 
