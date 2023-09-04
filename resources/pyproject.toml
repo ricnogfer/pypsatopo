@@ -1,0 +1,19 @@
+[project]
+name = "PyPSATopo"
+version = "0.8.0"
+description = "PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network"
+authors = [{name = "Energy Systems Group at Aarhus University (Denmark)", email = "ricardo.fernandes@mpe.au.dk"}]
+requires-python = ">=3.2"
+classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: BSD License", "Operating System :: OS Independent"]
+dependencies = ["pypsa", "pandas"]
+keywords = ["PyPSA", "power system", "network", "visualization", "representation", "topography"]
+
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+
+[project.urls]
+"Homepage" = "https://github.com/ricnogfer/pypsatopo"
+
