@@ -1,5 +1,5 @@
 ## Description
-PyPSATopo is a tool which allows generating the topographical representation of any arbitrary [PyPSA](https://pypsa.org)-based network (thanks to the [DOT language](https://graphviz.org/doc/info/lang.html)). Besides easing understand of a network by providing its graphical representation, the tool helps debugging it given that broken links and missing buses are shown in (slightly) different shapes and colors. Technically speaking, PyPSATopo can be thought of as a [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering) tool for PyPSA-based networks.
+PyPSATopo is a tool that allows generating the topographical representation of any arbitrary [PyPSA](https://pypsa.org)-based network (thanks to the [DOT language](https://graphviz.org/doc/info/lang.html)). Besides easing the understanding of a network by providing its graphical representation, the tool helps debug it given that broken links and missing buses are shown in (slightly) different shapes and colors. Technically speaking, PyPSATopo can be thought of as a [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering) tool for PyPSA-based networks.
 
 To get a quick overview of the capabilities of PyPSATopo, simply launch it in a terminal as follows:
 
@@ -168,11 +168,11 @@ As stated previously, PyPSATopo is a tool which allows generating the topographi
 - By default, PyPSATopo generates the topographical representation of the entire network. This might be particularly overwhelming (visually speaking) depending on the complexity of the network - see [PyPSA-Eur network topographical representation](https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsa-eur_topography.svg) to get an idea. To mitigate this, parameters `focus` and `neighbourhood` may be utilized (in combination) to focus on a particular aspect/segment of the network. The former tells PyPSATopo which bus to start visiting, while the latter tells how much neighbourhood (around the bus) should be visited (in other words, how much (indirect) components attached to the bus should be included in the representation). For instance, setting parameters `focus = "DK1 0 low voltage"` and `neighbourhood = 2` (which focuses/starts on bus `DK1 0 low voltage` and includes all the components attached to it up to a maximum neighbourhood degree of `2`) yields this [result](https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsa-eur_dk1_0_low_voltage_topography.svg) upon generating PyPSA-Eur network topographical representation. As an example, the following generates the topographical representation of a network focusing/starting on bus `CO2 Atmosphere` and including all the components attached to it up to a maximum neighbourhood degree of `3`:
 
     ```python
-    pypsatopo.generate(my_network, focus = "CO2 Atmosphere", neighbourhood = 3)
+    pypsatopo.generate(my_network, focus = "co2 atmosphere", neighbourhood = 3)
     ```
 
     ```bash
-    python pypsatopo.py my_network.nc --focus "CO2 Atmosphere" --neighbourhood 3
+    python pypsatopo.py my_network.nc --focus "co2 atmosphere" --neighbourhood 3
     ```
 
     Alternatively, parameters `focus` and `neighbourhood` may be set with a list of buses and respective neighbourhoods to enable focusing on several aspects/segments of the network at the same time (as opposite to just one bus and respective neighbourhood). Setting these parameters with a list of buses/neighbourhoods (instead of a scalar) enables PyPSATopo to visit and combine the output of each bus into one single topographical representation, potentially generating a [disjoint union of graphs](https://en.wikipedia.org/wiki/Disjoint_union_of_graphs). As an example, the following generates the topographical representation of a network by focusing/starting on buses `my_bus0` and `my_bus1`, and including all the components attached to these buses up to a maximum neighbourhood degree of `2` and `3`, respectively:
