@@ -8,11 +8,9 @@ classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :
 dependencies = ["pypsa", "pandas"]
 keywords = ["PyPSA", "power system", "network", "visualization", "representation", "topography"]
 
-
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
-
 
 [project.urls]
 "Homepage" = "https://github.com/ricnogfer/pypsatopo"
