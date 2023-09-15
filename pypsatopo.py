@@ -3,8 +3,8 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "0.8.0"
-__description__ = "PyPSATopo is a tool which allows generating the topographical representation of any arbitrary PyPSA-based network"
+__version__ = "0.9.0"
+__description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
 __contact__ = "ricardo.fernandes@mpe.au.dk"
@@ -1320,7 +1320,7 @@ def _generate_output(dot_representation, file_output, file_format, quiet):
 
 
 
-def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = True, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, quiet = True):
+def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, quiet = True):
     """
     Parameters
     ----------
@@ -1345,7 +1345,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     negative_efficiency : TYPE, optional
         DESCRIPTION. The default is True.
     broken_missing : TYPE, optional
-        DESCRIPTION. The default is True.
+        DESCRIPTION. The default is False.
     carrier_color : TYPE, optional
         DESCRIPTION. The default is None.
     context : TYPE, optional
@@ -1613,7 +1613,7 @@ if __name__ == "__main__":
     parser.add_argument("--link-filter", action = "store", help = "Filter (i.e. include/exclude) links in the topographical representation of the network in function of a (user-defined) regular expression")
     parser.add_argument("--line-filter", action = "store", help = "Filter (i.e. include/exclude) lines in the topographical representation of the network in function of a (user-defined) regular expression")
     parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("--no-broken-missing", action = "store_true", help = "Exclude broken links and missing buses from the topographical representation of the network")
+    parser.add_argument("--broken-missing", action = "store_true", help = "Include broken links and missing buses int the topographical representation of the network")
     parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
     parser.add_argument("--context", action = "store_true", help = "Lorem Ipsum")
     parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
@@ -1665,7 +1665,7 @@ if __name__ == "__main__":
 
 
             # generate topographical representation of network
-            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = not args.no_broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
+            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
 
 
             # check status of generation
@@ -1695,7 +1695,7 @@ if __name__ == "__main__":
 
 
         # generate topographical representation of dummy network
-        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = not args.no_broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
+        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
 
 
     # set exit code and finish
