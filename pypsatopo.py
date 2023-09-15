@@ -1101,7 +1101,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
         # process bus
         values0 = components[bus]
-        if (not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus)):
+        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))):   # the very first bus to focus on is not subjected to filtering (in case parameter "bus_filter" is defined)
             if carrier_color:
                 carrier = values0["carrier"]
                 if carrier and carrier not in carriers:
@@ -1613,7 +1613,7 @@ if __name__ == "__main__":
     parser.add_argument("--link-filter", action = "store", help = "Filter (i.e. include/exclude) links in the topographical representation of the network in function of a (user-defined) regular expression")
     parser.add_argument("--line-filter", action = "store", help = "Filter (i.e. include/exclude) lines in the topographical representation of the network in function of a (user-defined) regular expression")
     parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Lorem Ipsum")
-    parser.add_argument("--broken-missing", action = "store_true", help = "Include broken links and missing buses int the topographical representation of the network")
+    parser.add_argument("--broken-missing", action = "store_true", help = "Include broken links and missing buses in the topographical representation of the network")
     parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
     parser.add_argument("--context", action = "store_true", help = "Lorem Ipsum")
     parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
