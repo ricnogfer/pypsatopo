@@ -195,7 +195,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --no-negative-efficiency
     ```
 
-- By default, all broken links and missing buses are excluded from the topographical representation of a network. To include and show these in (slightly) different shapes and colors in the representation, set parameter `broken_missing = True`. As an example, the following generates the topographical representation of a network where broken links and missing buses are included in it:
+- By default, all broken links and missing buses are excluded from the topographical representation of a network. To include and show these in (slightly) different shapes and colors in the representation, set parameter `broken_missing = True`. As an example, the following generates the topographical representation of a network where all broken links and missing buses are included in it:
 
     ```python
     pypsatopo.generate(my_network, broken_missing = True)
@@ -228,11 +228,11 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
 - In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter` and `store_filter` tell PyPSATopo which buses, generators, loads and stores to include/exclude, respectively, parameters `link_filter` and `line_filter` tell which links and lines may be visited (or not) upon generating the topographical representation of a network. As an example, the following generates the topographical representation of a network where only the generators containing the words `wind` or `solar` in their names are selected (and all other generators are excluded):
 
     ```python
-    pypsatopo.generate(my_network, generator_filter = "wind|solar")
+    pypsatopo.generate(my_network, generator_filter = ".*(wind|solar).*")
     ```
 
     ```bash
-    python pypsatopo.py my_network.nc --generator-filter "wind|solar"
+    python pypsatopo.py my_network.nc --generator-filter ".*(wind|solar).*"
     ```
 
 - By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. among excluded components). To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish these from the formers visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
