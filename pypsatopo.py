@@ -153,7 +153,7 @@ def _replace(text):
 
 
 
-def _get_components(network, focus, quiet):
+def _get_components(network, focus, log, log_info, log_warning):
     """
     Parameters
     ----------
@@ -161,12 +161,16 @@ def _get_components(network, focus, quiet):
         DESCRIPTION.
     focus : TYPE
         DESCRIPTION.
-    quiet : TYPE
+    log : TYPE
+        DESCRIPTION.
+    log_info : TYPE
+        DESCRIPTION.
+    log_warning : TYPE
         DESCRIPTION.
 
     Returns
-    -------
     result : TYPE
+    -------
         DESCRIPTION.
     """
 
@@ -177,7 +181,7 @@ def _get_components(network, focus, quiet):
 
 
     # get buses from (PyPSA) network
-    if not quiet:
+    if log or log_info:
         print("[INF] Retrieving buses from network...")
     buses = network.buses
     buses_t = getattr(network, "buses_t", None)
@@ -190,7 +194,7 @@ def _get_components(network, focus, quiet):
 
 
     # get generators from (PyPSA) network
-    if not quiet:
+    if log or log_info:
         print("[INF] Retrieving generators from network...")
     generators = network.generators
     generators_t = getattr(network, "generators_t", None)
@@ -208,14 +212,15 @@ def _get_components(network, focus, quiet):
         p_time_series = _format_series(generators_t.p[generator]) if generators_t and generator in generators_t.p else "N/A"
         if bus:
             if bus in result:
-                if result[bus]["missing"] and not quiet:
-                    print("[WAR] Generator '%s' connects to bus '%s' which does not exist..." % (generator, bus))
+                if result[bus]["missing"]:
+                    if log or log_warning:
+                        print("[WAR] Generator '%s' connects to bus '%s' which does not exist..." % (generator, bus))
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Generator '%s' connects to bus '%s' which does not exist..." % (generator, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
-            if not quiet:
+            if log or log_warning:
                 print("[WAR] Generator '%s' does not have a bus specified..." % generator)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
@@ -224,7 +229,7 @@ def _get_components(network, focus, quiet):
 
 
     # get loads from (PyPSA) network
-    if not quiet:
+    if log or log_info:
         print("[INF] Retrieving loads from network...")
     loads = network.loads
     loads_t = getattr(network, "loads_t", None)
@@ -235,14 +240,15 @@ def _get_components(network, focus, quiet):
         p_set = _format_series(loads_t.p_set[load]) if loads_t and load in loads_t.p_set else "%.2f" % loads.p_set[i]
         if bus:
             if bus in result:
-                if result[bus]["missing"] and not quiet:
-                    print("[WAR] Load '%s' connects to bus '%s' which does not exist..." % (load, bus))
+                if result[bus]["missing"]:
+                    if log or log_warning:
+                        print("[WAR] Load '%s' connects to bus '%s' which does not exist..." % (load, bus))
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Load '%s' connects to bus '%s' which does not exist..." % (load, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
-            if not quiet:
+            if log or log_warning:
                 print("[WAR] Load '%s' does not have a bus specified..." % load)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
@@ -251,7 +257,7 @@ def _get_components(network, focus, quiet):
 
 
     # get stores from (PyPSA) network
-    if not quiet:
+    if log or log_info:
         print("[INF] Retrieving stores from network...")
     stores = network.stores
     stores_t = getattr(network, "stores_t", None)
@@ -270,14 +276,15 @@ def _get_components(network, focus, quiet):
         p_time_series = _format_series(stores_t.p[store]) if stores_t and store in stores_t.p else "N/A"
         if bus:
             if bus in result:
-                if result[bus]["missing"] and not quiet:
-                    print("[WAR] Store '%s' connects to bus '%s' which does not exist..." % (store, bus))
+                if result[bus]["missing"]:
+                    if log or log_warning:
+                        print("[WAR] Store '%s' connects to bus '%s' which does not exist..." % (store, bus))
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Store '%s' connects to bus '%s' which does not exist..." % (store, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
-            if not quiet:
+            if log or log_warning:
                 print("[WAR] Store '%s' does not have a bus specified..." % store)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
@@ -286,7 +293,7 @@ def _get_components(network, focus, quiet):
 
 
     # get declared buses that links connect to
-    if not quiet:
+    if log or log_info:
         print("[INF] Retrieving links from network...")
     links = network.links
     links_t = getattr(network, "links_t", None)
@@ -355,16 +362,17 @@ def _get_components(network, focus, quiet):
             bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
             if bus0:
                 if bus0 in result:
-                    if result[bus0]["missing"] and not quiet:
-                        print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist..." % (link, bus0))
+                    if result[bus0]["missing"]:
+                        if log or log_warning:
+                            print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist..." % (link, bus0))
                     missing0 = result[bus0]["missing"]
                 else:
-                    if not quiet:
+                    if log or log_warning:
                         print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist..." % (link, bus0))
                     result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     missing0 = True
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Link '%s' does not have bus0 specified..." % link)
                 bus0 = "bus #%d" % _MISSING_BUS_COUNT
                 _MISSING_BUS_COUNT += 1
@@ -372,16 +380,17 @@ def _get_components(network, focus, quiet):
                 missing0 = True
             if bus1:
                 if bus1 in result:
-                    if result[bus1]["missing"] and not quiet:
-                        print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist..." % (link, bus1))
+                    if result[bus1]["missing"]:
+                        if log or log_warning:
+                            print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist..." % (link, bus1))
                     missing1 = result[bus1]["missing"]
                 else:
-                    if not quiet:
+                    if log or log_warning:
                         print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist..." % (link, bus1))
                     result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     missing1 = True
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Link '%s' does not have bus1 specified..." % link)
                 bus1 = "bus #%d" % _MISSING_BUS_COUNT
                 _MISSING_BUS_COUNT += 1
@@ -400,18 +409,18 @@ def _get_components(network, focus, quiet):
                 if bus_value:
                     if bus_value in result:
                         if result[bus_value]["missing"]:
-                            if not quiet:
+                            if log or log_warning:
                                 print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index.values[i], bus_value, key))
                             if key != "bus0":
                                 missing += 1
                     else:
-                        if not quiet:
+                        if log or log_warning:
                             print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index.values[i], bus_value, key))
                         result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                         if key != "bus0":
                             missing += 1
                 else:
-                    if not quiet:
+                    if log or log_warning:
                         print("[WAR] Link '%s' does not have %s specified..." % (links.index.values[i], key))
                     bus_value = "bus #%d" % _MISSING_BUS_COUNT
                     _MISSING_BUS_COUNT += 1
@@ -442,7 +451,7 @@ def _get_components(network, focus, quiet):
 
 
     # get lines from (PyPSA) network
-    if not quiet:
+    if log or log_info:
         print("[INF] Retrieving lines from network...")
     lines = network.lines
     lines_t = getattr(network, "lines_t", None)
@@ -459,16 +468,17 @@ def _get_components(network, focus, quiet):
         p1_time_series = _format_series(lines_t.p1[line]) if lines_t and line in lines_t.p1 else "N/A"
         if bus0:
             if bus0 in result:
-                if result[bus0]["missing"] and not quiet:
-                    print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist..." % (line, bus0))
+                if result[bus0]["missing"]:
+                    if log or log_warning:
+                        print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist..." % (line, bus0))
                 missing0 = result[bus0]["missing"]
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist..." % (line, bus0))
                 result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing0 = True
         else:
-            if not quiet:
+            if log or log_warning:
                 print("[WAR] Line '%s' does not have bus0 specified..." % line)
             bus0 = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
@@ -476,16 +486,17 @@ def _get_components(network, focus, quiet):
             missing0 = True
         if bus1:
             if bus1 in result:
-                if result[bus1]["missing"] and not quiet:
-                    print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist..." % (line, bus1))
+                if result[bus1]["missing"]:
+                    if log or log_warning:
+                        print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist..." % (line, bus1))
                 missing1 = result[bus1]["missing"]
             else:
-                if not quiet:
+                if log or log_warning:
                     print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist..." % (line, bus1))
                 result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing1 = True
         else:
-            if not quiet:
+            if log or log_warning:
                 print("[WAR] Line '%s' does not have bus1 specified..." % line)
             bus1 = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
@@ -672,7 +683,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
 
 
 
-def _represent_components(buses, carriers, negative_efficiency, broken_missing, carrier_color, context, quiet):
+def _represent_components(buses, carriers, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning):
     """
     Parameters
     ----------
@@ -688,7 +699,11 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
         DESCRIPTION.
     context : TYPE
         DESCRIPTION.
-    quiet : TYPE
+    log : TYPE
+        DESCRIPTION.
+    log_info : TYPE
+        DESCRIPTION.
+    log_warning : TYPE
         DESCRIPTION.
 
     Returns
@@ -1031,7 +1046,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
 
 
 
-def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, negative_efficiency, broken_missing, carrier_color, context, quiet, carriers):
+def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers):
     """
     Parameters
     ----------
@@ -1061,7 +1076,11 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         DESCRIPTION.
     context : TYPE
         DESCRIPTION.
-    quiet : TYPE
+    log : TYPE
+        DESCRIPTION.
+    log_info : TYPE
+        DESCRIPTION.
+    log_warning : TYPE
         DESCRIPTION.
     carriers : TYPE
         DESCRIPTION.
@@ -1095,7 +1114,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
 
         # display info message
-        if not quiet:
+        if log or log_info:
             print("[INF] Focusing on bus '%s'..." % bus)
 
 
@@ -1252,7 +1271,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
 
 
-def _generate_output(dot_representation, file_output, file_format, quiet):
+def _generate_output(dot_representation, file_output, file_format, log, log_info, log_warning):
     """
     Parameters
     ----------
@@ -1262,7 +1281,11 @@ def _generate_output(dot_representation, file_output, file_format, quiet):
         DESCRIPTION.
     file_format : TYPE
         DESCRIPTION.
-    quiet : TYPE
+    log : TYPE
+        DESCRIPTION.
+    log_info : TYPE
+        DESCRIPTION.
+    log_warning : TYPE
         DESCRIPTION.
 
     Returns
@@ -1273,7 +1296,7 @@ def _generate_output(dot_representation, file_output, file_format, quiet):
 
     # write DOT representation of (PyPSA) network into a DOT file
     file_output_dot = "%s.dot" % file_output.rsplit(".", 1)[0]
-    if not quiet:
+    if log or log_info:
         print("[INF] Writing DOT file '%s'..." % file_output_dot)
     try:
         with open(file_output_dot, "w") as handle:
@@ -1286,12 +1309,12 @@ def _generate_output(dot_representation, file_output, file_format, quiet):
 
 
     # launch the tool 'dot' passing DOT file to it
-    if not quiet:
+    if log or log_info:
         print("[INF] Generating topographical representation of the network based on DOT file '%s'..." % file_output_dot)
     try:
         result = subprocess.run(["dot", "-T%s" % file_format, file_output_dot], capture_output = True)
     except KeyboardInterrupt:
-        if not quiet:
+        if log or log_warning:
             print("[WAR] Terminated by user request!")
         return 0   # return successfully
     except FileNotFoundError:
@@ -1306,7 +1329,7 @@ def _generate_output(dot_representation, file_output, file_format, quiet):
 
 
     # write result generated by the tool 'dot' into an output file
-    if not quiet:
+    if log or log_info:
         print("[INF] Writing output file '%s' in the %s format..." % (file_output, file_format.upper()))
     try:
         with open(file_output, "wb") as handle:
@@ -1320,7 +1343,7 @@ def _generate_output(dot_representation, file_output, file_format, quiet):
 
 
 
-def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, quiet = True):
+def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, log = False, log_info = False, log_warning = False):
     """
     Parameters
     ----------
@@ -1354,8 +1377,12 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
         DESCRIPTION. The default is FILE_OUTPUT.
     file_format : TYPE, optional
         DESCRIPTION. The default is FILE_FORMAT.
-    quiet : TYPE, optional
-        DESCRIPTION. The default is True.
+    log : TYPE, optional
+        DESCRIPTION. The default is False.
+    log_info : TYPE, optional
+        DESCRIPTION. The default is False.
+    log_warning : TYPE, optional
+        DESCRIPTION. The default is False.
 
     Returns
     -------
@@ -1370,24 +1397,24 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     # check if neighbourhood is valid
     if isinstance(neighbourhood, int):
         if neighbourhood < 0:
-            print("The neighbourhood should be equal or greater than 0")
+            print("[ERR] The neighbourhood should be equal or greater than 0")
             return -1   # return unsuccessfully
     else:   # list
         for value in neighbourhood:
             if value < 0:
-                print("The neighbourhood should be equal or greater than 0")
+                print("[ERR] The neighbourhood should be equal or greater than 0")
                 return -1   # return unsuccessfully
 
 
     # check if file format is valid
     if file_format not in ("svg", "png", "jpg", "gif", "ps"):
-        print("The file format '%s' is not valid (acceptable formats are: 'svg', 'png', 'jpg', 'gif' or 'ps')!" % file_format)
+        print("[ERR] The file format '%s' is not valid (acceptable formats are: 'svg', 'png', 'jpg', 'gif' or 'ps')!" % file_format)
         return -1   # return unsuccessfully
 
 
     # read (PyPSA) network
     if isinstance(network, str):
-        if args.no_quiet:
+        if log or log_info:
             print("[INF] Reading file '%s' containing PyPSA-based network..." % network)
         pypsa_network = pypsa.Network(network)
     else:   # pypsa.components.Network
@@ -1420,11 +1447,11 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     # get network name
     if pypsa_network.name:
         network_name = pypsa_network.name
-        if not quiet:
+        if log or log_info:
             print("[INF] Start generating topographical representation of the network '%s'..." % network_name)
     else:
         network_name = NETWORK_NAME
-        if not quiet:
+        if log or log_info:
             print("[INF] Start generating topographical representation of the network...")
 
 
@@ -1451,7 +1478,9 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("//    context=%s" % context)
     result.append("//    file_output=%s" % file_output)
     result.append("//    file_format=%s" % file_format)
-    result.append("//    quiet=%s" % quiet)
+    result.append("//    log=%s" % log)
+    result.append("//    log_info=%s" % log_info)
+    result.append("//    log_warning=%s" % log_warning)
     result.append("//")
     result.append("")
 
@@ -1480,7 +1509,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
 
     # get components from (PyPSA) network
-    components = _get_components(pypsa_network, focus is not None, quiet)
+    components = _get_components(pypsa_network, focus is not None, log, log_info, log_warning)
 
 
     # process components
@@ -1493,7 +1522,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                 value = neighbourhood
             else:   # list
                 value = neighbourhood[0] if len(neighbourhood) else 0
-            _focus(components, focus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, quiet, carriers)
+            _focus(components, focus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
         else:   # list
             for i in range(len(focus)):
                 bus = focus[i]
@@ -1502,7 +1531,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                         value = neighbourhood
                     else:   # list
                         value = neighbourhood[i] if i < len(neighbourhood) else 0
-                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, quiet, carriers)
+                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
                     visited.add(bus)
 
 
@@ -1580,7 +1609,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
 
     # add component DOT representations to result
-    result.extend(_represent_components(components, carriers, negative_efficiency, broken_missing, carrier_color, context, quiet))
+    result.extend(_represent_components(components, carriers, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning))
 
 
     # close digraph body
@@ -1588,12 +1617,13 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
 
     # generate output files based on (PyPSA) network DOT representation
-    status = _generate_output(result, file_output, file_format, quiet)
+    status = _generate_output(result, file_output, file_format, log, log_info, log_warning)
 
 
     # display info message
-    if not quiet and not status:
-        print("[INF] Finished generating topographical representation of the network!")
+    if not status:
+        if log or log_info:
+            print("[INF] Finished generating topographical representation of the network!")
 
 
     return status
@@ -1618,7 +1648,9 @@ if __name__ == "__main__":
     parser.add_argument("--context", action = "store_true", help = "Lorem Ipsum")
     parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
     parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Specify the file format of the topographical representation of the network")
-    parser.add_argument("--no-quiet", action = "store_true", help = "Show log messages while generating the topographical representation of the network")
+    parser.add_argument("--log", action = "store_true", help = "Show all log messages while generating the topographical representation of the network")
+    parser.add_argument("--log-info", action = "store_true", help = "Show only info log messages while generating the topographical representation of the network")
+    parser.add_argument("--log-warning", action = "store_true", help = "Show only warning log messages while generating the topographical representation of the network")
     args, files = parser.parse_known_args()
 
 
@@ -1651,7 +1683,7 @@ if __name__ == "__main__":
 
 
     # display PyPSATopo information
-    if args.no_quiet:
+    if args.log or args.log_info:
         print("[INF] %s version %s" % (__project__, __version__))
 
 
@@ -1665,7 +1697,7 @@ if __name__ == "__main__":
 
 
             # generate topographical representation of network
-            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
+            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
 
 
             # check status of generation
@@ -1695,7 +1727,7 @@ if __name__ == "__main__":
 
 
         # generate topographical representation of dummy network
-        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, quiet = not args.no_quiet)
+        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
 
 
     # set exit code and finish
