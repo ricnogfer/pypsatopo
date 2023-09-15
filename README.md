@@ -225,34 +225,44 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --carrier-color
     ```
 
-- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter` and `store_filter` tell PyPSATopo which buses, generators, loads and stores to include/exclude, respectively, parameters `link_filter` and `line_filter` tell which links and lines may be visited (or not) upon generating the topographical representation of a network. As an example, the following generates the topographical representation of a network where only the generators containing the words `wind` or `solar` in their names are selected (and all other generators are excluded):
+- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter` and `store_filter` tell PyPSATopo which buses, generators, loads and stores to include/exclude, respectively, parameters `link_filter` and `line_filter` tell which links and lines may be visited (or not) upon generating the topographical representation of a network. As an example, the following generates the topographical representation of a network where only the generators named `wind`, `solar` or `CHP` are selected (and all other generators are excluded):
 
     ```python
-    pypsatopo.generate(my_network, generator_filter = ".*(wind|solar).*")
+    pypsatopo.generate(my_network, generator_filter = "wind|solar|CHP")
     ```
 
     ```bash
-    python pypsatopo.py my_network.nc --generator-filter ".*(wind|solar).*"
+    python pypsatopo.py my_network.nc --generator-filter "wind|solar|CHP"
     ```
 
 - By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. among excluded components). To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish these from the formers visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
 
     ```python
-    pypsatopo.generate(my_network, load_filter = "agriculture", context = True)
+    pypsatopo.generate(my_network, load_filter = ".*agriculture.*", context = True)
     ```
 
     ```bash
-    python pypsatopo.py my_network.nc --load-filter agriculture --context
+    python pypsatopo.py my_network.nc --load-filter .*agriculture.* --context
     ```
 
-- Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such network. Log messages not only facilitate understanding of the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo displaying log messages, set parameter `quiet = False`. Otherwise, in case the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed). As an example, the following displays log messages while generating the topographical representation of a network:
+- Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such network. Log messages not only facilitate understanding of the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo displaying log messages, set parameter `log = True`. Otherwise, in case the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed). As an example, the following displays log messages while generating the topographical representation of a network:
 
     ```python
-    pypsatopo.generate(my_network, quiet = False)
+    pypsatopo.generate(my_network, log = True)
     ```
 
     ```bash
-    python pypsatopo.py my_network.nc --no-quiet
+    python pypsatopo.py my_network.nc --log
+    ```
+
+    While parameter `log` tells PyPSATopo to display all log messages (independently of these being information or warning messages), parameters `log_info` and `log_warning` tell PyPSATopo to only display information or warning log messages, respectively. As an example, the following displays only information log messages (and all warning log messages will not be displayed) while generating the topographical representation of a network:
+
+    ```python
+    pypsatopo.generate(my_network, log_info = True)
+    ```
+
+    ```bash
+    python pypsatopo.py my_network.nc --log-info
     ```
 
 
