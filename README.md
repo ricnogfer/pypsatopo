@@ -195,14 +195,14 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --no-negative-efficiency
     ```
 
-- All broken links and missing buses are included in the topographical representation of a network by default, and are shown in (slightly) different shapes and colors. To exclude these from the representation, set parameter `broken_missing = False`. As an example, the following generates the topographical representation of a network where broken links and missing buses are excluded from it:
+- By default, all broken links and missing buses are excluded from the topographical representation of a network. To include and show these in (slightly) different shapes and colors in the representation, set parameter `broken_missing = True`. As an example, the following generates the topographical representation of a network where broken links and missing buses are included in it:
 
     ```python
-    pypsatopo.generate(my_network, broken_missing = False)
+    pypsatopo.generate(my_network, broken_missing = True)
     ```
 
     ```bash
-    python pypsatopo.py my_network.nc --no-broken-missing
+    python pypsatopo.py my_network.nc --broken-missing
     ```
 
 - To color a certain component (namely: bus, generator, load, store or line) in function of its carrier, set parameter `carrier_color` with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). As an example, the following generates the topographical representation of a network with its components colored in `red`, `green` or `blue` whenever their carriers are `my_carrier0`, `my_carrier1` or `my_carrier2`, respectively:
