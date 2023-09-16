@@ -255,7 +255,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --log
     ```
 
-    While parameter `log` tells PyPSATopo to display all log messages (independently of these being information or warning messages), parameters `log_info` and `log_warning` tell PyPSATopo to only display information or warning log messages, respectively. As an example, the following displays only information log messages (and all warning log messages will not be displayed) while generating the topographical representation of a network:
+    While parameter `log` tells PyPSATopo to display all log messages (independently of these being information or warning log messages), parameters `log_info` and `log_warning` tell PyPSATopo to only display information or warning log messages, respectively. As an example, the following displays only information log messages (and all warning log messages will not be displayed) while generating the topographical representation of a network:
 
     ```python
     pypsatopo.generate(my_network, log_info = True)
@@ -263,6 +263,13 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
 
     ```bash
     python pypsatopo.py my_network.nc --log-info
+    ```
+
+- While PyPSATopo strives to generate the topographical representation of a network with the most common/expected graphical features, the tool is flexible enough to let each user adjust/personalize the representation by setting PyPSATopo [global variables](https://github.com/ricnogfer/pypsatopo/blob/master/pypsatopo.py#L29) with appropriate values. As an example, the following generates the topographical representation of a network with a background in blue (instead of transparent):
+
+    ```python
+    pypsatopo.BACKGROUND_COLOR = "blue"
+    pypsatopo.generate(my_network)
     ```
 
 
