@@ -632,12 +632,22 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
 
         # process multi-link trunks (attached to the bus)
         multi_link_trunks = values0["multi_link_trunks"]
+        multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_trunks:
-            link, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
+            link_trunk, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
             not_missing = count - missing
-            if not_missing or broken_missing:   # TODO: test logic
-                if values0["selected"] and (not link_filter or link_filter.match(link)):
-                    values1[-1] = True
+            if not_missing or broken_missing:
+                if values0["selected"] and (not link_filter or link_filter.match(link_trunk)):
+                    if bus_filter:
+                        for values2 in multi_link_branches:
+                            link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
+                            if link_trunk == link_branch:
+                                if not values0["missing"] and not buses[bus_to]["missing"] or broken_missing:
+                                    if bus_filter.match(bus_to):
+                                        values1[-1] = True
+                                        break
+                    else:
+                        values1[-1] = True
 
 
         # process multi-link branches (attached to the bus)
@@ -1120,7 +1130,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
         # process bus
         values0 = components[bus]
-        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))):   # the very first bus to focus on is not subjected to filtering (in case parameter "bus_filter" is defined)
+        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))):   # skip applying filter to initial bus to focus on in case parameter "bus_filter" is specified
             if carrier_color:
                 carrier = values0["carrier"]
                 if carrier and carrier not in carriers:
@@ -1212,12 +1222,22 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
         # process multi-link trunks (attached to the bus)
         multi_link_trunks = values0["multi_link_trunks"]
+        multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_trunks:
-            link, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
+            link_trunk, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
             not_missing = count - missing
-            if not_missing or broken_missing:   # TODO: test logic
-                if values0["selected"] and (not link_filter or link_filter.match(link)):
-                    values1[-1] = True
+            if not_missing or broken_missing:
+                if values0["selected"] and (not link_filter or link_filter.match(link_trunk)):
+                    if bus_filter:
+                        for values2 in multi_link_branches:
+                            link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
+                            if link_trunk == link_branch:
+                                if not values0["missing"] and not components[bus_to]["missing"] or broken_missing:
+                                    if bus_filter.match(bus_to):
+                                        values1[-1] = True
+                                        break
+                    else:
+                        values1[-1] = True
 
 
         # process multi-link branches (attached to the bus)
@@ -1635,19 +1655,19 @@ if __name__ == "__main__":
     # parse arguments passed to PyPSATopo
     parser = argparse.ArgumentParser()
     parser.add_argument("--focus", nargs = "+", help = "Focus on one or more buses to start visiting")
-    parser.add_argument("--neighbourhood", nargs = "+", type = int, help = "Lorem Ipsum")
-    parser.add_argument("--bus-filter", action = "store", help = "Filter (i.e. include/exclude) buses in the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--generator-filter", action = "store", help = "Filter (i.e. include/exclude) generators in the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--load-filter", action = "store", help = "Filter (i.e. include/exclude) loads in the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--store-filter", action = "store", help = "Filter (i.e. include/exclude) stores in the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--link-filter", action = "store", help = "Filter (i.e. include/exclude) links in the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--line-filter", action = "store", help = "Filter (i.e. include/exclude) lines in the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--neighbourhood", nargs = "+", type = int, help = "Specify how much neighbourhood (around the bus to focus on) should be visited")
+    parser.add_argument("--bus-filter", action = "store", help = "Include/exclude buses in/from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--generator-filter", action = "store", help = "Include/exclude generators in/from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--load-filter", action = "store", help = "Include/exclude loads in/from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--store-filter", action = "store", help = "Include/exclude stores in/from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--link-filter", action = "store", help = "Include/exclude links in/from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--line-filter", action = "store", help = "Include/exclude lines in /from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Invert the sense of the arrow (i.e. to point to bus0 instead) when dealing with links with negative efficiencies")
     parser.add_argument("--broken-missing", action = "store_true", help = "Include broken links and missing buses in the topographical representation of the network")
     parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
-    parser.add_argument("--context", action = "store_true", help = "Lorem Ipsum")
+    parser.add_argument("--context", action = "store_true", help = "Show selected components in the topographical representation of the network among excluded components")
     parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
-    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Specify the file format of the topographical representation of the network")
+    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Specify the file format that the topographical representation of the network is saved as")
     parser.add_argument("--log", action = "store_true", help = "Show all log messages while generating the topographical representation of the network")
     parser.add_argument("--log-info", action = "store_true", help = "Show only info log messages while generating the topographical representation of the network")
     parser.add_argument("--log-warning", action = "store_true", help = "Show only warning log messages while generating the topographical representation of the network")
