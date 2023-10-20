@@ -3,7 +3,7 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "0.9.1"
+__version__ = "0.10.0"
 __description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
@@ -356,7 +356,7 @@ def _get_components(network, focus, log, log_info, log_warning):
             efficiency = links.efficiency[i]
             capital_cost = links.capital_cost[i]
             marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost[i]
-            p_nom_opt = links.p_nom_opt[link]
+            p_nom_opt = links.p_nom_opt[link]   # TODO: check why using "link" and not "i" (like the rest)
             p0_time_series = _format_series(links_t.p0[link]) if links_t and link in links_t.p0 else "N/A"
             p1_time_series = _format_series(links_t.p1[link]) if links_t and link in links_t.p1 else "N/A"
             bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
@@ -511,7 +511,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
 
 
-def _process_components(buses, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, negative_efficiency, broken_missing, carrier_color, context):
+def _process_components(buses, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, carrier_filter, negative_efficiency, broken_missing, carrier_color, context):
     """
     Parameters
     ----------
@@ -528,6 +528,8 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
     link_filter : TYPE
         DESCRIPTION.
     line_filter : TYPE
+        DESCRIPTION.
+    carrier_filter : TYPE
         DESCRIPTION.
     negative_efficiency : TYPE
         DESCRIPTION.
@@ -563,7 +565,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         generators = values0["generators"]
         for values1 in generators:
             generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
-            if values0["selected"] and (not generator_filter or generator_filter.match(generator)):
+            if values0["selected"] and (not generator_filter or generator_filter.match(generator)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
                         carriers[carrier] = None
@@ -577,7 +579,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         loads = values0["loads"]
         for values1 in loads:
             load, carrier, p_set, pselected = values1
-            if values0["selected"] and (not load_filter or load_filter.match(load)):
+            if values0["selected"] and (not load_filter or load_filter.match(load)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
                         carriers[carrier] = None
@@ -591,7 +593,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         stores = values0["stores"]
         for values1 in stores:
             store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
-            if values0["selected"] and (not store_filter or store_filter.match(store)):
+            if values0["selected"] and (not store_filter or store_filter.match(store)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
                         carriers[carrier] = None
@@ -606,7 +608,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         for values1 in links:
             link, bus_to, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, p1_time_series, bidirectional, direction, missing, selected = values1
             if not missing or broken_missing:
-                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
+                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)) and (not carrier_filter or carrier_filter.match(carrier)):
                     values1[-1] = True
                 if values1[-1] or context:
                     if bidirectional:
@@ -637,7 +639,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
             link_trunk, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
             not_missing = count - missing
             if not_missing or broken_missing:
-                if values0["selected"] and (not link_filter or link_filter.match(link_trunk)):
+                if values0["selected"] and (not link_filter or link_filter.match(link_trunk)) and (not carrier_filter or carrier_filter.match(carrier)):
                     if bus_filter:
                         for values2 in multi_link_branches:
                             link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
@@ -655,7 +657,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         for values1 in multi_link_branches:
             link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
             if not values0["missing"] and not buses[bus_to]["missing"] or broken_missing:
-                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
+                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)) and (not carrier_filter or carrier_filter.match(carrier)):
                     values1[-1] = True
                 if values1[-1] or context:   # TODO: test logic
                     if negative_efficiency or efficiency >= 0:
@@ -679,7 +681,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         for values1 in lines:
             line, bus1, carrier, s_nom_extendable, s_nom, capital_cost, s_nom_opt, p0_time_series, p1_time_series, direction, missing, selected = values1
             if not missing or broken_missing:
-                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not line_filter or line_filter.match(line)):
+                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not line_filter or line_filter.match(line)) and (not carrier_filter or carrier_filter.match(carrier)):
                     if carrier_color:
                         if carrier and carrier not in carriers:
                             carriers[carrier] = None
@@ -1363,7 +1365,7 @@ def _generate_output(dot_representation, file_output, file_format, log, log_info
 
 
 
-def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, log = False, log_info = False, log_warning = False):
+def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, carrier_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, log = False, log_info = False, log_warning = False):
     """
     Parameters
     ----------
@@ -1384,6 +1386,8 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     link_filter : TYPE, optional
         DESCRIPTION. The default is None.
     line_filter : TYPE, optional
+        DESCRIPTION. The default is None.
+    carrier_filter : TYPE, optional
         DESCRIPTION. The default is None.
     negative_efficiency : TYPE, optional
         DESCRIPTION. The default is True.
@@ -1462,6 +1466,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     store_filter_regexp = re.compile(store_filter) if store_filter else None
     link_filter_regexp = re.compile(link_filter) if link_filter else None
     line_filter_regexp = re.compile(line_filter) if line_filter else None
+    carrier_filter_regexp = re.compile(carrier_filter) if carrier_filter else None
 
 
     # get network name
@@ -1492,6 +1497,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("//    store_filter=%s" % store_filter)
     result.append("//    link_filter=%s" % link_filter)
     result.append("//    line_filter=%s" % line_filter)
+    result.append("//    carrier_filter=%s" % carrier_filter)
     result.append("//    negative_efficiency=%s" % negative_efficiency)
     result.append("//    broken_missing=%s" % broken_missing)
     result.append("//    carrier_color=%s" % carrier_color)
@@ -1625,7 +1631,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                         remove[line][1] = True
 
     else:
-        carriers = _process_components(components, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context)
+        carriers = _process_components(components, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, carrier_filter_regexp, negative_efficiency, broken_missing, carrier_color, context)
 
 
     # add component DOT representations to result
@@ -1656,12 +1662,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--focus", nargs = "+", help = "Focus on one or more buses to start visiting")
     parser.add_argument("--neighbourhood", nargs = "+", type = int, help = "Specify how much neighbourhood (around the bus to focus on) should be visited")
-    parser.add_argument("--bus-filter", action = "store", help = "Include/exclude buses in/from the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--generator-filter", action = "store", help = "Include/exclude generators in/from the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--load-filter", action = "store", help = "Include/exclude loads in/from the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--store-filter", action = "store", help = "Include/exclude stores in/from the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--link-filter", action = "store", help = "Include/exclude links in/from the topographical representation of the network in function of a (user-defined) regular expression")
-    parser.add_argument("--line-filter", action = "store", help = "Include/exclude lines in /from the topographical representation of the network in function of a (user-defined) regular expression")
+    parser.add_argument("--bus-filter", action = "store", help = "Include/exclude buses in/from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--generator-filter", action = "store", help = "Include/exclude generators in/from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--load-filter", action = "store", help = "Include/exclude loads in/from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--store-filter", action = "store", help = "Include/exclude stores in/from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--link-filter", action = "store", help = "Include/exclude links in/from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--line-filter", action = "store", help = "Include/exclude lines in /from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--carrier-filter", action = "store", help = "Include/exclude components based on their carriers in /from the topographical representation of the network in function of a regular expression")
     parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Invert the sense of the arrow (i.e. to point to bus0 instead) when dealing with links with negative efficiencies")
     parser.add_argument("--broken-missing", action = "store_true", help = "Include broken links and missing buses in the topographical representation of the network")
     parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
@@ -1685,6 +1692,7 @@ if __name__ == "__main__":
     store_filter = args.store_filter if args.store_filter else None
     link_filter = args.link_filter if args.link_filter else None
     line_filter = args.line_filter if args.line_filter else None
+    carrier_filter = args.carrier_filter if args.carrier_filter else None
     carrier_color = args.carrier_color if args.carrier_color else None
     if args.carrier_color is None:
         carrier_color = None
@@ -1717,7 +1725,7 @@ if __name__ == "__main__":
 
 
             # generate topographical representation of network
-            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
+            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, carrier_filter = carrier_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
 
 
             # check status of generation
@@ -1747,7 +1755,7 @@ if __name__ == "__main__":
 
 
         # generate topographical representation of dummy network
-        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
+        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, carrier_filter = carrier_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
 
 
     # set exit code and finish
