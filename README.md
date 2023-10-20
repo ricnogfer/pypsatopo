@@ -32,13 +32,13 @@ network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
 ## Installation
-PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for [Python](https://en.wikipedia.org/wiki/Python_(programming_language)). To install the tool using pip, open a terminal and execute the following:
+PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for Python. To install the tool using pip, open a terminal and execute the following:
 
 ```bash
 pip install pypsatopo
 ```
 
-PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case these are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). As a reference, PyPSATopo is known to work correctly with the following versions of the components:
+PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case they are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). As a reference, PyPSATopo is known to work correctly with the following versions of the components:
 
 - Python 3.10.8
 
@@ -84,7 +84,7 @@ python pypsatopo.py --help
 
 
 ## PyPSA Components
-Currently, PyPSATopo supports some of the most important PyPSA components, namely: [Bus](https://pypsa.readthedocs.io/en/latest/components.html#bus), [Generator](https://pypsa.readthedocs.io/en/latest/components.html#generator), [Load](https://pypsa.readthedocs.io/en/latest/components.html#load), [Store](https://pypsa.readthedocs.io/en/latest/components.html#store), [Link](https://pypsa.readthedocs.io/en/latest/components.html#link) and [Line](https://pypsa.readthedocs.io/en/latest/components.html#line). These are graphically represented as follows in PyPSATopo:
+Currently, PyPSATopo supports some of the most important PyPSA components, namely: [Bus](https://pypsa.readthedocs.io/en/latest/components.html#bus), [Generator](https://pypsa.readthedocs.io/en/latest/components.html#generator), [Load](https://pypsa.readthedocs.io/en/latest/components.html#load), [Store](https://pypsa.readthedocs.io/en/latest/components.html#store), [Link](https://pypsa.readthedocs.io/en/latest/components.html#link) and [Line](https://pypsa.readthedocs.io/en/latest/components.html#line). These are graphically represented by PyPSATopo as follows:
 
 - Bus (fundamental component of the network, to which components like loads, generators and stores attach. It enforces energy conservation for all elements feeding in and out of it - i.e. like Kirchhoff’s Current Law).
 <kbd>
@@ -225,7 +225,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --carrier-color
     ```
 
-- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter` and `store_filter` tell PyPSATopo which buses, generators, loads and stores to include/exclude, respectively, parameters `link_filter` and `line_filter` tell which links and lines may be visited (or not) upon generating the topographical representation of a network. As an example, the following generates the topographical representation of a network where only the generators named `wind`, `solar` or `CHP` are selected (and all other generators are excluded):
+- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter`, `line_filter` and `carrier_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `link_filter` and `line_filter` tell PyPSATopo which buses, generators, loads, stores, links and lines to include/exclude, respectively, the last two also specify which links or lines may be visited (or not) upon generating the topographical representation of a network. Moreover, parameter `carrier_filter` may be utilized to include/exclude any component in function of its carrier. As an example, the following generates the topographical representation of a network where only the generators named `wind`, `solar` or `CHP` are selected (and all other generators are excluded):
 
     ```python
     pypsatopo.generate(my_network, generator_filter = "wind|solar|CHP")
