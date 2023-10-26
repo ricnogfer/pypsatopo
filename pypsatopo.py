@@ -36,11 +36,11 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                       "BROKEN_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): N/A MW\nPower time series (%s): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "BROKEN_BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (p0): N/A MW\nPower time series (p1): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
-                      "MULTI_LINK_POINT": "   \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal energy: %s\nNominal power: %.2f MW\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", shape = \"point\", width = %.2f, color = \"%s\"]",
-                      "MULTI_LINK_TRUNK": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "BROKEN_MULTI_LINK_TRUNK": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\n\nOptimised nominal power: 0.00 MW\nPower time series (p0): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"none\"]",
-                      "MULTI_LINK_BRANCH": "   \"%s\" -> \"%s\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\n\nOptimised nominal power: %.2f MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
-                      "BROKEN_MULTI_LINK_BRANCH": "   \"%s\" -> \"%s\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
+                      "MULTI_LINK_POINT": "   \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\n%s\nCarrier: %s\nExtendable nominal energy: %s\nNominal power: %.2f MW\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", shape = \"point\", width = %.2f, color = \"%s\"]",
+                      "MULTI_LINK_TRUNK": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\n%s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "BROKEN_MULTI_LINK_TRUNK": "   \"%s (bus)\" -> \"%s (multi-link)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s (bus0)\n%s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (p0): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"none\"]",
+                      "MULTI_LINK_BRANCH": "   \"%s\" -> \"%s\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
+                      "BROKEN_MULTI_LINK_BRANCH": "   \"%s\" -> \"%s\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Multi-link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "LINE": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Line: %s\nBus0: %s\nBus1: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MVA\nCapital cost: %.2f currency/MVA\n\nOptimised nominal power: %.2f MVA\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "BROKEN_LINE": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Line: %s\nBus0: %s\nBus1: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MVA\nCapital cost: %.2f currency/MVA\n\nOptimised nominal power: 0.00 MVA\nPower time series (p0): N/A MW\nPower time series (p1): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]"
                      }
@@ -208,7 +208,7 @@ def _get_components(network, focus, log, log_info, log_warning):
         efficiency = generators.efficiency[i]
         capital_cost = generators.capital_cost[i]
         marginal_cost = _format_series(generators_t.marginal_cost[generator]) if generators_t and generator in generators_t.marginal_cost else "%.2f" % generators.marginal_cost[i]
-        p_nom_opt = generators.p_nom_opt[generator]
+        p_nom_opt = generators.p_nom_opt[i]
         p_time_series = _format_series(generators_t.p[generator]) if generators_t and generator in generators_t.p else "N/A"
         if bus:
             if bus in result:
@@ -271,7 +271,7 @@ def _get_components(network, focus, log, log_info, log_warning):
         e_cyclic = "True" if stores.e_cyclic[i] else "False"
         capital_cost = stores.capital_cost[i]
         marginal_cost = _format_series(stores_t.marginal_cost[store]) if stores_t and store in stores_t.marginal_cost else "%.2f" % stores.marginal_cost[i]
-        e_nom_opt = stores.e_nom_opt[store]
+        e_nom_opt = stores.e_nom_opt[i]
         e_time_series = _format_series(stores_t.e[store]) if stores_t and store in stores_t.p else "N/A"
         p_time_series = _format_series(stores_t.p[store]) if stores_t and store in stores_t.p else "N/A"
         if bus:
@@ -356,7 +356,7 @@ def _get_components(network, focus, log, log_info, log_warning):
             efficiency = links.efficiency[i]
             capital_cost = links.capital_cost[i]
             marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost[i]
-            p_nom_opt = links.p_nom_opt[link]   # TODO: check why using "link" and not "i" (like the rest)
+            p_nom_opt = links.p_nom_opt[i]
             p0_time_series = _format_series(links_t.p0[link]) if links_t and link in links_t.p0 else "N/A"
             p1_time_series = _format_series(links_t.p1[link]) if links_t and link in links_t.p1 else "N/A"
             bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
@@ -435,19 +435,21 @@ def _get_components(network, focus, log, log_info, log_warning):
             carrier = links.carrier[i]
             p_nom_extendable = "True" if links.p_nom_extendable[i] else "False"
             p_nom = links.p_nom[i]
-            p_nom_opt = links.p_nom_opt[link]
+            p_nom_opt = links.p_nom_opt[i]
             p0_time_series = _format_series(links_t.p0[link]) if links_t and link in links_t.p0 else "N/A"
             bus0_value, bus0_efficiency = specified_buses["bus0"]
-            result[bus0_value]["multi_link_trunks"].append([link, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, len(specified_buses) - 1, missing, False])
-            index = len(result[bus0_value]["multi_link_trunks"]) - 1
+            index = len(result[bus0_value]["multi_link_trunks"])
+            bus_to = []
             for key, value in specified_buses.items():
                 bus_value, bus_efficiency = value
                 if key != "bus0":
+                    bus_to.append("To: %s (%s)" % (bus_value, key))
                     px = "p%s" % key[3:]
                     px_time_series = _format_series(links_t[px][link]) if links_t and px in links_t and link in links_t[px] else "N/A"
-                    result[bus0_value]["multi_link_branches"].append([link, bus_value, key, carrier, p_nom_extendable, p_nom, bus_efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, True, False])
+                    result[bus0_value]["multi_link_branches"].append([link, bus_value, key, carrier, p_nom_extendable, p_nom, bus_efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, True, False])
                     if focus:
-                        result[bus_value]["multi_link_branches"].append([link, bus0_value, key, carrier, p_nom_extendable, p_nom, bus_efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, False, False])
+                        result[bus_value]["multi_link_branches"].append([link, bus0_value, key, carrier, p_nom_extendable, p_nom, bus_efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, False, False])
+            result[bus0_value]["multi_link_trunks"].append([link, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, len(specified_buses) - 1, missing, False])
 
 
     # get lines from (PyPSA) network
@@ -463,7 +465,7 @@ def _get_components(network, focus, log, log_info, log_warning):
         s_nom_extendable = "True" if lines.s_nom_extendable[i] else "False"
         s_nom = lines.s_nom[i]
         capital_cost = lines.capital_cost[i]
-        s_nom_opt = lines.s_nom_opt[line]
+        s_nom_opt = lines.s_nom_opt[i]
         p0_time_series = _format_series(lines_t.p0[line]) if lines_t and line in lines_t.p0 else "N/A"
         p1_time_series = _format_series(lines_t.p1[line]) if lines_t and line in lines_t.p1 else "N/A"
         if bus0:
@@ -636,13 +638,13 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         multi_link_trunks = values0["multi_link_trunks"]
         multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_trunks:
-            link_trunk, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
+            link_trunk, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, count, missing, selected = values1
             not_missing = count - missing
             if not_missing or broken_missing:
                 if values0["selected"] and (not link_filter or link_filter.match(link_trunk)) and (not carrier_filter or carrier_filter.match(carrier)):
                     if bus_filter:
                         for values2 in multi_link_branches:
-                            link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
+                            link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
                             if link_trunk == link_branch:
                                 if not values0["missing"] and not buses[bus_to]["missing"] or broken_missing:
                                     if bus_filter.match(bus_to):
@@ -655,7 +657,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         # process multi-link branches (attached to the bus)
         multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_branches:
-            link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
+            link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
             if not values0["missing"] and not buses[bus_to]["missing"] or broken_missing:
                 if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)) and (not carrier_filter or carrier_filter.match(carrier)):
                     values1[-1] = True
@@ -901,81 +903,83 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
 
         # represent multi-link trunks (attached to the bus) in DOT
         multi_link_trunks = values["multi_link_trunks"]
-        for link, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected in multi_link_trunks:
+        for link, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, count, missing, selected in multi_link_trunks:
             not_missing = count - missing
-            bus_to = "1 bus (%d missing)" % missing if not_missing == 1 else "%d buses (%d missing)" % (not_missing, missing)
+            #bus_to = "1 bus (%d missing)" % missing if not_missing == 1 else "%d buses (%d missing)" % (not_missing, missing)
             if not_missing == 0:
                 if broken_missing:
+                    bus_to = "\n".join(bus_to)
                     if selected:
-                        result_multi_link_trunks.append(multi_link_point_representation % (link, TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, BROKEN_MISSING_COLOR))
-                        result_multi_link_trunks.append(broken_multi_link_trunk_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, LINK_THICKNESS, BROKEN_MISSING_COLOR))
+                        result_multi_link_trunks.append(multi_link_point_representation % (link, TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, BROKEN_MISSING_COLOR))
+                        result_multi_link_trunks.append(broken_multi_link_trunk_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, LINK_THICKNESS, BROKEN_MISSING_COLOR))
                     elif context:
-                        result_multi_link_trunks.append(multi_link_point_representation % (link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, FADED_COMPONENT_COLOR))
-                        result_multi_link_trunks.append(broken_multi_link_trunk_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, LINK_THICKNESS, FADED_COMPONENT_COLOR))
+                        result_multi_link_trunks.append(multi_link_point_representation % (link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, FADED_COMPONENT_COLOR))
+                        result_multi_link_trunks.append(broken_multi_link_trunk_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, LINK_THICKNESS, FADED_COMPONENT_COLOR))
             else:
+                bus_to = "\n".join(bus_to) if broken_missing else "\n".join(bus_to[:not_missing])
                 if selected:
-                    result_multi_link_trunks.append(multi_link_point_representation % (link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
-                    result_multi_link_trunks.append(multi_link_trunk_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, LINK_THICKNESS, LINK_COLOR))
+                    result_multi_link_trunks.append(multi_link_point_representation % (link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, LINK_COLOR))
+                    result_multi_link_trunks.append(multi_link_trunk_representation % (bus, link, TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, LINK_THICKNESS, LINK_COLOR))
                 elif context:
-                    result_multi_link_trunks.append(multi_link_point_representation % (link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, FADED_COMPONENT_COLOR))
-                    result_multi_link_trunks.append(multi_link_trunk_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR))
+                    result_multi_link_trunks.append(multi_link_point_representation % (link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, MULTI_LINK_POINT_WIDTH, FADED_COMPONENT_COLOR))
+                    result_multi_link_trunks.append(multi_link_trunk_representation % (bus, link, FADED_TEXT_COLOR, _replace(link), link, bus, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR))
 
 
         # process multi-link branches (attached to the bus)
         # TODO: test this logic
         multi_link_branches = values["multi_link_branches"]
-        for link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected in multi_link_branches:
+        for link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected in multi_link_branches:
             if values["missing"] or buses[bus_to]["missing"]:
                 if broken_missing:
                     if selected:
                         if negative_efficiency or efficiency >= 0:
                             #if direction:
                             if True:
-                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                             #else:
-                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                         else:
                             #if direction:
                             if True:
-                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                             #else:
-                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, BROKEN_MISSING_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                     elif context:
                         if negative_efficiency or efficiency >= 0:
                             #if direction:
                             if True:
-                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                             #else:
-                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (broken)" % link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, "p0", p0_time_series, px, "N/A", LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                         else:
                             #if direction:
                             if True:
-                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                                result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                             #else:
-                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            #    result_multi_link_branches.append(broken_multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), "%s (broken & inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, px, "N/A", "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
             else:   # TODO: ok in terms of the logic in this "else"
                 if selected:
                     if negative_efficiency or efficiency >= 0:
                         if direction:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                         else:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus, TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus_to, "%s (%s)" % (bus, bus_value), carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus, TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus_to, "%s (%s)" % (bus, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                     else:
                         if direction:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                         else:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus, bus_value), "%s (bus0)" % bus_to, carrier, p_nom_extendable, p_nom, -efficiency, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus, "%s (multi-link)" % link, TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus, bus_value), "%s (bus0)" % bus_to, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, LINK_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                 elif context:
                     if negative_efficiency or efficiency >= 0:
                         if direction:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus_to, FADED_TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus, "%s (%s)" % (bus_to, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                         else:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus, FADED_TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus_to, "%s (%s)" % (bus, bus_value), carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (multi-link)" % link, "%s (bus)" % bus, FADED_TEXT_COLOR, _replace(link), link, "%s (bus0)" % bus_to, "%s (%s)" % (bus, bus_value), carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, "p0", p0_time_series, px, px_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                     else:
                         if direction:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus_to, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus_to, bus_value), "%s (bus0)" % bus, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
                         else:
-                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus, bus_value), "%s (bus0)" % bus_to, carrier, p_nom_extendable, p_nom, -efficiency, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                            result_multi_link_branches.append(multi_link_branch_representation % ("%s (bus)" % bus, "%s (multi-link)" % link, FADED_TEXT_COLOR, _replace(link), "%s (inverted)" % link, "%s (%s)" % (bus, bus_value), "%s (bus0)" % bus_to, carrier, p_nom_extendable, p_nom, -efficiency, capital_cost, marginal_cost, p_nom_opt, px, px_time_series, "p0", p0_time_series, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
 
         # represent lines (attached to the bus) in DOT
@@ -1226,13 +1230,13 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         multi_link_trunks = values0["multi_link_trunks"]
         multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_trunks:
-            link_trunk, carrier, p_nom_extendable, p_nom, p_nom_opt, p0_time_series, count, missing, selected = values1
+            link_trunk, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, count, missing, selected = values1
             not_missing = count - missing
             if not_missing or broken_missing:
                 if values0["selected"] and (not link_filter or link_filter.match(link_trunk)):
                     if bus_filter:
                         for values2 in multi_link_branches:
-                            link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
+                            link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
                             if link_trunk == link_branch:
                                 if not values0["missing"] and not components[bus_to]["missing"] or broken_missing:
                                     if bus_filter.match(bus_to):
@@ -1245,7 +1249,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process multi-link branches (attached to the bus)
         multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_branches:
-            link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
+            link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
             if not values0["missing"] and not components[bus_to]["missing"] or broken_missing:
                 if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
                     values1[-1] = True
@@ -1532,7 +1536,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
         remove = dict()
         for bus, values in components.items():
             multi_link_branches = values["multi_link_branches"]
-            for link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected in multi_link_branches:
+            for link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected in multi_link_branches:
                 key = (link, bus_value)
                 if key not in remove:
                     remove[key] = [False, 0, 0]
@@ -1544,7 +1548,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
         for bus, values in components.items():
             multi_link_branches = values["multi_link_branches"]
             for i in range(len(multi_link_branches) - 1, -1, -1):
-                link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = multi_link_branches[i]
+                link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = multi_link_branches[i]
                 key = (link, bus_value)
                 if selected:
                     if remove[key][0] and remove[key][1] > 1:
