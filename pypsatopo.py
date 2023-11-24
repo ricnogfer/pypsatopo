@@ -3,7 +3,7 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 __description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
@@ -186,7 +186,7 @@ def _get_components(network, focus, log, log_info, log_warning):
     buses = network.buses
     buses_t = getattr(network, "buses_t", None)
     for i in range(len(buses)):
-        bus = buses.index.values[i]
+        bus = buses.index[i]
         carrier = buses.carrier[i]
         unit = "" if buses.unit[i] == "None" else buses.unit[i]
         p_time_series = _format_series(buses_t.p[bus]) if buses_t and bus in buses_t.p else "N/A"
@@ -199,8 +199,8 @@ def _get_components(network, focus, log, log_info, log_warning):
     generators = network.generators
     generators_t = getattr(network, "generators_t", None)
     for i in range(len(generators)):
-        generator = generators.index.values[i]
-        bus = generators.bus.values[i]
+        generator = generators.index[i]
+        bus = generators.bus[i]
         carrier = generators.carrier[i]
         p_nom_extendable = "True" if generators.p_nom_extendable[i] else "False"
         p_nom = generators.p_nom[i]
@@ -234,8 +234,8 @@ def _get_components(network, focus, log, log_info, log_warning):
     loads = network.loads
     loads_t = getattr(network, "loads_t", None)
     for i in range(len(loads)):
-        load = loads.index.values[i]
-        bus = loads.bus.values[i]
+        load = loads.index[i]
+        bus = loads.bus[i]
         carrier = loads.carrier[i]
         p_set = _format_series(loads_t.p_set[load]) if loads_t and load in loads_t.p_set else "%.2f" % loads.p_set[i]
         if bus:
@@ -262,8 +262,8 @@ def _get_components(network, focus, log, log_info, log_warning):
     stores = network.stores
     stores_t = getattr(network, "stores_t", None)
     for i in range(len(stores)):
-        store = stores.index.values[i]
-        bus = stores.bus.values[i]
+        store = stores.index[i]
+        bus = stores.bus[i]
         carrier = stores.carrier[i]
         e_nom_extendable = "True" if stores.e_nom_extendable[i] else "False"
         e_nom = stores.e_nom[i]
@@ -347,7 +347,7 @@ def _get_components(network, focus, log, log_info, log_warning):
         if len(specified_buses) < 3:   # mono-link
 
             # process mono-link
-            link = links.index.values[i]
+            link = links.index[i]
             bus0 = links.bus0[i]
             bus1 = links.bus1[i]
             carrier = links.carrier[i]
@@ -410,18 +410,18 @@ def _get_components(network, focus, log, log_info, log_warning):
                     if bus_value in result:
                         if result[bus_value]["missing"]:
                             if log or log_warning:
-                                print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index.values[i], bus_value, key))
+                                print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index[i], bus_value, key))
                             if key != "bus0":
                                 missing += 1
                     else:
                         if log or log_warning:
-                            print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index.values[i], bus_value, key))
+                            print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index[i], bus_value, key))
                         result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                         if key != "bus0":
                             missing += 1
                 else:
                     if log or log_warning:
-                        print("[WAR] Link '%s' does not have %s specified..." % (links.index.values[i], key))
+                        print("[WAR] Link '%s' does not have %s specified..." % (links.index[i], key))
                     bus_value = "bus #%d" % _MISSING_BUS_COUNT
                     _MISSING_BUS_COUNT += 1
                     result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -431,10 +431,12 @@ def _get_components(network, focus, log, log_info, log_warning):
 
 
             # process multi-link
-            link = links.index.values[i]
+            link = links.index[i]
             carrier = links.carrier[i]
             p_nom_extendable = "True" if links.p_nom_extendable[i] else "False"
             p_nom = links.p_nom[i]
+            capital_cost = links.capital_cost[i]
+            marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost[i]
             p_nom_opt = links.p_nom_opt[i]
             p0_time_series = _format_series(links_t.p0[link]) if links_t and link in links_t.p0 else "N/A"
             bus0_value, bus0_efficiency = specified_buses["bus0"]
@@ -458,9 +460,9 @@ def _get_components(network, focus, log, log_info, log_warning):
     lines = network.lines
     lines_t = getattr(network, "lines_t", None)
     for i in range(len(lines)):
-        line = lines.index.values[i]
-        bus0 = lines.bus0.values[i]
-        bus1 = lines.bus1.values[i]
+        line = lines.index[i]
+        bus0 = lines.bus0[i]
+        bus1 = lines.bus1[i]
         carrier = lines.carrier[i]
         s_nom_extendable = "True" if lines.s_nom_extendable[i] else "False"
         s_nom = lines.s_nom[i]
@@ -555,7 +557,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
     for bus, values0 in buses.items():
 
         # process bus
-        if (not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus)):
+        if (not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus)) and (not carrier_filter or carrier_filter.match(values0["carrier"])):
             if carrier_color:
                 carrier = values0["carrier"]
                 if carrier and carrier not in carriers:
@@ -580,7 +582,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         # process loads (attached to the bus)
         loads = values0["loads"]
         for values1 in loads:
-            load, carrier, p_set, pselected = values1
+            load, carrier, p_set, selected = values1
             if values0["selected"] and (not load_filter or load_filter.match(load)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -655,7 +657,6 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
 
 
         # process multi-link branches (attached to the bus)
-        multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_branches:
             link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
             if not values0["missing"] and not buses[bus_to]["missing"] or broken_missing:
@@ -1062,7 +1063,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
 
 
 
-def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers):
+def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, carrier_filter, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers):
     """
     Parameters
     ----------
@@ -1083,6 +1084,8 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
     link_filter : TYPE
         DESCRIPTION.
     line_filter : TYPE
+        DESCRIPTION.
+    carrier_filter : TYPE
         DESCRIPTION.
     negative_efficiency : TYPE
         DESCRIPTION.
@@ -1136,7 +1139,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
         # process bus
         values0 = components[bus]
-        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))):   # skip applying filter to initial bus to focus on in case parameter "bus_filter" is specified
+        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))) and (not carrier_filter or carrier_filter.match(values0["carrier"])):   # skip applying filter to initial bus to focus on in case parameter "bus_filter" is specified
             if carrier_color:
                 carrier = values0["carrier"]
                 if carrier and carrier not in carriers:
@@ -1153,7 +1156,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         generators = values0["generators"]
         for values1 in generators:
             generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
-            if values0["selected"] and (not generator_filter or generator_filter.match(generator)):
+            if values0["selected"] and (not generator_filter or generator_filter.match(generator)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
                         carriers[carrier] = None
@@ -1166,8 +1169,8 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process loads (attached to the bus currently on focus)
         loads = values0["loads"]
         for values1 in loads:
-            load, carrier, p_set, pselected = values1
-            if values0["selected"] and (not load_filter or load_filter.match(load)):
+            load, carrier, p_set, selected = values1
+            if values0["selected"] and (not load_filter or load_filter.match(load)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
                         carriers[carrier] = None
@@ -1181,7 +1184,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         stores = values0["stores"]
         for values1 in stores:
             store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
-            if values0["selected"] and (not store_filter or store_filter.match(store)):
+            if values0["selected"] and (not store_filter or store_filter.match(store)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
                         carriers[carrier] = None
@@ -1196,34 +1199,35 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         for values1 in links:
             link, bus_to, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, p1_time_series, bidirectional, direction, missing, selected = values1
             key = "%s (link)" % link
-            if key not in visited:
-                visited.add(key)
-                if not missing or broken_missing:
-                    if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
-                        values1[-1] = True
-                    if values1[-1] or context:
-                        if bidirectional:
-                            components[bus]["incoming_links_count"] += 1
+            if key in visited:
+                continue
+            visited.add(key)
+            if not missing or broken_missing:
+                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)) and (not carrier_filter or carrier_filter.match(carrier)):
+                    values1[-1] = True
+                if values1[-1] or context:
+                    if bidirectional:
+                        components[bus]["incoming_links_count"] += 1
+                        components[bus]["outgoing_links_count"] += 1
+                        components[bus_to]["incoming_links_count"] += 1
+                        components[bus_to]["outgoing_links_count"] += 1
+                    elif negative_efficiency or efficiency >= 0:
+                        if direction:
                             components[bus]["outgoing_links_count"] += 1
                             components[bus_to]["incoming_links_count"] += 1
-                            components[bus_to]["outgoing_links_count"] += 1
-                        elif negative_efficiency or efficiency >= 0:
-                            if direction:
-                                components[bus]["outgoing_links_count"] += 1
-                                components[bus_to]["incoming_links_count"] += 1
-                            else:
-                                components[bus]["incoming_links_count"] += 1
-                                components[bus_to]["outgoing_links_count"] += 1
                         else:
-                            if direction:
-                                components[bus]["incoming_links_count"] += 1
-                                components[bus_to]["outgoing_links_count"] += 1
-                            else:
-                                components[bus]["outgoing_links_count"] += 1
-                                components[bus_to]["incoming_links_count"] += 1
-                        key = "%s (bus)" % bus_to
-                        if key not in visited:
-                            queue.append((bus_to, neighbourhood - 1))   # add neighbouring (adjacent) bus to queue
+                            components[bus]["incoming_links_count"] += 1
+                            components[bus_to]["outgoing_links_count"] += 1
+                    else:
+                        if direction:
+                            components[bus]["incoming_links_count"] += 1
+                            components[bus_to]["outgoing_links_count"] += 1
+                        else:
+                            components[bus]["outgoing_links_count"] += 1
+                            components[bus_to]["incoming_links_count"] += 1
+                    key = "%s (bus)" % bus_to
+                    if key not in visited:
+                        queue.append((bus_to, neighbourhood - 1))   # add neighbouring (adjacent) bus to queue
 
 
         # process multi-link trunks (attached to the bus)
@@ -1233,7 +1237,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
             link_trunk, bus_to, carrier, p_nom_extendable, p_nom, capital_cost, marginal_cost, p_nom_opt, p0_time_series, count, missing, selected = values1
             not_missing = count - missing
             if not_missing or broken_missing:
-                if values0["selected"] and (not link_filter or link_filter.match(link_trunk)):
+                if values0["selected"] and (not link_filter or link_filter.match(link_trunk)) and (not carrier_filter or carrier_filter.match(carrier)):
                     if bus_filter:
                         for values2 in multi_link_branches:
                             link_branch, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values2
@@ -1247,11 +1251,10 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
 
         # process multi-link branches (attached to the bus)
-        multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_branches:
             link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
             if not values0["missing"] and not components[bus_to]["missing"] or broken_missing:
-                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)):
+                if values0["selected"] and (not bus_filter or bus_filter.match(bus_to)) and (not link_filter or link_filter.match(link)) and (not carrier_filter or carrier_filter.match(carrier)):
                     values1[-1] = True
                     if not direction or neighbourhood > 1:
                         multi_link_trunks = components[bus_to]["multi_link_trunks"]
@@ -1280,20 +1283,21 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         for values1 in lines:
             line, bus1, carrier, s_nom_extendable, s_nom, capital_cost, s_nom_opt, p0_time_series, p1_time_series, direction, missing, selected = values1
             key = "%s (line)" % line
-            if key not in visited:
-                visited.add(key)
-                if not missing or broken_missing:
-                    if values0["selected"] and (not bus_filter or bus_filter.match(bus1)) and (not line_filter or line_filter.match(line)):
-                        if carrier_color:
-                            if carrier and carrier not in carriers:
-                                carriers[carrier] = None
-                        values1[-1] = True
-                    if values1[-1] or context:
-                        components[bus]["lines_count"] += 1
-                        components[bus1]["lines_count"] += 1
-                        key = "%s (bus)" % bus1
-                        if key not in visited:
-                            queue.append((bus1, neighbourhood - 1))   # add neighbouring (adjacent) bus to queue
+            if key in visited:
+                continue
+            visited.add(key)
+            if not missing or broken_missing:
+                if values0["selected"] and (not bus_filter or bus_filter.match(bus1)) and (not line_filter or line_filter.match(line)) and (not carrier_filter or carrier_filter.match(carrier)):
+                    if carrier_color:
+                        if carrier and carrier not in carriers:
+                            carriers[carrier] = None
+                    values1[-1] = True
+                if values1[-1] or context:
+                    components[bus]["lines_count"] += 1
+                    components[bus1]["lines_count"] += 1
+                    key = "%s (bus)" % bus1
+                    if key not in visited:
+                        queue.append((bus1, neighbourhood - 1))   # add neighbouring (adjacent) bus to queue
 
 
 
@@ -1328,7 +1332,7 @@ def _generate_output(dot_representation, file_output, file_format, log, log_info
         with open(file_output_dot, "w") as handle:
             for line in dot_representation:
                 handle.write("%s%s" % (line, os.linesep))
-            handle.write("%s" % os.linesep)
+            handle.write(os.linesep)
     except:
         print("[ERR] The file '%s' could not be written!" % file_output_dot)
         return -1   # return unsuccessfully
@@ -1507,7 +1511,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                         value = neighbourhood
                     else:   # list
                         value = neighbourhood[i] if i < len(neighbourhood) else 0
-                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
+                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, carrier_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
                     visited.add(bus)
 
 
