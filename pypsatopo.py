@@ -27,11 +27,11 @@ import pandas
 
 
 # declare (public) global variables (these may be overwritten by the caller to adjust/personalize the topographical representation of the PyPSA-based network)
-DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bus: %s\nCarrier: %s\nUnit: %s\nGenerators: %d\nLoads: %d\nStores: %d\nIncoming links: %d\nOutgoing links: %d\nLines: %d\n\nPower time series: %s MW\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f)\", color = \"%s\"]",
-                      "MISSING_BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bus: %s (missing)\nGenerators: %d\nLoads: %d\nStores: %d\nIncoming links: %d\nOutgoing links: %d\nLines: %d\n\nPower time series: N/A MW\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f), dashed\", color = \"%s\"]",
-                      "GENERATOR": "   \"%s (generator)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Generator: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nPower set: %s MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series: %s MW\", shape = \"circle\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (generator)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "LOAD": "   \"%s (load)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Load: %s\nBus: %s\nCarrier: %s\nPower set: %s MW\", shape = \"invtriangle\", width = %.2f, height = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
-                      "STORE": "   \"%s (store)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Store: %s\nBus: %s\nCarrier: %s\nExtendable nominal energy: %s\nNominal energy: %.2f MWh\nPower set: %s MW\nCyclic energy: %s\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal energy: %.2f MWh\nEnergy time series: %s MWh\nPower time series: %s MW\", shape = \"box\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
+DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bus: %s\nCarrier: %s\nUnit: %s\nGenerators: %d\nLoads: %d\nStores: %d\nIncoming links: %d\nOutgoing links: %d\nLines: %d\n\nPower time series: %s %s\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f)\", color = \"%s\"]",
+                      "MISSING_BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bus: %s (missing)\nGenerators: %d\nLoads: %d\nStores: %d\nIncoming links: %d\nOutgoing links: %d\nLines: %d\n\nPower time series: N/A %s\", shape = \"underline\", width = %.2f, height = 0.30, style = \"setlinewidth(%.2f), dashed\", color = \"%s\"]",
+                      "GENERATOR": "   \"%s (generator)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Generator: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f %s\nPower set: %s %s\nEfficiency: %.2f\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal power: %.2f %s\nPower time series: %s %s\", shape = \"circle\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (generator)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "LOAD": "   \"%s (load)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Load: %s\nBus: %s\nCarrier: %s\nPower set: %s %s\", shape = \"invtriangle\", width = %.2f, height = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
+                      "STORE": "   \"%s (store)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Store: %s\nBus: %s\nCarrier: %s\nExtendable nominal energy: %s\nNominal energy: %.2f %sh\nPower set: %s %s\nCyclic energy: %s\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal energy: %.2f %sh\nEnergy time series: %s %sh\nPower time series: %s %s\", shape = \"box\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BROKEN_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): N/A MW\nPower time series (%s): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
@@ -188,7 +188,7 @@ def _get_components(network, focus, log, log_info, log_warning):
     for i in range(len(buses)):
         bus = buses.index[i]
         carrier = buses.carrier[i]
-        unit = "" if buses.unit[i] == "None" else buses.unit[i]
+        unit = "MW" if buses.unit[i] == "None" else buses.unit[i]
         p_time_series = _format_series(buses_t.p[bus]) if buses_t and bus in buses_t.p else "N/A"
         result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": False, "selected": False, "carrier": carrier, "unit": unit, "p_time_series": p_time_series}
 
@@ -202,6 +202,8 @@ def _get_components(network, focus, log, log_info, log_warning):
         generator = generators.index[i]
         bus = generators.bus[i]
         carrier = generators.carrier[i]
+        tmp = buses.loc[bus].unit
+        unit = "MW" if tmp == "None" else tmp
         p_nom_extendable = "True" if generators.p_nom_extendable[i] else "False"
         p_nom = generators.p_nom[i]
         p_set = _format_series(generators_t.p_set[generator]) if generators_t and generator in generators_t.p_set else "%.2f" % generators.p_set[i]
@@ -225,7 +227,7 @@ def _get_components(network, focus, log, log_info, log_warning):
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
-        result[bus]["generators"].append([generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, False])
+        result[bus]["generators"].append([generator, carrier, unit, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, False])
 
 
     # get loads from (PyPSA) network
@@ -237,6 +239,8 @@ def _get_components(network, focus, log, log_info, log_warning):
         load = loads.index[i]
         bus = loads.bus[i]
         carrier = loads.carrier[i]
+        tmp = buses.loc[bus].unit
+        unit = "MW" if tmp == "None" else tmp
         p_set = _format_series(loads_t.p_set[load]) if loads_t and load in loads_t.p_set else "%.2f" % loads.p_set[i]
         if bus:
             if bus in result:
@@ -253,7 +257,7 @@ def _get_components(network, focus, log, log_info, log_warning):
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
-        result[bus]["loads"].append([load, carrier, p_set, False])
+        result[bus]["loads"].append([load, carrier, unit, p_set, False])
 
 
     # get stores from (PyPSA) network
@@ -265,6 +269,8 @@ def _get_components(network, focus, log, log_info, log_warning):
         store = stores.index[i]
         bus = stores.bus[i]
         carrier = stores.carrier[i]
+        tmp = buses.loc[bus].unit
+        unit = "MW" if tmp == "None" else tmp
         e_nom_extendable = "True" if stores.e_nom_extendable[i] else "False"
         e_nom = stores.e_nom[i]
         p_set = _format_series(stores_t.p_set[store]) if stores_t and store in stores_t.p_set else "%.2f" % stores.p_set[i]
@@ -289,7 +295,7 @@ def _get_components(network, focus, log, log_info, log_warning):
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
-        result[bus]["stores"].append([store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, False])
+        result[bus]["stores"].append([store, carrier, unit, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, False])
 
 
     # get declared buses that links connect to
@@ -568,7 +574,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         # process generators (attached to the bus)
         generators = values0["generators"]
         for values1 in generators:
-            generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
+            generator, carrier, unit, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
             if values0["selected"] and (not generator_filter or generator_filter.match(generator)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -582,7 +588,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         # process loads (attached to the bus)
         loads = values0["loads"]
         for values1 in loads:
-            load, carrier, p_set, selected = values1
+            load, carrier, unit, p_set, selected = values1
             if values0["selected"] and (not load_filter or load_filter.match(load)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -596,7 +602,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         # process stores (attached to the bus)
         stores = values0["stores"]
         for values1 in stores:
-            store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
+            store, carrier, unit, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
             if values0["selected"] and (not store_filter or store_filter.match(store)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -789,45 +795,45 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
         # represent bus in DOT
         if values["missing"]:
             if values["selected"]:
-                result_buses.append(missing_bus_representation % (bus, TEXT_COLOR, _replace(bus), bus, buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, BROKEN_MISSING_COLOR))
+                result_buses.append(missing_bus_representation % (bus, TEXT_COLOR, _replace(bus), bus, buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], values["unit"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, BROKEN_MISSING_COLOR))
             elif context and broken_missing:
-                result_buses.append(missing_bus_representation % (bus, FADED_TEXT_COLOR, _replace(bus), bus, buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, FADED_COMPONENT_COLOR))
+                result_buses.append(missing_bus_representation % (bus, FADED_TEXT_COLOR, _replace(bus), bus, buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], values["unit"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, FADED_COMPONENT_COLOR))
         else:
             if values["selected"]:
                 bus_color = carriers[values["carrier"]] if values["carrier"] in carriers else BUS_COLOR
-                result_buses.append(bus_representation % (bus, TEXT_COLOR, _replace(bus), bus, values["carrier"], values["unit"], buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], values["p_time_series"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, bus_color))
+                result_buses.append(bus_representation % (bus, TEXT_COLOR, _replace(bus), bus, values["carrier"], values["unit"], buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], values["p_time_series"], values["unit"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, bus_color))
             elif context:
-                result_buses.append(bus_representation % (bus, FADED_TEXT_COLOR, _replace(bus), bus, values["carrier"], values["unit"], buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], values["p_time_series"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, FADED_COMPONENT_COLOR))
+                result_buses.append(bus_representation % (bus, FADED_TEXT_COLOR, _replace(bus), bus, values["carrier"], values["unit"], buses[bus]["generators_count"], buses[bus]["loads_count"], buses[bus]["stores_count"], buses[bus]["incoming_links_count"], buses[bus]["outgoing_links_count"], buses[bus]["lines_count"], values["p_time_series"], values["unit"], BUS_MINIMUM_WIDTH, BUS_THICKNESS, FADED_COMPONENT_COLOR))
 
 
         # represent generators (attached to the bus) in DOT
         generators = values["generators"]
-        for generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected in generators:
+        for generator, carrier, unit, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected in generators:
             if selected:
                 generator_color = carriers[carrier] if carrier in carriers else GENERATOR_COLOR
-                result_generators.append(generator_representation % (generator, TEXT_COLOR, _replace(generator), generator, bus, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, generator_color, generator, bus, LINK_THICKNESS, generator_color))
+                result_generators.append(generator_representation % (generator, TEXT_COLOR, _replace(generator), generator, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, efficiency, capital_cost, unit, marginal_cost, unit, p_nom_opt, unit, p_time_series, unit, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, generator_color, generator, bus, LINK_THICKNESS, generator_color))
             elif context and (not values["missing"] or broken_missing):
-                result_generators.append(generator_representation % (generator, FADED_TEXT_COLOR, _replace(generator), generator, bus, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, FADED_COMPONENT_COLOR, generator, bus, LINK_THICKNESS, FADED_COMPONENT_COLOR))
+                result_generators.append(generator_representation % (generator, FADED_TEXT_COLOR, _replace(generator), generator, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, efficiency, capital_cost, unit, marginal_cost, unit, p_nom_opt, unit, p_time_series, unit, GENERATOR_MINIMUM_WIDTH, GENERATOR_THICKNESS, FADED_COMPONENT_COLOR, generator, bus, LINK_THICKNESS, FADED_COMPONENT_COLOR))
 
 
         # represent loads (attached to the bus) in DOT
         loads = values["loads"]
-        for load, carrier, p_set, selected in loads:
+        for load, carrier, unit, p_set, selected in loads:
             if selected:
                 load_color = carriers[carrier] if carrier in carriers else LOAD_COLOR
-                result_loads.append(load_representation % (load, TEXT_COLOR, _replace(load), load, bus, carrier, p_set, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, load_color, bus, load, LINK_THICKNESS, load_color))
+                result_loads.append(load_representation % (load, TEXT_COLOR, _replace(load), load, bus, carrier, p_set, unit, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, load_color, bus, load, LINK_THICKNESS, load_color))
             elif context and (not values["missing"] or broken_missing):
-                result_loads.append(load_representation % (load, FADED_TEXT_COLOR, _replace(load), load, bus, carrier, p_set, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, FADED_COMPONENT_COLOR, bus, load, LINK_THICKNESS, FADED_COMPONENT_COLOR))
+                result_loads.append(load_representation % (load, FADED_TEXT_COLOR, _replace(load), load, bus, carrier, p_set, unit, LOAD_MINIMUM_WIDTH, LOAD_MINIMUM_HEIGHT, LOAD_THICKNESS, FADED_COMPONENT_COLOR, bus, load, LINK_THICKNESS, FADED_COMPONENT_COLOR))
 
 
         # represent stores (attached to the bus) in DOT
         stores = values["stores"]
-        for store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected in stores:
+        for store, carrier, unit, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected in stores:
             if selected:
                 store_color = carriers[carrier] if carrier in carriers else STORE_COLOR
-                result_stores.append(store_representation % (store, TEXT_COLOR, _replace(store), store, bus, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, STORE_MINIMUM_WIDTH, STORE_THICKNESS, store_color, bus, store, LINK_THICKNESS, store_color, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                result_stores.append(store_representation % (store, TEXT_COLOR, _replace(store), store, bus, carrier, e_nom_extendable, e_nom, unit, p_set, unit, e_cyclic, capital_cost, unit, marginal_cost, unit, e_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORE_MINIMUM_WIDTH, STORE_THICKNESS, store_color, bus, store, LINK_THICKNESS, store_color, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
             elif context and (not values["missing"] or broken_missing):
-                result_stores.append(store_representation % (store, FADED_TEXT_COLOR, _replace(store), store, bus, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, STORE_MINIMUM_WIDTH, STORE_THICKNESS, FADED_COMPONENT_COLOR, bus, store, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                result_stores.append(store_representation % (store, FADED_TEXT_COLOR, _replace(store), store, bus, carrier, e_nom_extendable, e_nom, unit, p_set, unit, e_cyclic, capital_cost, unit, marginal_cost, unit, e_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORE_MINIMUM_WIDTH, STORE_THICKNESS, FADED_COMPONENT_COLOR, bus, store, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
 
         # represent links (attached to the bus) in DOT
@@ -1139,7 +1145,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
         # process bus
         values0 = components[bus]
-        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))) and (not carrier_filter or carrier_filter.match(values0["carrier"])):   # skip applying filter to initial bus to focus on in case parameter "bus_filter" is specified
+        if len(visited) == 1 or ((not values0["missing"] or broken_missing) and (not bus_filter or bus_filter.match(bus))) and (not carrier_filter or carrier_filter.match(values0["carrier"])):
             if carrier_color:
                 carrier = values0["carrier"]
                 if carrier and carrier not in carriers:
@@ -1155,7 +1161,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process generators (attached to the bus currently on focus)
         generators = values0["generators"]
         for values1 in generators:
-            generator, carrier, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
+            generator, carrier, unit, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
             if values0["selected"] and (not generator_filter or generator_filter.match(generator)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -1169,7 +1175,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process loads (attached to the bus currently on focus)
         loads = values0["loads"]
         for values1 in loads:
-            load, carrier, p_set, selected = values1
+            load, carrier, unit, p_set, selected = values1
             if values0["selected"] and (not load_filter or load_filter.match(load)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -1183,7 +1189,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process stores (attached to the bus currently on focus)
         stores = values0["stores"]
         for values1 in stores:
-            store, carrier, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
+            store, carrier, unit, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, selected = values1
             if values0["selected"] and (not store_filter or store_filter.match(store)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -1230,7 +1236,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
                         queue.append((bus_to, neighbourhood - 1))   # add neighbouring (adjacent) bus to queue
 
 
-        # process multi-link trunks (attached to the bus)
+        # process multi-link trunks (attached to the bus currently on focus)
         multi_link_trunks = values0["multi_link_trunks"]
         multi_link_branches = values0["multi_link_branches"]
         for values1 in multi_link_trunks:
@@ -1250,7 +1256,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
                         values1[-1] = True
 
 
-        # process multi-link branches (attached to the bus)
+        # process multi-link branches (attached to the bus currently on focus)
         for values1 in multi_link_branches:
             link, bus_to, bus_value, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, px, px_time_series, index, direction, selected = values1
             if not values0["missing"] and not components[bus_to]["missing"] or broken_missing:
@@ -1278,7 +1284,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
                     queue.append((bus_to, neighbourhood - 1))   # add neighbouring (adjacent) bus to queue
 
 
-        # process lines (attached to the bus)
+        # process lines (attached to the bus currently on focus)
         lines = values0["lines"]
         for values1 in lines:
             line, bus1, carrier, s_nom_extendable, s_nom, capital_cost, s_nom_opt, p0_time_series, p1_time_series, direction, missing, selected = values1
