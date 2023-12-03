@@ -38,7 +38,13 @@ PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/w
 pip install pypsatopo
 ```
 
-PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case they are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). As a reference, PyPSATopo is known to work correctly with the following versions of the components:
+PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case they are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). Alternatively, in case of working with [Conda](https://docs.conda.io) (or [Miniconda](https://docs.conda.io/projects/miniconda)), Dot may be installed automatically by opening a terminal and executing the following:
+
+```bash
+conda install -c conda-forge python-graphviz
+```
+
+As a reference, PyPSATopo is known to work correctly with the following versions of the components:
 
 - Python 3.10.8
 
@@ -48,7 +54,7 @@ PyPSATopo leverages from several components to accomplish its functionalities, n
 
 - Dot 2.40.1
 
-In addition, PyPSATopo should work in any platform (i.e. operating system) as long as the components that this tool depends on are supported in the target platform. As a reference, the tool is known to work correctly in Windows, Linux and macOS.
+In addition, PyPSATopo should work in any platform (i.e. operating system) as long as the components that this tool depends on are supported on the target platform. As a reference, the tool is known to work correctly in Windows, Linux and macOS.
 
 
 ## Usage
@@ -155,7 +161,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --file-output my_network.svg
     ```
 
-- PyPSATopo is able to generate the topographical representation a network in different formats, namely: [SVG](https://en.wikipedia.org/wiki/SVG), [PNG](https://en.wikipedia.org/wiki/PNG), [JPG](https://en.wikipedia.org/wiki/JPEG), [GIF](https://en.wikipedia.org/wiki/GIF) and [PS](https://en.wikipedia.org/wiki/Postscript). To specify the format, set parameter `file_format` with the appropriate value. Otherwise, in case the parameter is not set, the default format is SVG. As an example, the following generates the topographical representation of a network in the GIF format:
+- PyPSATopo is able to generate the topographical representation of a network in different formats, namely: [SVG](https://en.wikipedia.org/wiki/SVG), [PNG](https://en.wikipedia.org/wiki/PNG), [JPG](https://en.wikipedia.org/wiki/JPEG), [GIF](https://en.wikipedia.org/wiki/GIF) and [PS](https://en.wikipedia.org/wiki/Postscript). To specify the format, set parameter `file_format` with the appropriate value. Otherwise, in case the parameter is not set, the default format is SVG. As an example, the following generates the topographical representation of a network in the GIF format:
 
     ```python
     pypsatopo.generate(my_network, file_format = "gif")
@@ -175,7 +181,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --focus "co2 atmosphere" --neighbourhood 3
     ```
 
-    Alternatively, parameters `focus` and `neighbourhood` may be set with a list of buses and respective neighbourhoods to enable focusing on several aspects/segments of the network at the same time (as opposite to just one bus and respective neighbourhood). Setting these parameters with a list of buses/neighbourhoods (instead of a scalar) enables PyPSATopo to visit and combine the output of each bus into one single topographical representation, potentially generating a [disjoint union of graphs](https://en.wikipedia.org/wiki/Disjoint_union_of_graphs). As an example, the following generates the topographical representation of a network by focusing/starting on buses `my_bus0` and `my_bus1`, and including all the components attached to these buses up to a maximum neighbourhood degree of `2` and `3`, respectively:
+    Alternatively, parameters `focus` and `neighbourhood` may be set with a list of buses and respective neighbourhoods to enable focusing on several aspects/segments of the network at the same time (as opposed to just one bus and respective neighbourhood). Setting these parameters with a list of buses/neighbourhoods (instead of a scalar) enables PyPSATopo to visit and combine the output of each bus into one single topographical representation, potentially generating a [disjoint union of graphs](https://en.wikipedia.org/wiki/Disjoint_union_of_graphs). As an example, the following generates the topographical representation of a network by focusing/starting on buses `my_bus0` and `my_bus1`, and including all the components attached to these buses up to a maximum neighbourhood degree of `2` and `3`, respectively:
 
     ```python
     pypsatopo.generate(my_network, focus = ["my_bus0", "my_bus1"], neighbourhood = [2, 3])
@@ -185,7 +191,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --focus my_bus0 my_bus1 --neighbourhood 2 3
     ```
 
-- Just like for links with positive efficiencies, PyPSATopo represents links with negative efficiencies with a line going from *bus0* to, e.g., *bus1* and an arrow at the end of the line pointing to the latter. In case of need to invert the sense of the arrow (i.e. to point to *bus0* instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False`. As an example, the following generates the topographical representation of a network with no negative efficiencies (i.e. all links with negative efficiencies will have their arrows inverted):
+- Just like for links with positive efficiencies, PyPSATopo represents links with negative efficiencies with a line going from *bus0* to, e.g., *bus1* and an arrow at the end of the line pointing to the latter. In case of the need to invert the sense of the arrow (i.e. to point to *bus0* instead) when dealing with negative efficiencies, set parameter `negative_efficiency = False`. As an example, the following generates the topographical representation of a network with no negative efficiencies (i.e. all links with negative efficiencies will have their arrows inverted):
 
     ```python
     pypsatopo.generate(my_network, negative_efficiency = False)
@@ -235,7 +241,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --generator-filter "wind|solar|CHP"
     ```
 
-- By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. among excluded components). To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish them from the formers visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
+- By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. among excluded components). To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish them from the formers, visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
 
     ```python
     pypsatopo.generate(my_network, load_filter = ".*agriculture.*", context = True)
@@ -245,7 +251,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --load-filter .*agriculture.* --context
     ```
 
-- Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such network. Log messages not only facilitate understanding of the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo displaying log messages, set parameter `log = True`. Otherwise, in case the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed). As an example, the following displays log messages while generating the topographical representation of a network:
+- Given that it may take some time to process a complex network, PyPSATopo is capable of displaying log messages while processing such a network. Log messages not only facilitate understanding of the stage at which the tool is in the processing pipeline but also potential issues that the network may have. To enable PyPSATopo to display log messages, set parameter `log = True`. Otherwise, in case the parameter is not set, the tool behaves quietly by default (i.e. no log messages are displayed). As an example, the following displays log messages while generating the topographical representation of a network:
 
     ```python
     pypsatopo.generate(my_network, log = True)
@@ -255,7 +261,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --log
     ```
 
-    While parameter `log` tells PyPSATopo to display all log messages (independently of these being information or warning log messages), parameters `log_info` and `log_warning` tell PyPSATopo to only display information or warning log messages, respectively. As an example, the following displays only information log messages (and all warning log messages will not be displayed) while generating the topographical representation of a network:
+    While parameter `log` tells PyPSATopo to display all log messages (independently of information or warning log messages), parameters `log_info` and `log_warning` tell PyPSATopo to display only information or warning log messages, respectively. As an example, the following displays only information log messages (and all warning log messages will not be displayed) while generating the topographical representation of a network:
 
     ```python
     pypsatopo.generate(my_network, log_info = True)
@@ -274,5 +280,5 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
 
 
 ## Support
-PyPSATopo is actively developed and maintained by the Energy Systems Group at [Aarhus University](https://www.au.dk) (Denmark). Please open a ticket [here](https://github.com/ricnogfer/pypsatopo/issues) in case a bug was found or a feature is missing in this tool.
+PyPSATopo is actively developed and maintained by the Energy Systems Group at [Aarhus University](https://www.au.dk) (Denmark). Please open a ticket [here](https://github.com/ricnogfer/pypsatopo/issues) in case a bug is found or a feature is missing in this tool.
 
