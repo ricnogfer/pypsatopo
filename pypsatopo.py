@@ -105,18 +105,21 @@ def _format_series(values):
     if length == 0:
         result = "[]"
     elif length == 1:
-        result = "[%.2f]" % values[0]
+        result = "[%.2f]" % values.iloc[0]
     elif length == 2:
-        result = "[%.2f, %.2f]" % (values[0], values[1])
+        result = "[%.2f, %.2f]" % (values.iloc[0], values.iloc[1])
     elif length == 3:
-        result = "[%.2f, %.2f, %.2f]" % (values[0], values[1], values[2])
+        result = "[%.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2])
     elif length == 4:
-        result = "[%.2f, %.2f, %.2f, %.2f]" % (values[0], values[1], values[2], values[3])
+        result = "[%.2f, %.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2],
+                                               values.iloc[3])
     elif length == 5:
-        result = "[%.2f, %.2f, %.2f, %.2f, %.2f]" % (values[0], values[1], values[2], values[3], values[4])
+        result = "[%.2f, %.2f, %.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2],
+                                                     values.iloc[3], values.iloc[4])
     else:   # length > 5
-        result = "[%.2f, %.2f, %.2f, %.2f, %.2f, ...]" % (values[0], values[1], values[2], values[3], values[4])
-
+        result = "[%.2f, %.2f, %.2f, %.2f, %.2f, ...]" % (values.iloc[0], values.iloc[1],
+                                                          values.iloc[2], values.iloc[3],
+                                                          values.iloc[4])
 
     return result
 
@@ -205,7 +208,7 @@ def _get_components(network, focus, log, log_info, log_warning):
         tmp = buses.loc[bus].unit
         unit = "MW" if tmp == "None" else tmp
         p_nom_extendable = "True" if generators.p_nom_extendable.iloc[i] else "False"
-        p_nom = generators.p_nom[i]
+        p_nom = generators.p_nom.iloc[i]
         p_set = _format_series(generators_t.p_set[generator]) if generators_t and generator in generators_t.p_set else "%.2f" % generators.p_set.iloc[i]
         efficiency = generators.efficiency.iloc[i]
         capital_cost = generators.capital_cost.iloc[i]
