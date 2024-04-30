@@ -187,8 +187,8 @@ def _get_components(network, focus, log, log_info, log_warning):
     buses_t = getattr(network, "buses_t", None)
     for i in range(len(buses)):
         bus = buses.index[i]
-        carrier = buses.carrier[i]
-        unit = "MW" if buses.unit[i] == "None" else buses.unit[i]
+        carrier = buses.carrier.iloc[i]
+        unit = "MW" if buses.unit.iloc[i] == "None" else buses.unit.iloc[i]
         p_time_series = _format_series(buses_t.p[bus]) if buses_t and bus in buses_t.p else "N/A"
         result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": False, "selected": False, "carrier": carrier, "unit": unit, "p_time_series": p_time_series}
 
@@ -200,17 +200,17 @@ def _get_components(network, focus, log, log_info, log_warning):
     generators_t = getattr(network, "generators_t", None)
     for i in range(len(generators)):
         generator = generators.index[i]
-        bus = generators.bus[i]
-        carrier = generators.carrier[i]
+        bus = generators.bus.iloc[i]
+        carrier = generators.carrier.iloc[i]
         tmp = buses.loc[bus].unit
         unit = "MW" if tmp == "None" else tmp
-        p_nom_extendable = "True" if generators.p_nom_extendable[i] else "False"
+        p_nom_extendable = "True" if generators.p_nom_extendable.iloc[i] else "False"
         p_nom = generators.p_nom[i]
-        p_set = _format_series(generators_t.p_set[generator]) if generators_t and generator in generators_t.p_set else "%.2f" % generators.p_set[i]
-        efficiency = generators.efficiency[i]
-        capital_cost = generators.capital_cost[i]
-        marginal_cost = _format_series(generators_t.marginal_cost[generator]) if generators_t and generator in generators_t.marginal_cost else "%.2f" % generators.marginal_cost[i]
-        p_nom_opt = generators.p_nom_opt[i]
+        p_set = _format_series(generators_t.p_set[generator]) if generators_t and generator in generators_t.p_set else "%.2f" % generators.p_set.iloc[i]
+        efficiency = generators.efficiency.iloc[i]
+        capital_cost = generators.capital_cost.iloc[i]
+        marginal_cost = _format_series(generators_t.marginal_cost[generator]) if generators_t and generator in generators_t.marginal_cost else "%.2f" % generators.marginal_cost.iloc[i]
+        p_nom_opt = generators.p_nom_opt.iloc[i]
         p_time_series = _format_series(generators_t.p[generator]) if generators_t and generator in generators_t.p else "N/A"
         if bus:
             if bus in result:
@@ -237,11 +237,11 @@ def _get_components(network, focus, log, log_info, log_warning):
     loads_t = getattr(network, "loads_t", None)
     for i in range(len(loads)):
         load = loads.index[i]
-        bus = loads.bus[i]
-        carrier = loads.carrier[i]
+        bus = loads.bus.iloc[i]
+        carrier = loads.carrier.iloc[i]
         tmp = buses.loc[bus].unit
         unit = "MW" if tmp == "None" else tmp
-        p_set = _format_series(loads_t.p_set[load]) if loads_t and load in loads_t.p_set else "%.2f" % loads.p_set[i]
+        p_set = _format_series(loads_t.p_set[load]) if loads_t and load in loads_t.p_set else "%.2f" % loads.p_set.iloc[i]
         if bus:
             if bus in result:
                 if result[bus]["missing"]:
@@ -267,17 +267,17 @@ def _get_components(network, focus, log, log_info, log_warning):
     stores_t = getattr(network, "stores_t", None)
     for i in range(len(stores)):
         store = stores.index[i]
-        bus = stores.bus[i]
-        carrier = stores.carrier[i]
+        bus = stores.bus.iloc[i]
+        carrier = stores.carrier.iloc[i]
         tmp = buses.loc[bus].unit
         unit = "MW" if tmp == "None" else tmp
-        e_nom_extendable = "True" if stores.e_nom_extendable[i] else "False"
-        e_nom = stores.e_nom[i]
-        p_set = _format_series(stores_t.p_set[store]) if stores_t and store in stores_t.p_set else "%.2f" % stores.p_set[i]
-        e_cyclic = "True" if stores.e_cyclic[i] else "False"
-        capital_cost = stores.capital_cost[i]
-        marginal_cost = _format_series(stores_t.marginal_cost[store]) if stores_t and store in stores_t.marginal_cost else "%.2f" % stores.marginal_cost[i]
-        e_nom_opt = stores.e_nom_opt[i]
+        e_nom_extendable = "True" if stores.e_nom_extendable.iloc[i] else "False"
+        e_nom = stores.e_nom.iloc[i]
+        p_set = _format_series(stores_t.p_set[store]) if stores_t and store in stores_t.p_set else "%.2f" % stores.p_set.iloc[i]
+        e_cyclic = "True" if stores.e_cyclic.iloc[i] else "False"
+        capital_cost = stores.capital_cost.iloc[i]
+        marginal_cost = _format_series(stores_t.marginal_cost[store]) if stores_t and store in stores_t.marginal_cost else "%.2f" % stores.marginal_cost.iloc[i]
+        e_nom_opt = stores.e_nom_opt.iloc[i]
         e_time_series = _format_series(stores_t.e[store]) if stores_t and store in stores_t.p else "N/A"
         p_time_series = _format_series(stores_t.p[store]) if stores_t and store in stores_t.p else "N/A"
         if bus:
@@ -354,18 +354,18 @@ def _get_components(network, focus, log, log_info, log_warning):
 
             # process mono-link
             link = links.index[i]
-            bus0 = links.bus0[i]
-            bus1 = links.bus1[i]
-            carrier = links.carrier[i]
-            p_nom_extendable = "True" if links.p_nom_extendable[i] else "False"
-            p_nom = links.p_nom[i]
-            efficiency = links.efficiency[i]
-            capital_cost = links.capital_cost[i]
-            marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost[i]
-            p_nom_opt = links.p_nom_opt[i]
+            bus0 = links.bus0.iloc[i]
+            bus1 = links.bus1.iloc[i]
+            carrier = links.carrier.iloc[i]
+            p_nom_extendable = "True" if links.p_nom_extendable.iloc[i] else "False"
+            p_nom = links.p_nom.iloc[i]
+            efficiency = links.efficiency.iloc[i]
+            capital_cost = links.capital_cost.iloc[i]
+            marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost.iloc[i]
+            p_nom_opt = links.p_nom_opt.iloc[i]
             p0_time_series = _format_series(links_t.p0[link]) if links_t and link in links_t.p0 else "N/A"
             p1_time_series = _format_series(links_t.p1[link]) if links_t and link in links_t.p1 else "N/A"
-            bidirectional = (efficiency == 1 and links.marginal_cost[i] == 0 and links.p_min_pu[i] == -1)
+            bidirectional = (efficiency == 1 and links.marginal_cost.iloc[i] == 0 and links.p_min_pu.iloc[i] == -1)
             if bus0:
                 if bus0 in result:
                     if result[bus0]["missing"]:
@@ -438,12 +438,12 @@ def _get_components(network, focus, log, log_info, log_warning):
 
             # process multi-link
             link = links.index[i]
-            carrier = links.carrier[i]
-            p_nom_extendable = "True" if links.p_nom_extendable[i] else "False"
-            p_nom = links.p_nom[i]
-            capital_cost = links.capital_cost[i]
-            marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost[i]
-            p_nom_opt = links.p_nom_opt[i]
+            carrier = links.carrier.iloc[i]
+            p_nom_extendable = "True" if links.p_nom_extendable.iloc[i] else "False"
+            p_nom = links.p_nom.iloc[i]
+            capital_cost = links.capital_cost.iloc[i]
+            marginal_cost = _format_series(links_t.marginal_cost[link]) if links_t and link in links_t.marginal_cost else "%.2f" % links.marginal_cost.iloc[i]
+            p_nom_opt = links.p_nom_opt.iloc[i]
             p0_time_series = _format_series(links_t.p0[link]) if links_t and link in links_t.p0 else "N/A"
             bus0_value, bus0_efficiency = specified_buses["bus0"]
             index = len(result[bus0_value]["multi_link_trunks"])
@@ -467,13 +467,13 @@ def _get_components(network, focus, log, log_info, log_warning):
     lines_t = getattr(network, "lines_t", None)
     for i in range(len(lines)):
         line = lines.index[i]
-        bus0 = lines.bus0[i]
-        bus1 = lines.bus1[i]
-        carrier = lines.carrier[i]
-        s_nom_extendable = "True" if lines.s_nom_extendable[i] else "False"
-        s_nom = lines.s_nom[i]
-        capital_cost = lines.capital_cost[i]
-        s_nom_opt = lines.s_nom_opt[i]
+        bus0 = lines.bus0.iloc[i]
+        bus1 = lines.bus1.iloc[i]
+        carrier = lines.carrier.iloc[i]
+        s_nom_extendable = "True" if lines.s_nom_extendable.iloc[i] else "False"
+        s_nom = lines.s_nom.iloc[i]
+        capital_cost = lines.capital_cost.iloc[i]
+        s_nom_opt = lines.s_nom_opt.iloc[i]
         p0_time_series = _format_series(lines_t.p0[line]) if lines_t and line in lines_t.p0 else "N/A"
         p1_time_series = _format_series(lines_t.p1[line]) if lines_t and line in lines_t.p1 else "N/A"
         if bus0:
