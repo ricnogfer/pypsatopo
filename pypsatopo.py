@@ -3,7 +3,7 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "0.11.0"
+__version__ = "1.0.0"
 __description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
@@ -32,6 +32,7 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                       "GENERATOR": "   \"%s (generator)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Generator: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f %s\nPower set: %s %s\nEfficiency: %.2f\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal power: %.2f %s\nPower time series: %s %s\", shape = \"circle\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (generator)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
                       "LOAD": "   \"%s (load)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Load: %s\nBus: %s\nCarrier: %s\nPower set: %s %s\", shape = \"invtriangle\", width = %.2f, height = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
                       "STORE": "   \"%s (store)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Store: %s\nBus: %s\nCarrier: %s\nExtendable nominal energy: %s\nNominal energy: %.2f %sh\nPower set: %s %s\nCyclic energy: %s\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal energy: %.2f %sh\nEnergy time series: %s %sh\nPower time series: %s %s\", shape = \"box\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
+                      "STORAGE_UNIT": "   \"%s (storage unit)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Storage unit: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f %sh\nPower set: %s %s\nCharge cyclic state: %s\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal power: %.2f %s\nEnergy time series: %s %sh\nPower time series: %s %s\", shape = \"parallelogram\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (storage unit)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BROKEN_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): N/A MW\nPower time series (%s): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
@@ -68,6 +69,9 @@ LOAD_COLOR = "black"
 STORE_MINIMUM_WIDTH = 1.4
 STORE_THICKNESS = 2.0
 STORE_COLOR = "black"
+STORAGE_UNIT_MINIMUM_WIDTH = 1.8
+STORAGE_UNIT_THICKNESS = 2.0
+STORAGE_UNIT_COLOR = "black"
 LINK_THICKNESS = 1.5
 LINK_COLOR = "black"
 LINK_ARROW_SHAPE = "vee"   # acceptable values are: "vee", "normal", "onormal", "diamond", "odiamond", "curve" and "none"
@@ -111,15 +115,11 @@ def _format_series(values):
     elif length == 3:
         result = "[%.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2])
     elif length == 4:
-        result = "[%.2f, %.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2],
-                                               values.iloc[3])
+        result = "[%.2f, %.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2], values.iloc[3])
     elif length == 5:
-        result = "[%.2f, %.2f, %.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2],
-                                                     values.iloc[3], values.iloc[4])
+        result = "[%.2f, %.2f, %.2f, %.2f, %.2f]" % (values.iloc[0], values.iloc[1], values.iloc[2], values.iloc[3], values.iloc[4])
     else:   # length > 5
-        result = "[%.2f, %.2f, %.2f, %.2f, %.2f, ...]" % (values.iloc[0], values.iloc[1],
-                                                          values.iloc[2], values.iloc[3],
-                                                          values.iloc[4])
+        result = "[%.2f, %.2f, %.2f, %.2f, %.2f, ...]" % (values.iloc[0], values.iloc[1], values.iloc[2], values.iloc[3], values.iloc[4])
 
     return result
 
@@ -193,7 +193,7 @@ def _get_components(network, focus, log, log_info, log_warning):
         carrier = buses.carrier.iloc[i]
         unit = "MW" if buses.unit.iloc[i] == "None" else buses.unit.iloc[i]
         p_time_series = _format_series(buses_t.p[bus]) if buses_t and bus in buses_t.p else "N/A"
-        result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": False, "selected": False, "carrier": carrier, "unit": unit, "p_time_series": p_time_series}
+        result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": False, "selected": False, "carrier": carrier, "unit": unit, "p_time_series": p_time_series}
 
 
     # get generators from (PyPSA) network
@@ -223,13 +223,13 @@ def _get_components(network, focus, log, log_info, log_warning):
             else:
                 if log or log_warning:
                     print("[WAR] Generator '%s' connects to bus '%s' which does not exist..." % (generator, bus))
-                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
                 print("[WAR] Generator '%s' does not have a bus specified..." % generator)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
-            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         result[bus]["generators"].append([generator, carrier, unit, p_nom_extendable, p_nom, p_set, efficiency, capital_cost, marginal_cost, p_nom_opt, p_time_series, False])
 
 
@@ -253,13 +253,13 @@ def _get_components(network, focus, log, log_info, log_warning):
             else:
                 if log or log_warning:
                     print("[WAR] Load '%s' connects to bus '%s' which does not exist..." % (load, bus))
-                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
                 print("[WAR] Load '%s' does not have a bus specified..." % load)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
-            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         result[bus]["loads"].append([load, carrier, unit, p_set, False])
 
 
@@ -291,14 +291,52 @@ def _get_components(network, focus, log, log_info, log_warning):
             else:
                 if log or log_warning:
                     print("[WAR] Store '%s' connects to bus '%s' which does not exist..." % (store, bus))
-                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
                 print("[WAR] Store '%s' does not have a bus specified..." % store)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
-            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         result[bus]["stores"].append([store, carrier, unit, e_nom_extendable, e_nom, p_set, e_cyclic, capital_cost, marginal_cost, e_nom_opt, e_time_series, p_time_series, False])
+
+
+    # get storage units from (PyPSA) network
+    if log or log_info:
+        print("[INF] Retrieving storage units from network...")
+    storage_units = network.storage_units
+    storage_units_t = getattr(network, "storage_units_t", None)
+    for i in range(len(storage_units)):
+        storage_unit = storage_units.index[i]
+        bus = storage_units.bus.iloc[i]
+        carrier = storage_units.carrier.iloc[i]
+        tmp = buses.loc[bus].unit
+        unit = "MW" if tmp == "None" else tmp
+        p_nom_extendable = "True" if storage_units.p_nom_extendable.iloc[i] else "False"
+        p_nom = storage_units.p_nom.iloc[i]
+        p_set = _format_series(storage_units_t.p_set[storage_unit]) if storage_units_t and storage_unit in storage_units_t.p_set else "%.2f" % storage_units.p_set.iloc[i]
+        cyclic_state_charge = "True" if storage_units.cyclic_state_of_charge.iloc[i] else "False"
+        capital_cost = storage_units.capital_cost.iloc[i]
+        marginal_cost = _format_series(storage_units_t.marginal_cost[storage_unit]) if storage_units_t and storage_unit in storage_units_t.marginal_cost else "%.2f" % storage_units.marginal_cost.iloc[i]
+        p_nom_opt = storage_units.p_nom_opt.iloc[i]
+        e_time_series = _format_series(storage_units_t.e[storage_unit]) if storage_units_t and storage_unit in storage_units_t.p else "N/A"
+        p_time_series = _format_series(storage_units_t.p[storage_unit]) if storage_units_t and storage_unit in storage_units_t.p else "N/A"
+        if bus:
+            if bus in result:
+                if result[bus]["missing"]:
+                    if log or log_warning:
+                        print("[WAR] Storage unit '%s' connects to bus '%s' which does not exist..." % (storage_unit, bus))
+            else:
+                if log or log_warning:
+                    print("[WAR] Storage unit '%s' connects to bus '%s' which does not exist..." % (storage_unit, bus))
+                result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+        else:
+            if log or log_warning:
+                print("[WAR] Storage unit '%s' does not have a bus specified..." % storage_unit)
+            bus = "bus #%d" % _MISSING_BUS_COUNT
+            _MISSING_BUS_COUNT += 1
+            result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+        result[bus]["storage_units"].append([storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, False])
 
 
     # get declared buses that links connect to
@@ -378,14 +416,14 @@ def _get_components(network, focus, log, log_info, log_warning):
                 else:
                     if log or log_warning:
                         print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist..." % (link, bus0))
-                    result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                    result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     missing0 = True
             else:
                 if log or log_warning:
                     print("[WAR] Link '%s' does not have bus0 specified..." % link)
                 bus0 = "bus #%d" % _MISSING_BUS_COUNT
                 _MISSING_BUS_COUNT += 1
-                result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing0 = True
             if bus1:
                 if bus1 in result:
@@ -396,14 +434,14 @@ def _get_components(network, focus, log, log_info, log_warning):
                 else:
                     if log or log_warning:
                         print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist..." % (link, bus1))
-                    result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                    result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     missing1 = True
             else:
                 if log or log_warning:
                     print("[WAR] Link '%s' does not have bus1 specified..." % link)
                 bus1 = "bus #%d" % _MISSING_BUS_COUNT
                 _MISSING_BUS_COUNT += 1
-                result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing1 = True
             result[bus0]["links"].append([link, bus1, carrier, p_nom_extendable, p_nom, efficiency, capital_cost, marginal_cost, p_nom_opt, p0_time_series, p1_time_series, bidirectional, True, missing0 or missing1, False])
             if focus:
@@ -433,7 +471,7 @@ def _get_components(network, focus, log, log_info, log_warning):
                         print("[WAR] Link '%s' does not have %s specified..." % (links.index[i], key))
                     bus_value = "bus #%d" % _MISSING_BUS_COUNT
                     _MISSING_BUS_COUNT += 1
-                    result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                    result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     value[0] = bus_value
                     if key != "bus0":
                         missing += 1
@@ -488,14 +526,14 @@ def _get_components(network, focus, log, log_info, log_warning):
             else:
                 if log or log_warning:
                     print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist..." % (line, bus0))
-                result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing0 = True
         else:
             if log or log_warning:
                 print("[WAR] Line '%s' does not have bus0 specified..." % line)
             bus0 = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
-            result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+            result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
             missing0 = True
         if bus1:
             if bus1 in result:
@@ -506,14 +544,14 @@ def _get_components(network, focus, log, log_info, log_warning):
             else:
                 if log or log_warning:
                     print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist..." % (line, bus1))
-                result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+                result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing1 = True
         else:
             if log or log_warning:
                 print("[WAR] Line '%s' does not have bus1 specified..." % line)
             bus1 = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
-            result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
+            result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
             missing1 = True
         result[bus0]["lines"].append([line, bus1, carrier, s_nom_extendable, s_nom, capital_cost, s_nom_opt, p0_time_series, p1_time_series, True, missing0 or missing1, False])
         if focus:
@@ -524,7 +562,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
 
 
-def _process_components(buses, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, carrier_filter, negative_efficiency, broken_missing, carrier_color, context):
+def _process_components(buses, bus_filter, generator_filter, load_filter, store_filter, storage_unit_filter, link_filter, line_filter, carrier_filter, negative_efficiency, broken_missing, carrier_color, context):
     """
     Parameters
     ----------
@@ -537,6 +575,8 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
     load_filter : TYPE
         DESCRIPTION.
     store_filter : TYPE
+        DESCRIPTION.
+    storage_unit_filter : TYPE
         DESCRIPTION.
     link_filter : TYPE
         DESCRIPTION.
@@ -614,6 +654,20 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
                 buses[bus]["stores_count"] += 1
             elif context:
                 buses[bus]["stores_count"] += 1
+
+
+        # process storage units (attached to the bus)
+        storage_units = values0["storage_units"]
+        for values1 in storage_units:
+            storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, selected = values1
+            if values0["selected"] and (not storage_unit_filter or storage_unit_filter.match(storage_unit)) and (not carrier_filter or carrier_filter.match(carrier)):
+                if carrier_color:
+                    if carrier and carrier not in carriers:
+                        carriers[carrier] = None
+                values1[-1] = True
+                buses[bus]["storage_units_count"] += 1
+            elif context:
+                buses[bus]["storage_units_count"] += 1
 
 
         # process links (attached to the bus)
@@ -741,6 +795,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
     result_generators = list()
     result_loads = list()
     result_stores = list()
+    result_storage_units = list()
     result_links = list()
     result_multi_link_trunks = list()
     result_multi_link_branches = list()
@@ -779,6 +834,7 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
     generator_representation = DOT_REPRESENTATION["GENERATOR"]
     load_representation = DOT_REPRESENTATION["LOAD"]
     store_representation = DOT_REPRESENTATION["STORE"]
+    storage_unit_representation = DOT_REPRESENTATION["STORAGE_UNIT"]
     link_representation = DOT_REPRESENTATION["LINK"]
     broken_link_representation = DOT_REPRESENTATION["BROKEN_LINK"]
     bidirectional_link_representation = DOT_REPRESENTATION["BIDIRECTIONAL_LINK"]
@@ -838,6 +894,15 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
             elif context and (not values["missing"] or broken_missing):
                 result_stores.append(store_representation % (store, FADED_TEXT_COLOR, _replace(store), store, bus, carrier, e_nom_extendable, e_nom, unit, p_set, unit, e_cyclic, capital_cost, unit, marginal_cost, unit, e_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORE_MINIMUM_WIDTH, STORE_THICKNESS, FADED_COMPONENT_COLOR, bus, store, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
+
+        # represent storage units (attached to the bus) in DOT
+        storage_units = values["storage_units"]
+        for storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, selected in storage_units:
+            if selected:
+                storage_unit_color = carriers[carrier] if carrier in carriers else STORAGE_UNIT_COLOR
+                result_storage_units.append(storage_unit_representation % (storage_unit, TEXT_COLOR, _replace(storage_unit), storage_unit, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, cyclic_state_charge, capital_cost, unit, marginal_cost, unit, p_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORAGE_UNIT_MINIMUM_WIDTH, STORAGE_UNIT_THICKNESS, storage_unit_color, bus, storage_unit, LINK_THICKNESS, storage_unit_color, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+            elif context and (not values["missing"] or broken_missing):
+                result_storage_units.append(storage_unit_representation % (storage_unit, FADED_TEXT_COLOR, _replace(storage_unit), storage_unit, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, cyclic_state_charge, capital_cost, unit, marginal_cost, unit, e_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORAGE_UNIT_MINIMUM_WIDTH, STORAGE_UNIT_THICKNESS, FADED_COMPONENT_COLOR, bus, storage_unit, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
         # represent links (attached to the bus) in DOT
         links = values["links"]
@@ -1045,6 +1110,12 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
     result.append("")
 
 
+    # add storage units to result
+    result.append("   // storage units (%d)" % len(result_storage_units))
+    result.extend(result_storage_units)
+    result.append("")
+
+
     # add links to result
     result.append("   // links (%d)" % len(result_links))
     result.extend(result_links)
@@ -1068,11 +1139,11 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
     result.extend(result_lines)
 
 
-    return result, len(result_buses), len(result_generators), len(result_loads), len(result_stores), len(result_links) + len(result_multi_link_trunks) / 2, len(result_lines)
+    return result, len(result_buses), len(result_generators), len(result_loads), len(result_stores), len(result_storage_units), len(result_links) + len(result_multi_link_trunks) / 2, len(result_lines)
 
 
 
-def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, link_filter, line_filter, carrier_filter, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers):
+def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_filter, store_filter, storage_unit_filter, link_filter, line_filter, carrier_filter, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers):
     """
     Parameters
     ----------
@@ -1089,6 +1160,8 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
     load_filter : TYPE
         DESCRIPTION.
     store_filter : TYPE
+        DESCRIPTION.
+    storage_unit_filter : TYPE
         DESCRIPTION.
     link_filter : TYPE
         DESCRIPTION.
@@ -1118,7 +1191,6 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
     None.
     """
 
-    result = list()
     visited = set()
     queue = deque()
 
@@ -1201,6 +1273,20 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
                 components[bus]["stores_count"] += 1
             elif context:
                 components[bus]["stores_count"] += 1
+
+
+        # process storage units (attached to the bus currently on focus)
+        storage_units = values0["storage_units"]
+        for values1 in storage_units:
+            storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, selected = values1
+            if values0["selected"] and (not storage_unit_filter or storage_unit_filter.match(storage_unit)) and (not carrier_filter or carrier_filter.match(carrier)):
+                if carrier_color:
+                    if carrier and carrier not in carriers:
+                        carriers[carrier] = None
+                values1[-1] = True
+                components[bus]["storage_units_count"] += 1
+            elif context:
+                components[bus]["storage_units_count"] += 1
 
 
         # process links (attached to the bus currently on focus)
@@ -1382,7 +1468,7 @@ def _generate_output(dot_representation, file_output, file_format, log, log_info
 
 
 
-def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, link_filter = None, line_filter = None, carrier_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, log = False, log_info = False, log_warning = False):
+def generate(network, focus = None, neighbourhood = 0, bus_filter = None, generator_filter = None, load_filter = None, store_filter = None, storage_unit_filter = None, link_filter = None, line_filter = None, carrier_filter = None, negative_efficiency = True, broken_missing = False, carrier_color = None, context = False, file_output = FILE_OUTPUT, file_format = FILE_FORMAT, log = False, log_info = False, log_warning = False):
     """
     Parameters
     ----------
@@ -1399,6 +1485,8 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     load_filter : TYPE, optional
         DESCRIPTION. The default is None.
     store_filter : TYPE, optional
+        DESCRIPTION. The default is None.
+    storage_unit_filter : TYPE, optional
         DESCRIPTION. The default is None.
     link_filter : TYPE, optional
         DESCRIPTION. The default is None.
@@ -1481,6 +1569,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     generator_filter_regexp = re.compile(generator_filter) if generator_filter else None
     load_filter_regexp = re.compile(load_filter) if load_filter else None
     store_filter_regexp = re.compile(store_filter) if store_filter else None
+    storage_unit_filter_regexp = re.compile(storage_unit_filter) if storage_unit_filter else None
     link_filter_regexp = re.compile(link_filter) if link_filter else None
     line_filter_regexp = re.compile(line_filter) if line_filter else None
     carrier_filter_regexp = re.compile(carrier_filter) if carrier_filter else None
@@ -1511,7 +1600,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                 value = neighbourhood
             else:   # list
                 value = neighbourhood[0] if len(neighbourhood) else 0
-            _focus(components, focus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
+            _focus(components, focus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, storage_unit_filter_regexp, link_filter_regexp, line_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
         else:   # list
             for i in range(len(focus)):
                 bus = focus[i]
@@ -1520,7 +1609,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                         value = neighbourhood
                     else:   # list
                         value = neighbourhood[i] if i < len(neighbourhood) else 0
-                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, carrier_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
+                    _focus(components, bus, value, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, storage_unit_filter_regexp, link_filter_regexp, line_filter_regexp, carrier_filter_regexp, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning, carriers)
                     visited.add(bus)
 
 
@@ -1594,11 +1683,11 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
                         remove[line][1] = True
 
     else:
-        carriers = _process_components(components, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, link_filter_regexp, line_filter_regexp, carrier_filter_regexp, negative_efficiency, broken_missing, carrier_color, context)
+        carriers = _process_components(components, bus_filter_regexp, generator_filter_regexp, load_filter_regexp, store_filter_regexp, storage_unit_filter_regexp, link_filter_regexp, line_filter_regexp, carrier_filter_regexp, negative_efficiency, broken_missing, carrier_color, context)
 
 
     # get DOT representation of components
-    representation, buses_count, generators_count, loads_count, stores_count, links_count, lines_count = _represent_components(components, carriers, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning)
+    representation, buses_count, generators_count, loads_count, stores_count, storage_units_count, links_count, lines_count = _represent_components(components, carriers, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning)
 
 
     # add metadata to digraph
@@ -1616,6 +1705,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("//    generator_filter=%s" % generator_filter)
     result.append("//    load_filter=%s" % load_filter)
     result.append("//    store_filter=%s" % store_filter)
+    result.append("//    storage_unit_filter=%s" % storage_unit_filter)
     result.append("//    link_filter=%s" % link_filter)
     result.append("//    line_filter=%s" % line_filter)
     result.append("//    carrier_filter=%s" % carrier_filter)
@@ -1645,7 +1735,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
     result.append("   labelloc = \"t\"")
     result.append("   label = \"%s\n\n\n           \"" % network_name)
-    result.append("   tooltip = \"Network: %s\nBuses: %d (out of %d)\nGenerators: %d (out of %d)\nLoads: %s (out of %d)\nStores: %d (out of %d)\nLinks: %d (out of %d)\nLines: %d (out of %d)\nSnapshots: %d\"" % (network_name, buses_count, len(pypsa_network.buses), generators_count, len(pypsa_network.generators), loads_count, len(pypsa_network.loads), stores_count, len(pypsa_network.stores), links_count, len(pypsa_network.links), lines_count, len(pypsa_network.lines), len(pypsa_network.snapshots)))
+    result.append("   tooltip = \"Network: %s\nBuses: %d (out of %d)\nGenerators: %d (out of %d)\nLoads: %s (out of %d)\nStores: %d (out of %d)\nStorage units: %d (out of %d)\nLinks: %d (out of %d)\nLines: %d (out of %d)\nSnapshots: %d\"" % (network_name, buses_count, len(pypsa_network.buses), generators_count, len(pypsa_network.generators), loads_count, len(pypsa_network.loads), stores_count, len(pypsa_network.stores), storage_units_count, len(pypsa_network.storage_units), links_count, len(pypsa_network.links), lines_count, len(pypsa_network.lines), len(pypsa_network.snapshots)))
     result.append("   rankdir = \"%s\"" % RANK_DIRECTION)
     result.append("   ranksep = %.2f" % RANK_SEPARATION)
     result.append("   nodesep = %.2f" % NODE_SEPARATION)
@@ -1687,6 +1777,7 @@ if __name__ == "__main__":
     parser.add_argument("--generator-filter", action = "store", help = "Include/exclude generators in/from the topographical representation of the network in function of a regular expression")
     parser.add_argument("--load-filter", action = "store", help = "Include/exclude loads in/from the topographical representation of the network in function of a regular expression")
     parser.add_argument("--store-filter", action = "store", help = "Include/exclude stores in/from the topographical representation of the network in function of a regular expression")
+    parser.add_argument("--storage-unit-filter", action = "store", help = "Include/exclude storage units in/from the topographical representation of the network in function of a regular expression")
     parser.add_argument("--link-filter", action = "store", help = "Include/exclude links in/from the topographical representation of the network in function of a regular expression")
     parser.add_argument("--line-filter", action = "store", help = "Include/exclude lines in /from the topographical representation of the network in function of a regular expression")
     parser.add_argument("--carrier-filter", action = "store", help = "Include/exclude components based on their carriers in /from the topographical representation of the network in function of a regular expression")
@@ -1711,6 +1802,7 @@ if __name__ == "__main__":
     generator_filter = args.generator_filter if args.generator_filter else None
     load_filter = args.load_filter if args.load_filter else None
     store_filter = args.store_filter if args.store_filter else None
+    storage_unit_filter = args.storage_unit_filter if args.storage_unit_filter else None
     link_filter = args.link_filter if args.link_filter else None
     line_filter = args.line_filter if args.line_filter else None
     carrier_filter = args.carrier_filter if args.carrier_filter else None
@@ -1746,7 +1838,7 @@ if __name__ == "__main__":
 
 
             # generate topographical representation of network
-            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, carrier_filter = carrier_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
+            status = generate(files[i], focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, storage_unit_filter = storage_unit_filter, link_filter = link_filter, line_filter = line_filter, carrier_filter = carrier_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
 
 
             # check status of generation
@@ -1771,12 +1863,13 @@ if __name__ == "__main__":
         network.add("Generator", "solar", bus = "electricity")
         network.add("Load", "vehicle", bus = "transport")
         network.add("Store", "battery", bus = "electricity")
+        network.add("StorageUnit", "hydro", bus = "electricity")
         network.add("Link", "ICEV", bus0 = "oil", bus1 = "transport")
         network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
         # generate topographical representation of dummy network
-        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, link_filter = link_filter, line_filter = line_filter, carrier_filter = carrier_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
+        status = generate(network, focus = args.focus, neighbourhood = neighbourhood, bus_filter = bus_filter, generator_filter = generator_filter, load_filter = load_filter, store_filter = store_filter, storage_unit_filter = storage_unit_filter, link_filter = link_filter, line_filter = line_filter, carrier_filter = carrier_filter, negative_efficiency = not args.no_negative_efficiency, broken_missing = args.broken_missing, carrier_color = carrier_color, context = args.context, file_output = file_output, file_format = file_format, log = args.log, log_info = args.log_info, log_warning = args.log_warning)
 
 
     # set exit code and finish
