@@ -21,6 +21,7 @@ network.add("Generator", "oil", bus = "oil")
 network.add("Generator", "solar", bus = "electricity")
 network.add("Load", "vehicle", bus = "transport")
 network.add("Store", "battery", bus = "electricity")
+network.add("StorageUnit", "hydro", bus = "electricity")
 network.add("Link", "ICEV", bus0 = "oil", bus1 = "transport")
 network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ```
@@ -90,7 +91,7 @@ python pypsatopo.py --help
 
 
 ## PyPSA Components
-Currently, PyPSATopo supports some of the most important PyPSA components, namely: [Bus](https://pypsa.readthedocs.io/en/latest/components.html#bus), [Generator](https://pypsa.readthedocs.io/en/latest/components.html#generator), [Load](https://pypsa.readthedocs.io/en/latest/components.html#load), [Store](https://pypsa.readthedocs.io/en/latest/components.html#store), [Link](https://pypsa.readthedocs.io/en/latest/components.html#link) and [Line](https://pypsa.readthedocs.io/en/latest/components.html#line). These are graphically represented by PyPSATopo as follows:
+Currently, PyPSATopo supports some of the most important PyPSA components, namely: [Bus](https://pypsa.readthedocs.io/en/latest/components.html#bus), [Generator](https://pypsa.readthedocs.io/en/latest/components.html#generator), [Load](https://pypsa.readthedocs.io/en/latest/components.html#load), [Store](https://pypsa.readthedocs.io/en/latest/components.html#store), [Storage unit](https://pypsa.readthedocs.io/en/latest/components.html#storage-unit), [Link](https://pypsa.readthedocs.io/en/latest/components.html#link) and [Line](https://pypsa.readthedocs.io/en/latest/components.html#line). These are graphically represented by PyPSATopo as follows:
 
 - Bus (fundamental component of the network, to which components like loads, generators and stores attach. It enforces energy conservation for all elements feeding in and out of it - i.e. like Kirchhoff’s Current Law).
 <kbd>
@@ -119,6 +120,14 @@ Currently, PyPSATopo supports some of the most important PyPSA components, namel
 - Store (attaches to a single bus and stores energy only (it cannot convert between energy carriers). It inherits its energy carrier from the bus to which it is attached).
 <kbd>
    <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsatopo_store.png" alt = "Graphical representation of a store in PyPSATopo" style = "background-color: white;" width = 350>
+</kbd>
+</br>
+</br>
+</br>
+
+- Storage unit (attaches to a single bus and used for inter-temporal power shifting. It has a time-varying state of charge and various efficiencies).
+<kbd>
+   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsatopo_storage_unit.png" alt = "Graphical representation of a storage unit in PyPSATopo" style = "background-color: white;" width = 350>
 </kbd>
 </br>
 </br>

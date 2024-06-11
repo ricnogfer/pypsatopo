@@ -20,6 +20,7 @@ network.add("Generator", "oil", bus = "oil")
 network.add("Generator", "solar", bus = "electricity")
 network.add("Load", "vehicle", bus = "transport")
 network.add("Store", "battery", bus = "electricity")
+network.add("StorageUnit", "hydro", bus = "electricity")
 network.add("Link", "ICEV", bus0 = "oil", bus1 = "transport")
 network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ```
