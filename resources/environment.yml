@@ -5,6 +5,7 @@ channels:
 
 dependencies:
 - python>=3.2
-- pypsa=0.21.3
-- pandas=1.5.3
+- pypsa>=0.21.3
+- pandas>=1.5.3
+- python-graphviz
 
