@@ -33,13 +33,13 @@ network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 
 
 ## Installation
-PyPSATopo can be installed in the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for Python. To install the tool using pip, open a terminal and execute the following:
+PyPSATopo can be installed on the machine using [pip](https://en.wikipedia.org/wiki/Pip_(package_manager)), a package management system for Python. To install the tool using pip, open a terminal and execute the following:
 
 ```bash
 pip install pypsatopo
 ```
 
-PyPSATopo leverages from several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case they are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). Alternatively, in case of working with [Conda](https://docs.conda.io) (or [Miniconda](https://docs.conda.io/projects/miniconda)), Dot may be installed automatically by opening a terminal and executing the following:
+PyPSATopo leverages several components to accomplish its functionalities, namely: [Python](https://www.python.org), [PyPSA](https://pypsa.org), [Pandas](https://pandas.pydata.org) and [Dot](https://graphviz.org) (from Graphviz). Consequently, these should be installed before running PyPSATopo. While PyPSA and Pandas are automatically installed by PyPSATopo in case they are missing, Dot must be manually installed by the user (see [download](https://graphviz.org/download) for additional details). Alternatively, in case of working with [Conda](https://docs.conda.io) (or [Miniconda](https://docs.conda.io/projects/miniconda)), Dot may be installed automatically by opening a terminal and executing the following:
 
 ```bash
 conda install -c conda-forge python-graphviz
@@ -55,7 +55,7 @@ As a reference, PyPSATopo is known to work correctly with the following versions
 
 - Dot 2.40.1
 
-In addition, PyPSATopo should work in any platform (i.e. operating system) as long as the components that this tool depends on are supported on the target platform. As a reference, the tool is known to work correctly in Windows, Linux and macOS.
+In addition, PyPSATopo should work on any platform (i.e. operating system) as long as the components that this tool depends on are supported on the target platform. As a reference, the tool is known to work correctly in Windows, Linux and macOS.
 
 
 ## Usage
@@ -125,7 +125,7 @@ Currently, PyPSATopo supports some of the most important PyPSA components, namel
 </br>
 </br>
 
-- Storage unit (attaches to a single bus and used for inter-temporal power shifting. It has a time-varying state of charge and various efficiencies).
+- Storage unit (attaches to a single bus and is used for inter-temporal power shifting. It has a time-varying state of charge and various efficiencies).
 <kbd>
    <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsatopo_storage_unit.png" alt = "Graphical representation of a storage unit in PyPSATopo" style = "background-color: white;" width = 350>
 </kbd>
@@ -158,7 +158,7 @@ Currently, PyPSATopo supports some of the most important PyPSA components, namel
 
 
 ## Functionalities
-As stated previously, PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network. It basically allows to reverse engineer such type of network to ease its understanding. To that end, PyPSATopo provides several functionalities to cover as many [use-cases](https://en.wikipedia.org/wiki/Use_case) as possible. These functionalities are described below and their usage exemplified using both the application programming interface and the command-line interface.
+As stated previously, PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network. It basically allows to reverse engineer such type of network to ease its understanding. To that end, PyPSATopo provides several functionalities to cover as many [use-cases](https://en.wikipedia.org/wiki/Use_case) as possible. These functionalities are described below, and their usage exemplified using both the application programming interface and the command-line interface.
 
 - When generating the topographical representation of a network and in case parameter `file_output` is not specified, PyPSATopo saves the output either in (1) a file named `topography` with an extension equal to the file format if the tool is used through its application programming interface or (2) a file named as the network file with an extension equal to the file format if the tool is used through a command-line interface. To specify the file name where to save the output, set parameter `file_output` with the appropriate value. As an example, the following generates the topographical representation of a network and saves the output in a file named `my_network.svg`:
 
@@ -180,7 +180,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --file-format gif
     ```
 
-- By default, PyPSATopo generates the topographical representation of the entire network. This might be particularly overwhelming (visually speaking) depending on the complexity of the network - see [PyPSA-Eur network topographical representation](https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsa-eur_topography.svg) to get an idea. To mitigate this, parameters `focus` and `neighbourhood` may be utilized (in combination) to focus on a particular aspect/segment of the network. The former tells PyPSATopo which bus to start visiting, while the latter tells how much neighbourhood (around the bus) should be visited (in other words, how much (indirect) components attached to the bus should be included in the representation). For instance, setting parameters `focus = "DK1 0 low voltage"` and `neighbourhood = 2` (which focuses/starts on bus `DK1 0 low voltage` and includes all the components attached to it up to a maximum neighbourhood degree of `2`) yields this [result](https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsa-eur_dk1_0_low_voltage_topography.svg) upon generating PyPSA-Eur network topographical representation. As an example, the following generates the topographical representation of a network focusing/starting on bus `co2 atmosphere` and including all the components attached to it up to a maximum neighbourhood degree of `3`:
+- By default, PyPSATopo generates the topographical representation of the entire network. This might be particularly overwhelming (visually speaking) depending on the complexity of the network - see [PyPSA-Eur network topographical representation](https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsa-eur_topography.svg) to get an idea. To mitigate this, parameters `focus` and `neighbourhood` may be utilised (in combination) to focus on a particular aspect/segment of the network. The former tells PyPSATopo which bus to start visiting, while the latter tells how much neighbourhood (around the bus) should be visited (in other words, how much (indirect) components attached to the bus should be included in the representation). For instance, setting parameters `focus = "DK1 0 low voltage"` and `neighbourhood = 2` (which focuses/starts on bus `DK1 0 low voltage` and includes all the components attached to it up to a maximum neighbourhood degree of `2`) yields this [result](https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/pypsa-eur_dk1_0_low_voltage_topography.svg) upon generating PyPSA-Eur network topographical representation. As an example, the following generates the topographical representation of a network focusing/starting on bus `co2 atmosphere` and including all the components attached to it up to a maximum neighbourhood degree of `3`:
 
     ```python
     pypsatopo.generate(my_network, focus = "co2 atmosphere", neighbourhood = 3)
@@ -220,7 +220,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --broken-missing
     ```
 
-- To color a certain component (namely: bus, generator, load, store or line) in function of its carrier, set parameter `carrier_color` with a dictionary containing key-value pairs, where key is the name of a carrier and value is a color assigned to it. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). As an example, the following generates the topographical representation of a network with its components colored in `red`, `green` or `blue` whenever their carriers are `my_carrier0`, `my_carrier1` or `my_carrier2`, respectively:
+- To color a certain component (namely: bus, generator, load, store or line) in function of its carrier, set parameter `carrier_color` with a dictionary containing key-value pairs, where the key is the name of a carrier and the value is a color assigned to it. Acceptable colors are defined [here](https://graphviz.org/doc/info/colors.html). As an example, the following generates the topographical representation of a network with its components colored in `red`, `green` or `blue` whenever their carriers are `my_carrier0`, `my_carrier1` or `my_carrier2`, respectively:
 
     ```python
     pypsatopo.generate(my_network, carrier_color = {"my_carrier0": "red", "my_carrier1": "green", "my_carrier2": "blue"})
@@ -240,7 +240,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --carrier-color
     ```
 
-- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `storage_unit_filter`, `link_filter`, `line_filter` and `carrier_filter` may be utilized in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `storage_unit_filter`, `link_filter` and `line_filter` tell PyPSATopo which buses, generators, loads, stores, storage units, links and lines to include/exclude, respectively, the last two also specify which links or lines may be visited (or not) upon generating the topographical representation of a network. Moreover, parameter `carrier_filter` may be utilized to include/exclude any component in function of its carrier value. As an example, the following generates the topographical representation of a network where only the generators named `wind`, `solar` or `CHP` are selected (and all other generators are excluded):
+- In case fine-grained selection/visiting logic is needed, parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `storage_unit_filter`, `link_filter`, `line_filter` and `carrier_filter` may be utilised in combination or separately. These parameters are expected to be set with (user-defined) [regular expressions](https://en.wikipedia.org/wiki/Regular_expression). While parameters `bus_filter`, `generator_filter`, `load_filter`, `store_filter`, `storage_unit_filter`, `link_filter` and `line_filter` tell PyPSATopo which buses, generators, loads, stores, storage units, links and lines to include/exclude, respectively, the last two also specify which links or lines may be visited (or not) upon generating the topographical representation of a network. Moreover, parameter `carrier_filter` may be utilised to include/exclude any component in function of its carrier value. As an example, the following generates the topographical representation of a network where only the generators named `wind`, `solar` or `CHP` are selected (and all other generators are excluded):
 
     ```python
     pypsatopo.generate(my_network, generator_filter = "wind|solar|CHP")
@@ -250,7 +250,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --generator-filter "wind|solar|CHP"
     ```
 
-- By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. among excluded components). To show selected components in the topographical representation of a network among excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish them from the formers, visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
+- By default, excluded components (due to, e.g., filtering) are not shown in the topographical representation of a network. In certain situations, however, it might be useful to understand where selected (included) components are located in the full representation (i.e. amongst excluded components). To show selected components in the topographical representation of a network amongst excluded components, set parameter `context = True`. While selected components are shown with the appropriate colors, excluded components are shown with faded colors (to distinguish them from the formers, visually speaking). As an example, the following generates the topographical representation of a network where only the loads containing the word `agriculture` in their names are selected (and all other loads are displayed with faded colors):
 
     ```python
     pypsatopo.generate(my_network, load_filter = ".*agriculture.*", context = True)
