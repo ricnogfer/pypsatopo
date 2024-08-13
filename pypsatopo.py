@@ -32,7 +32,7 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                       "GENERATOR": "   \"%s (generator)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Generator: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f %s\nPower set: %s %s\nEfficiency: %.2f\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal power: %.2f %s\nPower time series: %s %s\", shape = \"circle\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (generator)\" -> \"%s (bus)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
                       "LOAD": "   \"%s (load)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Load: %s\nBus: %s\nCarrier: %s\nPower set: %s %s\", shape = \"invtriangle\", width = %.2f, height = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (load)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"none\"]",
                       "STORE": "   \"%s (store)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Store: %s\nBus: %s\nCarrier: %s\nExtendable nominal energy: %s\nNominal energy: %.2f %sh\nPower set: %s %s\nCyclic energy: %s\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal energy: %.2f %sh\nEnergy time series: %s %sh\nPower time series: %s %s\", shape = \"box\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (store)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
-                      "STORAGE_UNIT": "   \"%s (storage unit)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Storage unit: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f %sh\nPower set: %s %s\nCharge cyclic state: %s\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal power: %.2f %s\nEnergy time series: %s %sh\nPower time series: %s %s\", shape = \"parallelogram\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (storage unit)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
+                      "STORAGE_UNIT": "   \"%s (storage unit)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Storage unit: %s\nBus: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f %s\nPower set: %s %s\nCharge cyclic state: %s\nCapital cost: %.2f currency/%s\nMarginal cost: %s currency/%sh\n\nOptimised nominal power: %.2f %s\nPower time series: %s %s\", shape = \"parallelogram\", width = %.2f, style = \"setlinewidth(%.2f)\", color = \"%s\"]   \"%s (bus)\" -> \"%s (storage unit)\" [style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
                       "LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (%s): %s MW\nPower time series (%s): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BROKEN_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: %.2f\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: 0.00 MW\nPower time series (%s): N/A MW\nPower time series (%s): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowsize = %.2f]",
                       "BIDIRECTIONAL_LINK": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Bidirectional link: %s\nFrom: %s\nTo: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MW\nEfficiency: 1.00\nCapital cost: %.2f currency/MW\nMarginal cost: %s currency/MWh\n\nOptimised nominal power: %.2f MW\nPower time series (p0): %s MW\nPower time series (p1): %s MW\", style = \"setlinewidth(%.2f)\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]",
@@ -319,7 +319,6 @@ def _get_components(network, focus, log, log_info, log_warning):
         capital_cost = storage_units.capital_cost.iloc[i]
         marginal_cost = _format_series(storage_units_t.marginal_cost[storage_unit]) if storage_units_t and storage_unit in storage_units_t.marginal_cost else "%.2f" % storage_units.marginal_cost.iloc[i]
         p_nom_opt = storage_units.p_nom_opt.iloc[i]
-        e_time_series = _format_series(storage_units_t.e[storage_unit]) if storage_units_t and storage_unit in storage_units_t.p else "N/A"
         p_time_series = _format_series(storage_units_t.p[storage_unit]) if storage_units_t and storage_unit in storage_units_t.p else "N/A"
         if bus:
             if bus in result:
@@ -336,7 +335,7 @@ def _get_components(network, focus, log, log_info, log_warning):
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
-        result[bus]["storage_units"].append([storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, False])
+        result[bus]["storage_units"].append([storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, p_time_series, False])
 
 
     # get declared buses that links connect to
@@ -659,7 +658,7 @@ def _process_components(buses, bus_filter, generator_filter, load_filter, store_
         # process storage units (attached to the bus)
         storage_units = values0["storage_units"]
         for values1 in storage_units:
-            storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, selected = values1
+            storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
             if values0["selected"] and (not storage_unit_filter or storage_unit_filter.match(storage_unit)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
@@ -897,12 +896,12 @@ def _represent_components(buses, carriers, negative_efficiency, broken_missing, 
 
         # represent storage units (attached to the bus) in DOT
         storage_units = values["storage_units"]
-        for storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, selected in storage_units:
+        for storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected in storage_units:
             if selected:
                 storage_unit_color = carriers[carrier] if carrier in carriers else STORAGE_UNIT_COLOR
-                result_storage_units.append(storage_unit_representation % (storage_unit, TEXT_COLOR, _replace(storage_unit), storage_unit, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, cyclic_state_charge, capital_cost, unit, marginal_cost, unit, p_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORAGE_UNIT_MINIMUM_WIDTH, STORAGE_UNIT_THICKNESS, storage_unit_color, bus, storage_unit, LINK_THICKNESS, storage_unit_color, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                result_storage_units.append(storage_unit_representation % (storage_unit, TEXT_COLOR, _replace(storage_unit), storage_unit, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, cyclic_state_charge, capital_cost, unit, marginal_cost, unit, p_nom_opt, unit, p_time_series, unit, STORAGE_UNIT_MINIMUM_WIDTH, STORAGE_UNIT_THICKNESS, storage_unit_color, bus, storage_unit, LINK_THICKNESS, storage_unit_color, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
             elif context and (not values["missing"] or broken_missing):
-                result_storage_units.append(storage_unit_representation % (storage_unit, FADED_TEXT_COLOR, _replace(storage_unit), storage_unit, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, cyclic_state_charge, capital_cost, unit, marginal_cost, unit, e_nom_opt, unit, e_time_series, unit, p_time_series, unit, STORAGE_UNIT_MINIMUM_WIDTH, STORAGE_UNIT_THICKNESS, FADED_COMPONENT_COLOR, bus, storage_unit, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
+                result_storage_units.append(storage_unit_representation % (storage_unit, FADED_TEXT_COLOR, _replace(storage_unit), storage_unit, bus, carrier, p_nom_extendable, p_nom, unit, p_set, unit, cyclic_state_charge, capital_cost, unit, marginal_cost, unit, p_nom_opt, unit, p_time_series, unit, STORAGE_UNIT_MINIMUM_WIDTH, STORAGE_UNIT_THICKNESS, FADED_COMPONENT_COLOR, bus, storage_unit, LINK_THICKNESS, FADED_COMPONENT_COLOR, LINK_ARROW_SHAPE, LINK_ARROW_SHAPE, LINK_ARROW_SIZE))
 
         # represent links (attached to the bus) in DOT
         links = values["links"]
@@ -1784,7 +1783,7 @@ if __name__ == "__main__":
     parser.add_argument("--no-negative-efficiency", action = "store_true", help = "Invert the sense of the arrow (i.e. to point to bus0 instead) when dealing with links with negative efficiencies")
     parser.add_argument("--broken-missing", action = "store_true", help = "Include broken links and missing buses in the topographical representation of the network")
     parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
-    parser.add_argument("--context", action = "store_true", help = "Show selected components in the topographical representation of the network among excluded components")
+    parser.add_argument("--context", action = "store_true", help = "Show selected components in the topographical representation of the network amongst excluded components")
     parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
     parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Specify the file format that the topographical representation of the network is saved as")
     parser.add_argument("--log", action = "store_true", help = "Show all log messages while generating the topographical representation of the network")
