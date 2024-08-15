@@ -27,6 +27,6 @@ network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ... as well as generate the corresponding topographical representation of the network in the SVG format:
 
 <kbd>
-   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/topography.svg" alt = "Topographical representation of network 'My Dummy Network'" style = "background-color: white;" width = 550>
+   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/topography.svg" alt = "Topographical representation of network 'My Dummy Network'" style = "background-color: white;" width = 575>
 </kbd>
 

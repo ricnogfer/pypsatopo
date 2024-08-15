@@ -28,7 +28,7 @@ network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
 ... as well as generate the corresponding topographical representation of the network in the SVG format:
 
 <kbd>
-   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/topography.svg" alt = "Topographical representation of network 'My Dummy Network'" style = "background-color: white;" width = 550>
+   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/topography.svg" alt = "Topographical representation of network 'My Dummy Network'" style = "background-color: white;" width = 575>
 </kbd>
 
 
@@ -280,7 +280,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --log-info
     ```
 
-- While PyPSATopo strives to generate the topographical representation of a network with the most common/expected graphical features, the tool is flexible enough to let each user adjust/personalize the representation by setting PyPSATopo [global variables](https://github.com/ricnogfer/pypsatopo/blob/master/pypsatopo.py#L29) with appropriate values. As an example, the following generates the topographical representation of a network with a background in blue (instead of transparent):
+- While PyPSATopo strives to generate the topographical representation of a network with the most common/expected graphical features, the tool is flexible enough to let each user adjust/personalise the representation by setting PyPSATopo [global variables](https://github.com/ricnogfer/pypsatopo/blob/master/pypsatopo.py#L29-L86) with appropriate values. As an example, the following generates the topographical representation of a network with a background in blue (instead of transparent):
 
     ```python
     pypsatopo.BACKGROUND_COLOR = "blue"
