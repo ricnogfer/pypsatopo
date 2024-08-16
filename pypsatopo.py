@@ -1277,7 +1277,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
         # process storage units (attached to the bus currently on focus)
         storage_units = values0["storage_units"]
         for values1 in storage_units:
-            storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, e_time_series, p_time_series, selected = values1
+            storage_unit, carrier, unit, p_nom_extendable, p_nom, p_set, cyclic_state_charge, capital_cost, marginal_cost, p_nom_opt, p_time_series, selected = values1
             if values0["selected"] and (not storage_unit_filter or storage_unit_filter.match(storage_unit)) and (not carrier_filter or carrier_filter.match(carrier)):
                 if carrier_color:
                     if carrier and carrier not in carriers:
