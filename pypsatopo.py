@@ -3,7 +3,7 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
