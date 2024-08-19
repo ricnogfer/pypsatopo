@@ -17,7 +17,7 @@
 <!-- oil (bus) -->
 <g id="node1" class="node">
 <title>oil (bus)</title>
-<g id="a_node1"><a xlink:title="Bus: oil&#10;Carrier: AC&#10;Unit: MW&#10;Generators: 1&#10;Loads: 0&#10;Stores: 0&#10;Incoming links: 0&#10;Outgoing links: 1&#10;Lines: 0&#10;&#10;Power time series: N/A MW">
+<g id="a_node1"><a xlink:title="Bus: oil&#10;Carrier: AC&#10;Unit: MW&#10;Generators: 1&#10;Loads: 0&#10;Stores: 0&#10;Storage units: 0&#10;Incoming links: 0&#10;Outgoing links: 1&#10;Lines: 0&#10;&#10;Power time series: N/A MW">
 <polygon fill="none" stroke="none" stroke-width="7.3" points="662.2,-298.6 424.6,-298.6 424.6,-277 662.2,-277 662.2,-298.6"/>
 <polyline fill="none" stroke="black" stroke-width="7.3" points="424.6,-277 662.2,-277"/>
 <text text-anchor="start" x="536.2" y="-285.4" font-family="Courier New" font-size="8.00" fill="red">oil</text>
@@ -27,7 +27,7 @@
 <!-- transport (bus) -->
 <g id="node3" class="node">
 <title>transport (bus)</title>
-<g id="a_node3"><a xlink:title="Bus: transport&#10;Carrier: AC&#10;Unit: MW&#10;Generators: 0&#10;Loads: 1&#10;Stores: 0&#10;Incoming links: 2&#10;Outgoing links: 0&#10;Lines: 0&#10;&#10;Power time series: N/A MW">
+<g id="a_node3"><a xlink:title="Bus: transport&#10;Carrier: AC&#10;Unit: MW&#10;Generators: 0&#10;Loads: 1&#10;Stores: 0&#10;Storage units: 0&#10;Incoming links: 2&#10;Outgoing links: 0&#10;Lines: 0&#10;&#10;Power time series: N/A MW">
 <polygon fill="none" stroke="none" stroke-width="7.3" points="643.2,-188.2 405.6,-188.2 405.6,-166.6 643.2,-166.6 643.2,-188.2"/>
 <polyline fill="none" stroke="black" stroke-width="7.3" points="405.6,-166.6 643.2,-166.6"/>
 <text text-anchor="start" x="502.8" y="-175" font-family="Courier New" font-size="8.00" fill="red">transport</text>
@@ -47,7 +47,7 @@
 <!-- electricity (bus) -->
 <g id="node2" class="node">
 <title>electricity (bus)</title>
-<g id="a_node2"><a xlink:title="Bus: electricity&#10;Carrier: AC&#10;Unit: MW&#10;Generators: 1&#10;Loads: 0&#10;Stores: 1&#10;Incoming links: 0&#10;Outgoing links: 1&#10;Lines: 0&#10;&#10;Power time series: N/A MW">
+<g id="a_node2"><a xlink:title="Bus: electricity&#10;Carrier: AC&#10;Unit: MW&#10;Generators: 1&#10;Loads: 0&#10;Stores: 1&#10;Storage units: 1&#10;Incoming links: 0&#10;Outgoing links: 1&#10;Lines: 0&#10;&#10;Power time series: N/A MW">
 <polygon fill="none" stroke="none" stroke-width="7.3" points="352.2,-298.6 114.6,-298.6 114.6,-277 352.2,-277 352.2,-298.6"/>
 <polyline fill="none" stroke="black" stroke-width="7.3" points="114.6,-277 352.2,-277"/>
 <text text-anchor="start" x="207" y="-285.4" font-family="Courier New" font-size="8.00" fill="red">electricity</text>
