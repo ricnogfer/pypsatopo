@@ -3,7 +3,7 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "1.0.3"
+__version__ = "1.0.4"
 __description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
@@ -1760,6 +1760,19 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     if not status:
         if log or log_info:
             print("[INF] Finished generating topographical representation of the network!")
+
+
+    # display topographical representation (only when running from Jupyter)
+    if not status:
+        try:
+            if get_ipython().__class__.__name__ == "ZMQInteractiveShell":   # in Jupyter
+                import IPython.display
+                if file_format == "svg":
+                    display(IPython.display.SVG(file_output))
+                else:
+                    display(IPython.display.Image(file_output))
+        except:
+            pass
 
 
     return status
