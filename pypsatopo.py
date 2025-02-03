@@ -1868,16 +1868,15 @@ if __name__ == "__main__":
 
 
         # add some dummy components to dummy network
-        network.add("Bus", "oil")
         network.add("Bus", "electricity")
-        network.add("Bus", "transport")
-        network.add("Generator", "oil", bus = "oil")
+        network.add("Bus", "hydrogen")
+        network.add("Generator", "wind", bus = "electricity")
         network.add("Generator", "solar", bus = "electricity")
-        network.add("Load", "vehicle", bus = "transport")
+        network.add("Load", "transport", bus = "electricity")
+        network.add("Load", "industry", bus = "hydrogen")
         network.add("Store", "battery", bus = "electricity")
         network.add("StorageUnit", "hydro", bus = "electricity")
-        network.add("Link", "ICEV", bus0 = "oil", bus1 = "transport")
-        network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
+        network.add("Link", "electrolysis", bus0 = "electricity", bus1 = "hydrogen")
 
 
         # generate topographical representation of dummy network

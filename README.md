@@ -14,21 +14,20 @@ This will create a PyPSA-based network made of the following components:
 network = pypsa.Network(name = "My Dummy Network")
 
 # add some dummy components to dummy network
-network.add("Bus", "oil")
 network.add("Bus", "electricity")
-network.add("Bus", "transport")
-network.add("Generator", "oil", bus = "oil")
+network.add("Bus", "hydrogen")
+network.add("Generator", "wind", bus = "electricity")
 network.add("Generator", "solar", bus = "electricity")
-network.add("Load", "vehicle", bus = "transport")
+network.add("Load", "transport", bus = "electricity")
+network.add("Load", "industry", bus = "hydrogen")
 network.add("Store", "battery", bus = "electricity")
 network.add("StorageUnit", "hydro", bus = "electricity")
-network.add("Link", "ICEV", bus0 = "oil", bus1 = "transport")
-network.add("Link", "BEV", bus0 = "electricity", bus1 = "transport")
+network.add("Link", "electrolysis", bus0 = "electricity", bus1 = "hydrogen")
 ```
 ... as well as generate the corresponding topographical representation of the network in the SVG format:
 
 <kbd>
-   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/topography.svg" alt = "Topographical representation of network 'My Dummy Network'" style = "background-color: white;" width = 575>
+   <img src = "https://raw.githubusercontent.com/ricnogfer/pypsatopo/master/resources/topography.svg" alt = "Topographical representation of network 'My Dummy Network'" style = "background-color: white;" width = 650>
 </kbd>
 
 
