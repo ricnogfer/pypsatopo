@@ -48,7 +48,7 @@ As a reference, PyPSATopo is known to work correctly with the following versions
 
 - Python 3.10.8
 
-- PyPSA 0.21.3
+- PyPSA 0.22.0
 
 - Pandas 1.5.3
 
