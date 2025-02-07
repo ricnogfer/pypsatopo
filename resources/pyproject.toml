@@ -1,6 +1,6 @@
 [project]
 name = "pypsatopo"
-version = "1.1.0"
+version = "1.1.1"
 description = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 authors = [{name = "Energy Systems Group at Aarhus University (Denmark)", email = "ricardo.fernandes@mpe.au.dk"}]
 requires-python = ">=3.2"
