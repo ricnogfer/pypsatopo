@@ -3,7 +3,7 @@
 
 
 __project__ = "PyPSATopo"
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __description__ = "PyPSATopo is a tool that allows generating the topographical representation of any arbitrary PyPSA-based network"
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
@@ -381,6 +381,8 @@ def _get_components(network, focus, log, log_info, log_warning):
                     else:
                         efficiency = 1.0
                 elif number in declared_efficiencies:
+                    if link["bus%s" % number].strip() == "":
+                        continue
                     efficiency = link["efficiency%s" % number]
                     if pandas.isna(efficiency):
                         efficiency = 1.0
