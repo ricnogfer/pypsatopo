@@ -46,7 +46,7 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                       "BROKEN_LINE": "   \"%s (bus)\" -> \"%s (bus)\" [label = <<font color = \"%s\">%s</font>>, tooltip = \"Line: %s\nBus0: %s\nBus1: %s\nCarrier: %s\nExtendable nominal power: %s\nNominal power: %.2f MVA\nCapital cost: %.2f currency/MVA\n\nOptimised nominal power: 0.00 MVA\nPower time series (p0): N/A MW\nPower time series (p1): N/A MW\", style = \"setlinewidth(%.2f), dashed\", color = \"%s\", arrowhead = \"%s\", arrowtail = \"%s\", arrowsize = %.2f, dir = \"both\"]"
                      }
 FILE_OUTPUT = "topography.svg"
-FILE_FORMAT = "svg"   # acceptable values are: "svg", "png", "jpg", "gif" and "ps"
+FILE_FORMAT = "svg"   # acceptable values are: "svg", "png", "jpg", "gif", "pdf" and "ps"
 BACKGROUND_COLOR = "transparent"
 NETWORK_NAME = "My Network"
 RANK_DIRECTION = "TB"   # acceptable values are: "TB" (top to bottom), "BT" (bottom to top), "LR" (left to right) and "RL" (right to left)
@@ -1541,8 +1541,8 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
 
     # check if file format is valid
-    if file_format not in ("svg", "png", "jpg", "gif", "ps"):
-        print("[ERR] The file format '%s' is not valid (acceptable formats are: 'svg', 'png', 'jpg', 'gif' or 'ps')!" % file_format)
+    if file_format not in ("svg", "png", "jpg", "gif", "pdf", "ps"):
+        print("[ERR] The file format '%s' is not valid (acceptable formats are: 'svg', 'png', 'jpg', 'gif', 'pdf' or 'ps')!" % file_format)
         return -1   # return unsuccessfully
 
 
@@ -1804,7 +1804,7 @@ if __name__ == "__main__":
     parser.add_argument("--carrier-color", nargs = "*", help = "Specify a palette to color components in function of their carriers")
     parser.add_argument("--context", action = "store_true", help = "Show selected components in the topographical representation of the network amongst excluded components")
     parser.add_argument("--file-output", nargs = "+", help = "Specify the file name where to save the topographical representation of the network")
-    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "ps"], help = "Specify the file format that the topographical representation of the network is saved as")
+    parser.add_argument("--file-format", choices = ["svg", "png", "jpg", "gif", "pdf", "ps"], help = "Specify the file format that the topographical representation of the network is saved as")
     parser.add_argument("--log", action = "store_true", help = "Show all log messages while generating the topographical representation of the network")
     parser.add_argument("--log-info", action = "store_true", help = "Show only info log messages while generating the topographical representation of the network")
     parser.add_argument("--log-warning", action = "store_true", help = "Show only warning log messages while generating the topographical representation of the network")

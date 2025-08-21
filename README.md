@@ -169,7 +169,7 @@ As stated previously, PyPSATopo is a tool that allows generating the topographic
     python pypsatopo.py my_network.nc --file-output my_network.svg
     ```
 
-- PyPSATopo is able to generate the topographical representation of a network in different formats, namely: [SVG](https://en.wikipedia.org/wiki/SVG), [PNG](https://en.wikipedia.org/wiki/PNG), [JPG](https://en.wikipedia.org/wiki/JPEG), [GIF](https://en.wikipedia.org/wiki/GIF) and [PS](https://en.wikipedia.org/wiki/Postscript). To specify the format, set parameter `file_format` with the appropriate value. Otherwise, in case the parameter is not set, the default format is SVG. As an example, the following generates the topographical representation of a network in the GIF format:
+- PyPSATopo is able to generate the topographical representation of a network in different formats, namely: [SVG](https://en.wikipedia.org/wiki/SVG), [PNG](https://en.wikipedia.org/wiki/PNG), [JPG](https://en.wikipedia.org/wiki/JPEG), [GIF](https://en.wikipedia.org/wiki/GIF), [PDF](https://en.wikipedia.org/wiki/PDF) and [PS](https://en.wikipedia.org/wiki/Postscript). To specify the format, set parameter `file_format` with the appropriate value. Otherwise, in case the parameter is not set, the default format is SVG. As an example, the following generates the topographical representation of a network in the GIF format:
 
     ```python
     pypsatopo.generate(my_network, file_format = "gif")
