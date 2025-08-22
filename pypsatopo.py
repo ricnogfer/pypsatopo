@@ -185,7 +185,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get buses from (PyPSA) network
     if log or log_info:
-        print("[INF] Retrieving buses from network...")
+        print("[INF] Retrieving buses from network")
     buses = network.buses
     buses_t = getattr(network, "buses_t", None)
     for i in range(len(buses)):
@@ -198,7 +198,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get generators from (PyPSA) network
     if log or log_info:
-        print("[INF] Retrieving generators from network...")
+        print("[INF] Retrieving generators from network")
     generators = network.generators
     generators_t = getattr(network, "generators_t", None)
     for i in range(len(generators)):
@@ -219,14 +219,14 @@ def _get_components(network, focus, log, log_info, log_warning):
             if bus in result:
                 if result[bus]["missing"]:
                     if log or log_warning:
-                        print("[WAR] Generator '%s' connects to bus '%s' which does not exist..." % (generator, bus))
+                        print("[WAR] Generator '%s' connects to bus '%s' which does not exist" % (generator, bus))
             else:
                 if log or log_warning:
-                    print("[WAR] Generator '%s' connects to bus '%s' which does not exist..." % (generator, bus))
+                    print("[WAR] Generator '%s' connects to bus '%s' which does not exist" % (generator, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
-                print("[WAR] Generator '%s' does not have a bus specified..." % generator)
+                print("[WAR] Generator '%s' does not have a bus specified" % generator)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -235,7 +235,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get loads from (PyPSA) network
     if log or log_info:
-        print("[INF] Retrieving loads from network...")
+        print("[INF] Retrieving loads from network")
     loads = network.loads
     loads_t = getattr(network, "loads_t", None)
     for i in range(len(loads)):
@@ -249,14 +249,14 @@ def _get_components(network, focus, log, log_info, log_warning):
             if bus in result:
                 if result[bus]["missing"]:
                     if log or log_warning:
-                        print("[WAR] Load '%s' connects to bus '%s' which does not exist..." % (load, bus))
+                        print("[WAR] Load '%s' connects to bus '%s' which does not exist" % (load, bus))
             else:
                 if log or log_warning:
-                    print("[WAR] Load '%s' connects to bus '%s' which does not exist..." % (load, bus))
+                    print("[WAR] Load '%s' connects to bus '%s' which does not exist" % (load, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
-                print("[WAR] Load '%s' does not have a bus specified..." % load)
+                print("[WAR] Load '%s' does not have a bus specified" % load)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -265,7 +265,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get stores from (PyPSA) network
     if log or log_info:
-        print("[INF] Retrieving stores from network...")
+        print("[INF] Retrieving stores from network")
     stores = network.stores
     stores_t = getattr(network, "stores_t", None)
     for i in range(len(stores)):
@@ -287,14 +287,14 @@ def _get_components(network, focus, log, log_info, log_warning):
             if bus in result:
                 if result[bus]["missing"]:
                     if log or log_warning:
-                        print("[WAR] Store '%s' connects to bus '%s' which does not exist..." % (store, bus))
+                        print("[WAR] Store '%s' connects to bus '%s' which does not exist" % (store, bus))
             else:
                 if log or log_warning:
-                    print("[WAR] Store '%s' connects to bus '%s' which does not exist..." % (store, bus))
+                    print("[WAR] Store '%s' connects to bus '%s' which does not exist" % (store, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
-                print("[WAR] Store '%s' does not have a bus specified..." % store)
+                print("[WAR] Store '%s' does not have a bus specified" % store)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -303,7 +303,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get storage units from (PyPSA) network
     if log or log_info:
-        print("[INF] Retrieving storage units from network...")
+        print("[INF] Retrieving storage units from network")
     storage_units = network.storage_units
     storage_units_t = getattr(network, "storage_units_t", None)
     for i in range(len(storage_units)):
@@ -324,14 +324,14 @@ def _get_components(network, focus, log, log_info, log_warning):
             if bus in result:
                 if result[bus]["missing"]:
                     if log or log_warning:
-                        print("[WAR] Storage unit '%s' connects to bus '%s' which does not exist..." % (storage_unit, bus))
+                        print("[WAR] Storage unit '%s' connects to bus '%s' which does not exist" % (storage_unit, bus))
             else:
                 if log or log_warning:
-                    print("[WAR] Storage unit '%s' connects to bus '%s' which does not exist..." % (storage_unit, bus))
+                    print("[WAR] Storage unit '%s' connects to bus '%s' which does not exist" % (storage_unit, bus))
                 result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
         else:
             if log or log_warning:
-                print("[WAR] Storage unit '%s' does not have a bus specified..." % storage_unit)
+                print("[WAR] Storage unit '%s' does not have a bus specified" % storage_unit)
             bus = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -340,7 +340,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get declared buses that links connect to
     if log or log_info:
-        print("[INF] Retrieving links from network...")
+        print("[INF] Retrieving links from network")
     links = network.links
     links_t = getattr(network, "links_t", None)
     bus_regexp = re.compile("^bus[0-9]+$")
@@ -412,16 +412,16 @@ def _get_components(network, focus, log, log_info, log_warning):
                 if bus0 in result:
                     if result[bus0]["missing"]:
                         if log or log_warning:
-                            print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist..." % (link, bus0))
+                            print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist" % (link, bus0))
                     missing0 = result[bus0]["missing"]
                 else:
                     if log or log_warning:
-                        print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist..." % (link, bus0))
+                        print("[WAR] Link '%s' connects to bus '%s' (bus0) which does not exist" % (link, bus0))
                     result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     missing0 = True
             else:
                 if log or log_warning:
-                    print("[WAR] Link '%s' does not have bus0 specified..." % link)
+                    print("[WAR] Link '%s' does not have bus0 specified" % link)
                 bus0 = "bus #%d" % _MISSING_BUS_COUNT
                 _MISSING_BUS_COUNT += 1
                 result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -430,16 +430,16 @@ def _get_components(network, focus, log, log_info, log_warning):
                 if bus1 in result:
                     if result[bus1]["missing"]:
                         if log or log_warning:
-                            print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist..." % (link, bus1))
+                            print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist" % (link, bus1))
                     missing1 = result[bus1]["missing"]
                 else:
                     if log or log_warning:
-                        print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist..." % (link, bus1))
+                        print("[WAR] Link '%s' connects to bus '%s' (bus1) which does not exist" % (link, bus1))
                     result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                     missing1 = True
             else:
                 if log or log_warning:
-                    print("[WAR] Link '%s' does not have bus1 specified..." % link)
+                    print("[WAR] Link '%s' does not have bus1 specified" % link)
                 bus1 = "bus #%d" % _MISSING_BUS_COUNT
                 _MISSING_BUS_COUNT += 1
                 result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -458,18 +458,18 @@ def _get_components(network, focus, log, log_info, log_warning):
                     if bus_value in result:
                         if result[bus_value]["missing"]:
                             if log or log_warning:
-                                print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index[i], bus_value, key))
+                                print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist" % (links.index[i], bus_value, key))
                             if key != "bus0":
                                 missing += 1
                     else:
                         if log or log_warning:
-                            print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist..." % (links.index[i], bus_value, key))
+                            print("[WAR] Link '%s' connects to bus '%s' (%s) which does not exist" % (links.index[i], bus_value, key))
                         result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                         if key != "bus0":
                             missing += 1
                 else:
                     if log or log_warning:
-                        print("[WAR] Link '%s' does not have %s specified..." % (links.index[i], key))
+                        print("[WAR] Link '%s' does not have %s specified" % (links.index[i], key))
                     bus_value = "bus #%d" % _MISSING_BUS_COUNT
                     _MISSING_BUS_COUNT += 1
                     result[bus_value] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -506,7 +506,7 @@ def _get_components(network, focus, log, log_info, log_warning):
 
     # get lines from (PyPSA) network
     if log or log_info:
-        print("[INF] Retrieving lines from network...")
+        print("[INF] Retrieving lines from network")
     lines = network.lines
     lines_t = getattr(network, "lines_t", None)
     for i in range(len(lines)):
@@ -524,16 +524,16 @@ def _get_components(network, focus, log, log_info, log_warning):
             if bus0 in result:
                 if result[bus0]["missing"]:
                     if log or log_warning:
-                        print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist..." % (line, bus0))
+                        print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist" % (line, bus0))
                 missing0 = result[bus0]["missing"]
             else:
                 if log or log_warning:
-                    print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist..." % (line, bus0))
+                    print("[WAR] Line '%s' connects to bus '%s' (bus0) which does not exist" % (line, bus0))
                 result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing0 = True
         else:
             if log or log_warning:
-                print("[WAR] Line '%s' does not have bus0 specified..." % line)
+                print("[WAR] Line '%s' does not have bus0 specified" % line)
             bus0 = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus0] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -542,16 +542,16 @@ def _get_components(network, focus, log, log_info, log_warning):
             if bus1 in result:
                 if result[bus1]["missing"]:
                     if log or log_warning:
-                        print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist..." % (line, bus1))
+                        print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist" % (line, bus1))
                 missing1 = result[bus1]["missing"]
             else:
                 if log or log_warning:
-                    print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist..." % (line, bus1))
+                    print("[WAR] Line '%s' connects to bus '%s' (bus1) which does not exist" % (line, bus1))
                 result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
                 missing1 = True
         else:
             if log or log_warning:
-                print("[WAR] Line '%s' does not have bus1 specified..." % line)
+                print("[WAR] Line '%s' does not have bus1 specified" % line)
             bus1 = "bus #%d" % _MISSING_BUS_COUNT
             _MISSING_BUS_COUNT += 1
             result[bus1] = {"generators": list(), "loads": list(), "stores": list(), "storage_units": list(), "links": list(), "multi_link_trunks": list(), "multi_link_branches": list(), "lines": list(), "generators_count": 0, "loads_count": 0, "stores_count": 0, "storage_units_count": 0, "incoming_links_count": 0, "outgoing_links_count": 0, "lines_count": 0, "missing": True, "selected": False, "carrier": "", "unit": "", "p_time_series": ""}
@@ -1220,7 +1220,7 @@ def _focus(components, bus, neighbourhood, bus_filter, generator_filter, load_fi
 
         # display info message
         if log or log_info:
-            print("[INF] Focusing on bus '%s'..." % bus)
+            print("[INF] Focusing on bus '%s'" % bus)
 
 
         # process bus
@@ -1427,7 +1427,7 @@ def _generate_output(dot_representation, file_output, file_format, log, log_info
     # write DOT representation of (PyPSA) network into a DOT file
     file_output_dot = "%s.dot" % file_output.rsplit(".", 1)[0]
     if log or log_info:
-        print("[INF] Writing DOT file '%s'..." % file_output_dot)
+        print("[INF] Writing DOT file '%s'" % file_output_dot)
     try:
         with open(file_output_dot, "w") as handle:
             for line in dot_representation:
@@ -1440,7 +1440,7 @@ def _generate_output(dot_representation, file_output, file_format, log, log_info
 
     # launch the tool 'dot' passing DOT file to it
     if log or log_info:
-        print("[INF] Generating topographical representation of the network based on DOT file '%s'..." % file_output_dot)
+        print("[INF] Generating topographical representation of the network based on DOT file '%s'" % file_output_dot)
     try:
         result = subprocess.run(["dot", "-T%s" % file_format, file_output_dot], capture_output = True)
     except KeyboardInterrupt:
@@ -1460,7 +1460,7 @@ def _generate_output(dot_representation, file_output, file_format, log, log_info
 
     # write result generated by the tool 'dot' into an output file
     if log or log_info:
-        print("[INF] Writing output file '%s' in the %s format..." % (file_output, file_format.upper()))
+        print("[INF] Writing output file '%s' in the %s format" % (file_output, file_format.upper()))
     try:
         with open(file_output, "wb") as handle:
             handle.write(result.stdout)
@@ -1549,7 +1549,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     # read (PyPSA) network
     if isinstance(network, str):
         if log or log_info:
-            print("[INF] Reading file '%s' containing PyPSA-based network..." % network)
+            print("[INF] Reading file '%s' containing PyPSA-based network" % network)
         pypsa_network = pypsa.Network(network)
     else:   # pypsa.components.Network
         pypsa_network = network
@@ -1584,11 +1584,11 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     if pypsa_network.name:
         network_name = pypsa_network.name
         if log or log_info:
-            print("[INF] Start generating topographical representation of the network '%s'..." % network_name)
+            print("[INF] Start generating topographical representation of the network '%s'" % network_name)
     else:
         network_name = NETWORK_NAME
         if log or log_info:
-            print("[INF] Start generating topographical representation of the network...")
+            print("[INF] Start generating topographical representation of the network")
 
 
     # get components from (PyPSA) network
@@ -1693,6 +1693,11 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
     # get DOT representation of components
     representation, buses_count, generators_count, loads_count, stores_count, storage_units_count, links_count, lines_count = _represent_components(components, carriers, negative_efficiency, broken_missing, carrier_color, context, log, log_info, log_warning)
+
+
+    # add extension to file output in case it does not have one
+    if "." not in file_output:
+        file_output = "%s.%s" % (file_output, file_format)
 
 
     # add metadata to digraph
