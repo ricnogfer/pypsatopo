@@ -8,7 +8,7 @@ __description__ = "PyPSATopo is a tool that allows generating the topographical 
 __license__ = "BSD 3-Clause"
 __author__ = "Energy Systems Group at Aarhus University (Denmark)"
 __contact__ = "ricardo.fernandes@mpe.au.dk"
-__status__ = "Development"
+__status__ = "Production"
 
 
 
