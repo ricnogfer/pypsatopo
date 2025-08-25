@@ -15,3 +15,7 @@ content-type = "text/markdown"
 [project.urls]
 "Homepage" = "https://github.com/ricnogfer/pypsatopo"
 
+[build-system]
+requires = ["setuptools>=66,<70", "wheel"]
+build-backend = "setuptools.build_meta"
+
