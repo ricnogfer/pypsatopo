@@ -205,8 +205,11 @@ def _get_components(network, focus, log, log_info, log_warning):
         generator = generators.index[i]
         bus = generators.bus.iloc[i]
         carrier = generators.carrier.iloc[i]
-        tmp = buses.loc[bus].unit
-        unit = "MW" if tmp == "None" else tmp
+        if bus in buses:
+            tmp = buses.loc[bus].unit
+            unit = "MW" if tmp == "None" else tmp
+        else:
+            unit = "MW"
         p_nom_extendable = "True" if generators.p_nom_extendable.iloc[i] else "False"
         p_nom = generators.p_nom.iloc[i]
         p_set = _format_series(generators_t.p_set[generator]) if generators_t and generator in generators_t.p_set else "%.2f" % generators.p_set.iloc[i]
@@ -242,8 +245,11 @@ def _get_components(network, focus, log, log_info, log_warning):
         load = loads.index[i]
         bus = loads.bus.iloc[i]
         carrier = loads.carrier.iloc[i]
-        tmp = buses.loc[bus].unit
-        unit = "MW" if tmp == "None" else tmp
+        if bus in buses:
+            tmp = buses.loc[bus].unit
+            unit = "MW" if tmp == "None" else tmp
+        else:
+            unit = "MW"
         p_set = _format_series(loads_t.p_set[load]) if loads_t and load in loads_t.p_set else "%.2f" % loads.p_set.iloc[i]
         if bus:
             if bus in result:
@@ -272,8 +278,11 @@ def _get_components(network, focus, log, log_info, log_warning):
         store = stores.index[i]
         bus = stores.bus.iloc[i]
         carrier = stores.carrier.iloc[i]
-        tmp = buses.loc[bus].unit
-        unit = "MW" if tmp == "None" else tmp
+        if bus in buses:
+            tmp = buses.loc[bus].unit
+            unit = "MW" if tmp == "None" else tmp
+        else:
+            unit = "MW"
         e_nom_extendable = "True" if stores.e_nom_extendable.iloc[i] else "False"
         e_nom = stores.e_nom.iloc[i]
         p_set = _format_series(stores_t.p_set[store]) if stores_t and store in stores_t.p_set else "%.2f" % stores.p_set.iloc[i]
@@ -310,8 +319,11 @@ def _get_components(network, focus, log, log_info, log_warning):
         storage_unit = storage_units.index[i]
         bus = storage_units.bus.iloc[i]
         carrier = storage_units.carrier.iloc[i]
-        tmp = buses.loc[bus].unit
-        unit = "MW" if tmp == "None" else tmp
+        if bus in buses:
+            tmp = buses.loc[bus].unit
+            unit = "MW" if tmp == "None" else tmp
+        else:
+            unit = "MW"
         p_nom_extendable = "True" if storage_units.p_nom_extendable.iloc[i] else "False"
         p_nom = storage_units.p_nom.iloc[i]
         p_set = _format_series(storage_units_t.p_set[storage_unit]) if storage_units_t and storage_unit in storage_units_t.p_set else "%.2f" % storage_units.p_set.iloc[i]
