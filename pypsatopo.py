@@ -47,6 +47,7 @@ DOT_REPRESENTATION = {"BUS": "   \"%s (bus)\" [label = <<font color = \"%s\">%s<
                      }
 FILE_OUTPUT = "topography.svg"
 FILE_FORMAT = "svg"   # acceptable values are: "svg", "png", "jpg", "gif", "pdf" and "ps"
+MARGIN = 0.0
 BACKGROUND_COLOR = "transparent"
 NETWORK_NAME = "My Network"
 RANK_DIRECTION = "TB"   # acceptable values are: "TB" (top to bottom), "BT" (bottom to top), "LR" (left to right) and "RL" (right to left)
@@ -1754,7 +1755,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
     # configure digraph layout
     result.append("   // digraph layout")
-    result.append("   margin = \"0,0\"")
+    result.append("   margin = %.2f" % MARGIN)
     result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
     result.append("   labelloc = \"t\"")
     result.append("   label = \"%s\n\n\n           \"" % network_name)
