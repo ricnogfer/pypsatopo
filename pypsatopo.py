@@ -1754,6 +1754,7 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
 
     # configure digraph layout
     result.append("   // digraph layout")
+    result.append("   margin = \"0,0\"")
     result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
     result.append("   labelloc = \"t\"")
     result.append("   label = \"%s\n\n\n           \"" % network_name)
