@@ -1757,9 +1757,10 @@ def generate(network, focus = None, neighbourhood = 0, bus_filter = None, genera
     result.append("   // digraph layout")
     result.append("   margin = %.2f" % MARGIN)
     result.append("   bgcolor = \"%s\"" % BACKGROUND_COLOR)
-    result.append("   labelloc = \"t\"")
-    result.append("   label = \"%s\n\n\n           \"" % network_name)
-    result.append("   tooltip = \"Network: %s\nBuses: %d (out of %d)\nGenerators: %d (out of %d)\nLoads: %s (out of %d)\nStores: %d (out of %d)\nStorage units: %d (out of %d)\nLinks: %d (out of %d)\nLines: %d (out of %d)\nSnapshots: %d\"" % (network_name, buses_count, len(pypsa_network.buses), generators_count, len(pypsa_network.generators), loads_count, len(pypsa_network.loads), stores_count, len(pypsa_network.stores), storage_units_count, len(pypsa_network.storage_units), links_count, len(pypsa_network.links), lines_count, len(pypsa_network.lines), len(pypsa_network.snapshots)))
+    if network_name != "":
+        result.append("   labelloc = \"t\"")
+        result.append("   label = \"%s\n\n\n           \"" % network_name)
+        result.append("   tooltip = \"Network: %s\nBuses: %d (out of %d)\nGenerators: %d (out of %d)\nLoads: %s (out of %d)\nStores: %d (out of %d)\nStorage units: %d (out of %d)\nLinks: %d (out of %d)\nLines: %d (out of %d)\nSnapshots: %d\"" % (network_name, buses_count, len(pypsa_network.buses), generators_count, len(pypsa_network.generators), loads_count, len(pypsa_network.loads), stores_count, len(pypsa_network.stores), storage_units_count, len(pypsa_network.storage_units), links_count, len(pypsa_network.links), lines_count, len(pypsa_network.lines), len(pypsa_network.snapshots)))
     result.append("   rankdir = \"%s\"" % RANK_DIRECTION)
     result.append("   ranksep = %.2f" % RANK_SEPARATION)
     result.append("   nodesep = %.2f" % NODE_SEPARATION)
